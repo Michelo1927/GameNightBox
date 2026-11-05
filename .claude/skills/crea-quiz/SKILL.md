@@ -83,7 +83,10 @@ Cosa se ne ricava:
   - *indovina la canzone*: dalla hit che tutti conoscono a quella meno famosa o con un frammento più
     corto;
   - *indovina il personaggio*: l'indizio più vago è il 500 (es. "nasce il 31 luglio 1965"), il più
-    chiaro il 100;
+    chiaro il 100 (vedi sotto i due modi di scriverlo);
+  - *loghi*: i loghi famosissimi (Mercedes, Apple, Nike, McDonald's, Mastercard, PlayStation…) sono
+    **troppo facili** anche al 100. Usa marchi meno ovvi, loghi vecchi, un dettaglio ritagliato o un logo
+    a cui manca un pezzo; il 500 deve essere un marchio che tutti hanno visto ma pochi ricordano;
   - *definizioni* (fobie, piatti tipici, nomi d'arte): dalla più intuitiva alla più rara.
 
 ### Controllo finale della difficoltà
@@ -116,7 +119,17 @@ Nel riepilogo per l'utente segnala le 1-2 domande di cui sei meno sicuro sul liv
   scelte. Ottima per etimologie, "vero o falso", quiz in cui le risposte libere sarebbero ambigue.
 - **Indovina il prezzo**: domanda = prodotto, `answer` = prezzo, `rules` = tolleranza
   (es. "valida entro ±10%"), `hostNote` = intervallo esatto (es. "1,43 € - 1,75 €").
-- **Indovina il personaggio / l'oggetto**: un indizio che diventa più facile man mano.
+- **Indovina il personaggio / l'oggetto**: due modi, alternali nella stessa categoria.
+  - *Descrizione*: una frase con 2-3 dettagli, più o meno vaga a seconda dei punti.
+  - *Indizi a discesa* (il modo preferito dall'utente): una sola persona e 3-5 indizi numerati, uno per
+    riga, **dal più difficile al più facile** (1. nato a… 2. ha fatto… 3. è famoso per…). Le squadre
+    rispondono appena lo capiscono; l'ultimo indizio deve farlo indovinare a quasi tutti. Anche qui il
+    100 ha indizi più chiari del 500.
+- **Canzoni tradotte**: l'utente intende il **testo** della canzone tradotto in italiano, non il titolo.
+  Non riportare però i testi (neanche tradotti: sono protetti da copyright). Racconta invece con parole
+  tue, in italiano, cosa dice la canzone (la storia, l'immagine principale), senza citare versi e senza
+  tradurre il titolo. Se l'utente vuole proprio i versi tradotti, lascia la domanda da completare e
+  diglielo: li scrive lui.
 - **Indovina la canzone**: YouTube con `audioOnly: true` e `start`/`end` sul ritornello o sull'intro
   (vedi sotto). Domanda tipo "Titolo e artista?", `rules` con cosa serve (es. "servono titolo e artista").
 - **Immagine**: "che cos'è / chi è / dove si trova?" con una foto o un dettaglio.
