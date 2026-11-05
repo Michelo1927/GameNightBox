@@ -24,6 +24,9 @@ interface Props {
     kind: 'steal' | 'pass';
     by: Team;
     target?: Team;
+    /** Furto: the team chose to take the points from the bank instead of robbing someone. */
+    bank?: boolean;
+    /** A team id, '' for the bank (Furto), or nothing to undo the choice. */
     setTarget: (teamId?: string) => void;
     /** Each team's score before this cell: a team can't be robbed of more points than it has. */
     scores: Record<string, number>;
@@ -169,6 +172,13 @@ export default function QuestionModal({ category, question, teams, results, onRe
                     {t.name} ({special!.scores[t.id] ?? 0})
                   </button>
                 ))}
+                <button
+                  className={`pick ${special!.bank ? 'on' : ''}`}
+                  title="Non rubate: prendete i punti dal banco"
+                  onClick={() => special!.setTarget(special!.bank ? undefined : '')}
+                >
+                  🏦 Dal banco
+                </button>
               </span>
             )}
             {pickVictim && robbable.length === 0 && (

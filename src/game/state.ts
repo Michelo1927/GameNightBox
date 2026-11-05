@@ -41,7 +41,7 @@ export interface Special {
   kind: SpecialKind;
   /** The team whose turn it was when the cell was opened (unset: the cell plays as a normal one). */
   by?: string;
-  /** steal: the team robbed; pass: the team the question was passed to. */
+  /** steal: the team robbed ('' = points taken from the bank); pass: the team the question was passed to. */
   target?: string;
   gift?: Gift;
 }

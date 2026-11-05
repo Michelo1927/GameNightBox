@@ -26,7 +26,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 **✨ Caselle speciali:** alcune caselle nascoste si rivelano
 quando la squadra di turno le apre:
 - **🥷 Furto**: se la squadra risponde giusto, i punti li ruba a una squadra a scelta (+ a sé, − all'altra).
-  Se sbaglia li perde come sempre. Si può rubare solo a chi ha almeno quei punti; se nessuno li ha,
+  Con **🏦 Dal banco** può anche scegliere di non rubare. Se sbaglia li perde come sempre. Si può rubare solo a chi ha almeno quei punti; se nessuno li ha,
   i punti arrivano dal banco.
 - **🎯 Passa la mano**: letta la domanda, la squadra può passarla a un'altra. Se quella indovina prende
   i punti; se sbaglia non perde niente e i punti vanno a chi l'ha passata.
