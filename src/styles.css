@@ -15,9 +15,11 @@
 
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
+html { background: var(--bg); }
 body {
   margin: 0;
-  background: radial-gradient(circle at 50% 0%, #16207a 0%, var(--bg) 60%);
+  /* The glow covers the first screen only, then plain color: repeating it on long pages showed a seam. */
+  background: radial-gradient(circle at 50% 0%, #16207a 0%, var(--bg) 60%) top center / 100% 100vh no-repeat, var(--bg);
   color: var(--text);
   font-family: 'Inter', system-ui, sans-serif;
 }
