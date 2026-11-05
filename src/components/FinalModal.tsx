@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { sounds } from '../game/sounds';
 import type { FinalState, Result, Team } from '../game/state';
 import { findCorrectChoice, type FinalQuestion } from '../quiz/schema';
-import MediaView from './Media';
+import MediaView, { MaybeSplit } from './Media';
 import Timer from './Timer';
 
 interface Props {
@@ -24,6 +24,7 @@ interface Props {
  */
 export default function FinalModal({ final, state, teams, scores, timer, resolveUrl, onChange, onClose }: Props) {
   const [revealed, setRevealed] = useState(false);
+  const split = final.media?.type === 'image' && !!final.choices;
   const maxBet = (t: Team) => Math.max(0, scores[t.id] ?? 0);
   // A team with no points can only bet 0, so the host doesn't have to type it.
   const betOf = (t: Team) => state.bets[t.id] ?? (maxBet(t) === 0 ? 0 : undefined);
@@ -47,6 +48,15 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
     addEventListener('keydown', on);
     return () => removeEventListener('keydown', on);
   }, [onClose, state.stage]);
+
+  const answerBox = (
+    <div className="answer">
+      <div className="answer-label">Risposta</div>
+      <div className={`answer-text ${split ? 'md' : 'lg'}`}>{final.answer}</div>
+      {final.answerMedia && <MediaView media={final.answerMedia} url={resolveUrl(final.answerMedia.src)} />}
+      {final.hostNote && <p className="host-note">📝 {final.hostNote}</p>}
+    </div>
+  );
 
   const setBet = (id: string, text: string) => {
     const bets = { ...state.bets };
@@ -99,25 +109,22 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
         ) : (
           <div className="q-body">
             {final.question && <p className="q-text lg">{final.question}</p>}
-            {final.media && <MediaView media={final.media} url={resolveUrl(final.media.src)} />}
-            {final.rules && <p className="rules">📢 {final.rules}</p>}
+            {final.rules && split && <p className="rules">📢 {final.rules}</p>}
+            {final.media && !split && <MediaView media={final.media} url={resolveUrl(final.media.src)} />}
+            {final.rules && !split && <p className="rules">📢 {final.rules}</p>}
             {final.choices && (
-              <ol className="choices">
-                {final.choices.map((c, i) => (
-                  <li key={i} className={revealed ? (i === findCorrectChoice(final.choices!, final.answer) ? 'correct' : 'dim') : ''}>
-                    <b>{'ABCDEFGH'[i]}</b> {c}
-                  </li>
-                ))}
-              </ol>
+              <MaybeSplit split={split} media={final.media && <MediaView media={final.media} url={resolveUrl(final.media.src)} />}>
+                <ol className="choices">
+                  {final.choices.map((c, i) => (
+                    <li key={i} className={revealed ? (i === findCorrectChoice(final.choices!, final.answer) ? 'correct' : 'dim') : ''}>
+                      <b>{'ABCDEFGH'[i]}</b> {c}
+                    </li>
+                  ))}
+                </ol>
+                {split && revealed && answerBox}
+              </MaybeSplit>
             )}
-            {revealed && (
-              <div className="answer">
-                <div className="answer-label">Risposta</div>
-                <div className="answer-text lg">{final.answer}</div>
-                {final.answerMedia && <MediaView media={final.answerMedia} url={resolveUrl(final.answerMedia.src)} />}
-                {final.hostNote && <p className="host-note">📝 {final.hostNote}</p>}
-              </div>
-            )}
+            {!split && revealed && answerBox}
           </div>
         )}
 

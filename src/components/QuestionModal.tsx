@@ -3,7 +3,7 @@ import { sounds } from '../game/sounds';
 import Timer from './Timer';
 import type { Result, Team } from '../game/state';
 import { findCorrectChoice, type Question } from '../quiz/schema';
-import MediaView from './Media';
+import MediaView, { MaybeSplit } from './Media';
 
 interface Props {
   category: string;
@@ -52,6 +52,8 @@ export default function QuestionModal({ category, question, teams, results, onRe
     return () => removeEventListener('keydown', on, true);
   }, [onClose]);
 
+  // A picture with multiple choice goes side by side: image on the left, options on the right.
+  const split = question.media?.type === 'image' && !!question.choices;
   const correct = question.choices ? findCorrectChoice(question.choices, question.answer) : -1;
   const toggle = (teamId: string, r: Result) => onResult(teamId, results[teamId] === r ? null : r);
   const turnTeam = bet ? bet.team : answering && answering !== 'all' ? answering : undefined;
@@ -60,6 +62,16 @@ export default function QuestionModal({ category, question, teams, results, onRe
   const ordered = bet ? [bet.team] : turnTeam ? [...teams.filter((t) => t.id === turnTeam.id), ...teams.filter((t) => t.id !== turnTeam.id)] : teams;
   const points = bet ? bet.amount : question.points;
   const style = origin ? ({ transformOrigin: `${origin.x}px ${origin.y}px` } as CSSProperties) : undefined;
+
+  const answerBox = (
+    <div className="answer">
+      <div className="answer-label">Risposta</div>
+      <div className={`answer-text ${split ? 'md' : textSize(question.answer)}`}>{question.answer}</div>
+      {question.answerMedia && <MediaView media={question.answerMedia} url={resolveUrl(question.answerMedia.src)} />}
+      {/* Host notes can hint at the answer, so they appear only after the reveal. */}
+      {question.hostNote && <p className="host-note">📝 {question.hostNote}</p>}
+    </div>
+  );
 
   return (
     <div className="overlay question-overlay" style={style}>
@@ -77,27 +89,23 @@ export default function QuestionModal({ category, question, teams, results, onRe
 
         <div className="q-body">
           {question.question && <p className={`q-text ${textSize(question.question)}`}>{question.question}</p>}
-          {question.media && <MediaView media={question.media} url={resolveUrl(question.media.src)} />}
-          {question.rules && <p className="rules">📢 {question.rules}</p>}
+          {question.rules && split && <p className="rules">📢 {question.rules}</p>}
+          {question.media && !split && <MediaView media={question.media} url={resolveUrl(question.media.src)} />}
+          {question.rules && !split && <p className="rules">📢 {question.rules}</p>}
           {question.choices && (
-            <ol className="choices">
-              {question.choices.map((c, i) => (
-                <li key={i} className={revealed && i === correct ? 'correct' : revealed ? 'dim' : ''}>
-                  <b>{LETTERS[i]}</b> {c}
-                </li>
-              ))}
-            </ol>
+            <MaybeSplit split={split} media={question.media && <MediaView media={question.media} url={resolveUrl(question.media.src)} />}>
+              <ol className="choices">
+                {question.choices.map((c, i) => (
+                  <li key={i} className={revealed && i === correct ? 'correct' : revealed ? 'dim' : ''}>
+                    <b>{LETTERS[i]}</b> {c}
+                  </li>
+                ))}
+              </ol>
+              {split && revealed && answerBox}
+            </MaybeSplit>
           )}
 
-          {revealed && (
-            <div className="answer">
-              <div className="answer-label">Risposta</div>
-              <div className={`answer-text ${textSize(question.answer)}`}>{question.answer}</div>
-              {question.answerMedia && <MediaView media={question.answerMedia} url={resolveUrl(question.answerMedia.src)} />}
-              {/* Host notes can hint at the answer, so they appear only after the reveal. */}
-              {question.hostNote && <p className="host-note">📝 {question.hostNote}</p>}
-            </div>
-          )}
+          {!split && revealed && answerBox}
         </div>
 
         <footer className="q-footer">

@@ -1,5 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { youtubeId, type Media } from '../quiz/schema';
+
+/** Image + multiple choice: picture on the left, options on the right (stacked on narrow screens). */
+export function MaybeSplit({ split, media, children }: { split: boolean; media: ReactNode; children: ReactNode }) {
+  if (!split) return <>{children}</>;
+  return (
+    <div className="q-split">
+      {media}
+      <div className="q-side">{children}</div>
+    </div>
+  );
+}
 
 /** `url` is the resolved file URL (ignored for YouTube, which uses media.src). */
 export default function MediaView({ media, url }: { media: Media; url: string }) {
