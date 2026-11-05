@@ -1,0 +1,213 @@
+{
+  "title": "Suoni, loghi e parole",
+  "description": "Libri e citazioni, versi di animali, hit 2000-2010, loghi senza nome e titoli di canzoni tradotti.",
+  "credits": [
+    "Wolf howls.ogg - pubblico dominio (Wikimedia Commons)",
+    "Cicada orni.ogg - DavidDelon, pubblico dominio (Wikimedia Commons)",
+    "161691 felixblume dolphin-screaming-underwater-in-caribbean-sea-mexico.wav - Felix Blume, CC0 (Wikimedia Commons)",
+    "Howler monkey.ogg - David O'Hara, CC BY 3.0 (Wikimedia Commons)",
+    "Dacelo novaeguineae ANWC X00520.opus - V. Powys, CC BY 3.0 (Wikimedia Commons)",
+    "Loghi da Wikimedia Commons (pubblico dominio, marchi dei rispettivi proprietari): Mercedes-Benz Star 2022.svg, Playstation logo colour.svg, Mastercard 2019 logo.svg, Mitsubishi logo.svg, Toyota logo (Red).svg (ritagliato senza scritta)"
+  ],
+  "categories": [
+    {
+      "name": "Letteratura e citazioni",
+      "questions": [
+        {
+          "points": 100,
+          "question": "«Quel ramo del lago di Como, che volge a mezzogiorno…»: con queste parole comincia quale romanzo?",
+          "answer": "I promessi sposi",
+          "hostNote": "Di Alessandro Manzoni."
+        },
+        {
+          "points": 200,
+          "question": "Chi ha scritto «Il fu Mattia Pascal», la storia di un uomo che si finge morto per rifarsi una vita?",
+          "answer": "Luigi Pirandello",
+          "hostNote": "Basta il cognome."
+        },
+        {
+          "points": 300,
+          "question": "«Chiamatemi Ismaele.» Con questa frase comincia un famoso romanzo americano sulla caccia a una balena. Quale?",
+          "answer": "Moby Dick",
+          "hostNote": "Di Herman Melville (1851)."
+        },
+        {
+          "points": 400,
+          "question": "«Tutte le famiglie felici si somigliano; ogni famiglia infelice è infelice a modo suo.» È l'inizio di quale romanzo russo?",
+          "answer": "Anna Karenina",
+          "hostNote": "Di Lev Tolstoj."
+        },
+        {
+          "points": 500,
+          "question": "«Se vogliamo che tutto rimanga com'è, bisogna che tutto cambi.» Da quale romanzo italiano viene questa frase?",
+          "answer": "Il Gattopardo",
+          "hostNote": "Di Giuseppe Tomasi di Lampedusa; la dice Tancredi allo zio, il principe di Salina."
+        }
+      ]
+    },
+    {
+      "name": "Riconosci il verso",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Di quale animale è questo verso?",
+          "answer": "Lupo",
+          "media": { "type": "audio", "src": "verso-1.mp3", "start": 0, "end": 15 }
+        },
+        {
+          "points": 200,
+          "question": "Di quale animale è questo verso?",
+          "answer": "Cicala",
+          "media": { "type": "audio", "src": "verso-2.mp3", "start": 0, "end": 12 },
+          "hostNote": "È un insetto: «grillo» non vale."
+        },
+        {
+          "points": 300,
+          "question": "Di quale animale è questo verso, registrato sott'acqua?",
+          "answer": "Delfino",
+          "media": { "type": "audio", "src": "verso-3.mp3", "start": 0, "end": 15 },
+          "hostNote": "Registrato nel Mar dei Caraibi."
+        },
+        {
+          "points": 400,
+          "question": "Di quale animale è questo verso?",
+          "answer": "Scimmia urlatrice",
+          "media": { "type": "audio", "src": "verso-4.mp3", "start": 0, "end": 15 },
+          "rules": "Non basta «scimmia»: serve quale.",
+          "hostNote": "Accettare anche «aluatta». Si sente a chilometri di distanza nella foresta."
+        },
+        {
+          "points": 500,
+          "question": "Di quale animale è questo verso?",
+          "answer": "Kookaburra",
+          "media": { "type": "audio", "src": "verso-5.mp3" },
+          "hostNote": "Uccello australiano, detto anche «martin pescatore ridente». Accettare entrambi i nomi."
+        }
+      ]
+    },
+    {
+      "name": "Musica 2000-2010",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Titolo e artista?",
+          "answer": "Umbrella - Rihanna",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=xXD5tltX9Pg", "start": 30, "end": 45, "audioOnly": true },
+          "rules": "Servono titolo e artista.",
+          "hostNote": "2007, con Jay-Z. Se il frammento non è quello giusto, fallo partire più avanti."
+        },
+        {
+          "points": 200,
+          "question": "Titolo e gruppo?",
+          "answer": "Mr. Brightside - The Killers",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=m2zUrruKjDQ", "start": 0, "end": 15, "audioOnly": true },
+          "rules": "Servono titolo e gruppo.",
+          "hostNote": "2004."
+        },
+        {
+          "points": 300,
+          "question": "Titolo e artista?",
+          "answer": "Rehab - Amy Winehouse",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=t2TKqJ2FXGM", "start": 18, "end": 32, "audioOnly": true },
+          "rules": "Servono titolo e artista.",
+          "hostNote": "2006. Il frammento salta il ritornello iniziale, che dice il titolo."
+        },
+        {
+          "points": 400,
+          "question": "Titolo e gruppo?",
+          "answer": "Feel Good Inc. - Gorillaz",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=NxxjLD2pmlk", "start": 0, "end": 15, "audioOnly": true },
+          "rules": "Servono titolo e gruppo.",
+          "hostNote": "2005, con i De La Soul."
+        },
+        {
+          "points": 500,
+          "question": "Titolo e gruppo?",
+          "answer": "Take Me Out - Franz Ferdinand",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=d11xns8lE4w", "start": 0, "end": 15, "audioOnly": true },
+          "rules": "Servono titolo e gruppo.",
+          "hostNote": "2004. Attenzione: l'inizio lento è diverso dal resto della canzone, il riff famoso arriva dopo."
+        }
+      ]
+    },
+    {
+      "name": "Loghi senza nome",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Di quale marca è questo logo?",
+          "answer": "Mercedes-Benz",
+          "media": { "type": "image", "src": "logo-1.svg" },
+          "hostNote": "Basta «Mercedes»."
+        },
+        {
+          "points": 200,
+          "question": "Di quale marca è questo logo?",
+          "answer": "PlayStation",
+          "media": { "type": "image", "src": "logo-2.svg" },
+          "hostNote": "Accettare anche «Sony» solo se aggiungono la console."
+        },
+        {
+          "points": 300,
+          "question": "Di quale marca sono questi due cerchi?",
+          "answer": "Mastercard",
+          "media": { "type": "image", "src": "logo-3.svg" }
+        },
+        {
+          "points": 400,
+          "question": "Di quale marca è questo logo?",
+          "answer": "Mitsubishi",
+          "media": { "type": "image", "src": "logo-4.svg" },
+          "hostNote": "In giapponese il nome significa «tre diamanti»."
+        },
+        {
+          "points": 500,
+          "question": "Di quale casa automobilistica è questo logo?",
+          "answer": "Toyota",
+          "media": { "type": "image", "src": "logo-5.svg" },
+          "hostNote": "Le ellissi intrecciate formano anche la lettera T."
+        }
+      ]
+    },
+    {
+      "name": "Canzoni tradotte",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Il titolo è stato tradotto in italiano: «Ragazza materiale». Qual è il titolo originale?",
+          "answer": "Material Girl",
+          "rules": "Serve il titolo originale.",
+          "hostNote": "Madonna, 1984."
+        },
+        {
+          "points": 200,
+          "question": "Il titolo è stato tradotto in italiano: «Autostrada per l'inferno». Qual è il titolo originale?",
+          "answer": "Highway to Hell",
+          "rules": "Serve il titolo originale.",
+          "hostNote": "AC/DC, 1979."
+        },
+        {
+          "points": 300,
+          "question": "Il titolo è stato tradotto in italiano: «Profuma di spirito adolescente». Qual è il titolo originale?",
+          "answer": "Smells Like Teen Spirit",
+          "rules": "Serve il titolo originale.",
+          "hostNote": "Nirvana, 1991. «Teen Spirit» era il nome di un deodorante."
+        },
+        {
+          "points": 400,
+          "question": "Il titolo è stato tradotto in italiano: «Ogni respiro che fai». Qual è il titolo originale?",
+          "answer": "Every Breath You Take",
+          "rules": "Serve il titolo originale.",
+          "hostNote": "The Police, 1983."
+        },
+        {
+          "points": 500,
+          "question": "Il titolo è stato tradotto in italiano: «Fai un giro sul lato selvaggio». Qual è il titolo originale?",
+          "answer": "Walk on the Wild Side",
+          "rules": "Serve il titolo originale.",
+          "hostNote": "Lou Reed, 1972."
+        }
+      ]
+    }
+  ]
+}
