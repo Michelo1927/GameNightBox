@@ -10,7 +10,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 1. Apri il sito e scegli un quiz.
 2. Crea le squadre (nome e colore). L'ordine delle squadre è l'ordine dei turni: si cambia con ▲ ▼
-   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli la durata del timer e quante caselle Raddoppio usare.
+   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli la durata del timer e quante caselle speciali usare.
 3. Clicca una casella, poi:
    - **Spazio**: mostra o nasconde la risposta;
    - **T** (o il pulsante ⏱): fa partire il timer; ripremendo ricomincia, ▾ sceglie un'altra durata, ✕ lo ferma;
@@ -23,9 +23,14 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 6. Il pulsante **⏱** c'è anche sul tabellone (tasto T), per cronometrare quello che vuoi durante la partita.
 7. **⛶** (o **F**) mette lo schermo intero; **🔊/🔇** accende o spegne i suoni.
 
-**🎲 Raddoppio:** alcune caselle nascoste (di default 1, mai tra le 100). Chi la trova scommette da 0
-al proprio punteggio (o fino al valore più alto del tabellone, se ha meno punti) prima di vedere la
-domanda: giusta = vince la puntata, sbagliata = la perde. Risponde solo quella squadra.
+**✨ Caselle speciali:** alcune caselle nascoste (di default 3, da 0 a 5 nelle opzioni) si rivelano
+quando la squadra di turno le apre:
+- **🥷 Furto**: se la squadra risponde giusto, i punti li ruba a una squadra a scelta (+ a sé, − all'altra).
+  Se sbaglia li perde come sempre.
+- **🎯 Passa la mano**: letta la domanda, la squadra può passarla a un'altra. Se quella indovina prende
+  i punti; se sbaglia non perde niente e i punti vanno a chi l'ha passata.
+- **🎁 Imprevisto**: niente domanda, si gira una carta a sorpresa (colpo di fortuna, tasse, festa per
+  tutti, Robin Hood, scambio di punteggio con la squadra davanti, regalo all'ultima).
 
 **🏆 Domanda finale:** si gioca quando tutte le squadre hanno avuto lo stesso numero di turni.
 - Se avanzano caselle (es. 2 squadre: 12 a testa, ne avanza 1), **l'ultima casella rimasta è la

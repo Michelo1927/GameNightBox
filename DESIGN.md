@@ -123,15 +123,20 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 
 1. **Home**: scegli il quiz.
 2. **Setup**: aggiungi le squadre (nome e colore), ordine dei turni (▲ ▼ o sorteggio), opzioni
-   (timer 0-60 s, caselle Raddoppio 0-3).
+   (durata del timer, caselle speciali 0-5).
 3. **Tabellone**: 5 colonne con le categorie, caselle 100–500, punteggi delle squadre in basso.
 4. **Domanda** (click sulla casella): testo e media a schermo intero.
    - `Spazio`: svela la risposta.
    - Per ogni squadra ci sono i bottoni ✅ (+punti) e ❌ (−punti).
    - `T`: timer (tick negli ultimi 5 secondi, suono alla fine).
    - `Esc`: chiude; la casella diventa "giocata" (si può riaprire).
-   - Caselle **Raddoppio** (scelte a caso a inizio partita, salvate nello stato): prima della domanda
-     la squadra di turno scommette; vale solo per lei.
+   - **Caselle speciali** (scelte a caso a inizio partita, salvate nello stato in `specials`): valgono
+     solo se le apre la squadra di turno, che viene salvata in `by`. 🥷 Furto: con risposta giusta la
+     squadra sceglie a chi rubare i punti. 🎯 Passa la mano: la squadra può passare la domanda; chi la
+     riceve non perde punti, se sbaglia i punti vanno a chi l'ha passata. 🎁 Imprevisto: niente domanda,
+     una carta pescata all'apertura (con i punti già calcolati) cambia i punteggi.
+     Il vecchio Raddoppio è stato tolto perché troppo forte (si poteva puntare tutto su una domanda
+     facile); le sue puntate restano lette solo per le partite salvate prima.
 5. **Domanda finale**, quando tutte le squadre hanno avuto lo stesso numero di turni: è l'ultima
    casella avanzata (se 25 non è divisibile per il numero di squadre; le altre avanzate sono per
    tutti), altrimenti la `final` del quiz, se c'è. Puntate inserite dall'host, poi domanda e ✓/✗.

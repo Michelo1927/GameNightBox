@@ -1,5 +1,5 @@
 import { go } from '../nav';
-import { newTeam, pickDoubles, resetGame, settingsOf, TEAM_COLORS, useGame, type Settings, type Team } from '../game/state';
+import { newTeam, pickSpecials, resetGame, settingsOf, TEAM_COLORS, useGame, type Settings, type Team } from '../game/state';
 import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';
 import { TIMER_CHOICES } from '../components/Timer';
@@ -35,9 +35,10 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const setSetting = (patch: Partial<Settings>) =>
     setGame((g) => {
       const next = { ...settingsOf(g), ...patch };
-      // A new number of Raddoppio cells: pick them again among the cells not played yet.
-      const doubles = patch.doubles !== undefined ? pickDoubles(quiz, next.doubles, g.played) : g.doubles;
-      return { ...g, settings: next, doubles };
+      if (patch.specials === undefined) return { ...g, settings: next };
+      // A new number of special cells: pick them again among the cells not played yet (played ones stay).
+      const kept = Object.fromEntries(Object.entries(g.specials ?? {}).filter(([k]) => g.played[k]));
+      return { ...g, settings: next, specials: { ...kept, ...pickSpecials(quiz, next.specials, g.played) } };
     });
 
   return (
@@ -99,10 +100,13 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
           </div>
         </div>
         <div className="option">
-          <span>🎲 Caselle Raddoppio (nascoste: chi le trova scommette i suoi punti)</span>
+          <span>
+            ✨ Caselle speciali nascoste: 🥷 Furto (rubi i punti a chi vuoi), 🎯 Passa la mano (passi la domanda: se l'altra sbaglia, i punti
+            sono tuoi), 🎁 Imprevisto (una carta a sorpresa)
+          </span>
           <div className="seg">
-            {[0, 1, 2, 3].map((n) => (
-              <button key={n} className={settings.doubles === n ? 'on' : ''} onClick={() => setSetting({ doubles: n })}>
+            {[0, 1, 2, 3, 4, 5].map((n) => (
+              <button key={n} className={settings.specials === n ? 'on' : ''} onClick={() => setSetting({ specials: n })}>
                 {n || 'No'}
               </button>
             ))}

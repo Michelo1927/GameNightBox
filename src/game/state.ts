@@ -14,8 +14,34 @@ export interface Team {
 export interface Settings {
   /** Default seconds for the timer (older games may have 0: the timer then uses 30). */
   timer: number;
-  /** How many hidden "Raddoppio" (Daily Double) cells the board has. */
-  doubles: number;
+  /** How many hidden special cells (Furto, Passa la mano, Imprevisto) the board has. */
+  specials: number;
+}
+
+/**
+ * Hidden special cells, revealed when opened by the team whose turn it is:
+ * - steal (Furto): a right answer takes the points from a team of its choice instead of the bank;
+ * - pass (Passa la mano): the team can pass the question to another team; if that team gets it wrong,
+ *   the points go to the team that passed it (the other team loses nothing);
+ * - gift (Imprevisto): no question, a random card changes the scores.
+ */
+export type SpecialKind = 'steal' | 'pass' | 'gift';
+
+export interface Gift {
+  icon: string;
+  title: string;
+  text: string;
+  /** teamId -> points won or lost, computed when the card is drawn. */
+  deltas: Record<string, number>;
+}
+
+export interface Special {
+  kind: SpecialKind;
+  /** The team whose turn it was when the cell was opened (unset: the cell plays as a normal one). */
+  by?: string;
+  /** steal: the team robbed; pass: the team the question was passed to. */
+  target?: string;
+  gift?: Gift;
 }
 
 export interface Bet {
@@ -38,14 +64,14 @@ export interface GameState {
   played: Record<string, boolean>;
   // The fields below were added later: games saved before them don't have them.
   settings?: Settings;
-  /** Cell keys of the Raddoppio cells, picked at random when the game starts. */
-  doubles?: string[];
-  /** cellKey -> the bet of the team that found a Raddoppio cell. */
+  /** cellKey -> special cell, picked at random when the game starts. */
+  specials?: Record<string, Special>;
+  /** Old "Raddoppio" bets (cellKey -> bet), only kept so games saved with them keep their scores. */
   bets?: Record<string, Bet>;
   final?: FinalState;
 }
 
-export const DEFAULT_SETTINGS: Settings = { timer: 30, doubles: 1 };
+export const DEFAULT_SETTINGS: Settings = { timer: 30, specials: 3 };
 export const settingsOf = (g: GameState): Settings => ({ ...DEFAULT_SETTINGS, ...g.settings });
 
 export const TEAM_COLORS = ['#e63946', '#2a9d8f', '#f4a261', '#8e44ad', '#3a86ff', '#ff70a6', '#70e000', '#adb5bd', '#ffbe0b', '#00bbf9'];
@@ -61,38 +87,37 @@ export const newTeam = (i: number): Team => ({
 
 export const emptyGame = (): GameState => ({ teams: [newTeam(0), newTeam(1)], results: {}, played: {} });
 
-/**
- * Picks the Raddoppio cells at random, never in the cheapest row (too easy to be worth a bet)
- * and never among cells already played.
- */
-export function pickDoubles(quiz: Quiz, count: number, played: Record<string, boolean> = {}): string[] {
-  const candidates: string[] = [];
-  quiz.categories.forEach((c, ci) => {
-    const min = Math.min(...c.questions.map((q) => q.points));
-    c.questions.forEach((q, qi) => {
-      if (q.points > min && !played[cellKey(ci, qi)]) candidates.push(cellKey(ci, qi));
-    });
-  });
-  const picked: string[] = [];
-  while (picked.length < count && candidates.length) picked.push(candidates.splice(Math.floor(Math.random() * candidates.length), 1)[0]);
-  return picked;
+export const SPECIAL_KINDS: SpecialKind[] = ['steal', 'pass', 'gift'];
+
+function shuffled<T>(a: T[]): T[] {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
 }
 
-/** New game with the same teams and settings: scores, played cells and Raddoppio cells start over. */
+/** Picks the special cells at random among the cells not played yet, mixing the kinds as evenly as possible. */
+export function pickSpecials(quiz: Quiz, count: number, played: Record<string, boolean> = {}): Record<string, Special> {
+  const free = quiz.categories.flatMap((c, ci) => c.questions.map((_, qi) => cellKey(ci, qi)).filter((k) => !played[k]));
+  const kinds: SpecialKind[] = [];
+  while (kinds.length < count) kinds.push(...shuffled(SPECIAL_KINDS));
+  return Object.fromEntries(shuffled(free).slice(0, count).map((k, i) => [k, { kind: kinds[i] }]));
+}
+
+/** New game with the same teams and settings: scores, played cells and special cells start over. */
 export function resetGame(g: GameState, quiz: Quiz): GameState {
   const settings = settingsOf(g);
   return {
     ...emptyGame(),
     teams: g.teams.map((t) => ({ ...t, adjust: 0 })),
     settings,
-    doubles: pickDoubles(quiz, settings.doubles),
+    specials: pickSpecials(quiz, settings.specials),
   };
 }
 
-/** Highest value on the board: a team with fewer points can still bet up to this. */
-export const maxPoints = (quiz: Quiz) => Math.max(...quiz.categories.flatMap((c) => c.questions.map((q) => q.points)));
-
-/** Points at stake on a cell for a team: its bet on a Raddoppio cell, otherwise the cell value. */
+/** Points at stake on a cell for a team: its bet on an old Raddoppio cell, otherwise the cell value. */
 export function cellPoints(game: GameState, quiz: Quiz, key: string, teamId: string): number {
   const bet = game.bets?.[key];
   if (bet && bet.teamId === teamId) return bet.amount;
@@ -100,16 +125,82 @@ export function cellPoints(game: GameState, quiz: Quiz, key: string, teamId: str
   return quiz.categories[c]?.questions[q]?.points ?? 0;
 }
 
+/** Points won (+) or lost (-) by each team on one cell, special rules included. */
+export function cellDeltas(game: GameState, quiz: Quiz, key: string): Record<string, number> {
+  const sp = game.specials?.[key];
+  if (sp?.kind === 'gift' && sp.by) return sp.gift?.deltas ?? {};
+  const results = game.results[key] ?? {};
+  const deltas: Record<string, number> = {};
+  const add = (id: string, n: number) => (deltas[id] = (deltas[id] ?? 0) + n);
+  const passed = sp?.kind === 'pass' && sp.by && sp.target ? sp : undefined;
+  for (const [id, r] of Object.entries(results)) {
+    const points = cellPoints(game, quiz, key, id);
+    // Passa la mano: the team that received the question loses nothing, its mistake rewards the passer.
+    if (passed && id === passed.target) add(r === 'right' ? id : passed.by!, points);
+    else add(id, r === 'right' ? points : -points);
+  }
+  // Furto: the points of a right answer are taken from the robbed team.
+  if (sp?.kind === 'steal' && sp.by && sp.target && results[sp.by] === 'right') add(sp.target, -cellPoints(game, quiz, key, sp.by));
+  return deltas;
+}
+
 /** Score without the final question (used for the final bets' limit). */
 export function boardScore(team: Team, game: GameState, quiz: Quiz): number {
   let score = team.adjust;
-  for (const [key, byTeam] of Object.entries(game.results)) {
-    const r = byTeam[team.id];
-    if (!r) continue;
-    const points = cellPoints(game, quiz, key, team.id);
-    score += r === 'right' ? points : -points;
-  }
+  const keys = new Set([...Object.keys(game.results), ...Object.keys(game.specials ?? {})]);
+  for (const key of keys) score += cellDeltas(game, quiz, key)[team.id] ?? 0;
   return score;
+}
+
+/**
+ * Draws an Imprevisto card for the team that opened the cell, worth around the cell's value.
+ * Only cards that make sense right now are drawn (e.g. no swap for the team already in the lead).
+ */
+export function drawGift(game: GameState, quiz: Quiz, key: string, teamId: string): Gift {
+  const [c, q] = key.split('-').map(Number);
+  const v = quiz.categories[c]?.questions[q]?.points ?? 100;
+  const half = Math.round(v / 2 / 10) * 10;
+  const scores = game.teams.map((t) => ({ t, s: boardScore(t, game, quiz) }));
+  const me = scores.find((x) => x.t.id === teamId)!;
+  const others = scores.filter((x) => x.t.id !== teamId);
+  const sorted = [...scores].sort((a, b) => b.s - a.s);
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  // The team just ahead: the lowest score higher than mine.
+  const ahead = others.filter((x) => x.s > me.s).sort((a, b) => a.s - b.s)[0];
+  // Who gets a present: the last team, or (if that's me) the lowest of the others.
+  const poorest = [...others].sort((a, b) => a.s - b.s)[0];
+
+  const cards: (Gift | false | undefined)[] = [
+    { icon: '🍀', title: 'Colpo di fortuna', text: `${me.t.name} vince ${v} punti senza rispondere!`, deltas: { [teamId]: v } },
+    { icon: '💸', title: 'Tasse', text: `${me.t.name} paga ${half} punti di tasse.`, deltas: { [teamId]: -half } },
+    {
+      icon: '🎉',
+      title: 'Festa per tutti',
+      text: `Tutte le squadre vincono ${half} punti!`,
+      deltas: Object.fromEntries(game.teams.map((t) => [t.id, half])),
+    },
+    first.s > last.s && {
+      icon: '🏹',
+      title: 'Robin Hood',
+      text: `${first.t.name} (prima) regala ${half} punti a ${last.t.name} (ultima).`,
+      deltas: { [first.t.id]: -half, [last.t.id]: half },
+    },
+    ahead && {
+      icon: '🔄',
+      title: 'Scambio',
+      text: `${me.t.name} scambia il punteggio con ${ahead.t.name}: ${me.s} ⇄ ${ahead.s}.`,
+      deltas: { [teamId]: ahead.s - me.s, [ahead.t.id]: me.s - ahead.s },
+    },
+    poorest && {
+      icon: '🎁',
+      title: 'Regalo',
+      text: `${me.t.name} regala ${half} punti a ${poorest.t.name}.`,
+      deltas: { [teamId]: -half, [poorest.t.id]: half },
+    },
+  ];
+  const valid = cards.filter((x): x is Gift => !!x);
+  return valid[Math.floor(Math.random() * valid.length)];
 }
 
 export function teamScore(team: Team, game: GameState, quiz: Quiz): number {
@@ -181,10 +272,10 @@ export function hasSavedGame(slug: string): boolean {
   return !!g && (Object.keys(g.played).length > 0 || Object.keys(g.results).length > 0);
 }
 
-/** Older saved games have no Raddoppio cells yet: pick them now. */
+/** Older saved games have no special cells yet: pick them now among the cells not played. */
 function withDefaults(g: GameState, quiz: Quiz): GameState {
-  if (g.doubles) return g;
-  return { ...g, doubles: pickDoubles(quiz, settingsOf(g).doubles, g.played) };
+  if (g.specials) return g;
+  return { ...g, specials: pickSpecials(quiz, settingsOf(g).specials, g.played) };
 }
 
 const UNDO_LIMIT = 50;

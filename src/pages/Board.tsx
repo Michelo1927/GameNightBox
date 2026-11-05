@@ -4,8 +4,8 @@ import {
   boardScore,
   cellKey,
   currentTurn,
+  drawGift,
   gameOver,
-  maxPoints,
   resetGame,
   settingsOf,
   teamScore,
@@ -17,7 +17,7 @@ import {
 import { sounds, useMuted } from '../game/sounds';
 import { mediaUrl, type LoadedQuiz } from '../quiz/load';
 import QuestionModal from '../components/QuestionModal';
-import DoubleBet from '../components/DoubleBet';
+import SpecialIntro, { SPECIAL_INFO } from '../components/SpecialIntro';
 import FinalModal from '../components/FinalModal';
 import Ranking from '../components/Ranking';
 import AnimatedNumber from '../components/AnimatedNumber';
@@ -26,7 +26,8 @@ import Timer from '../components/Timer';
 const SCORE_STEP = 50;
 const NEW_FINAL: FinalState = { stage: 'bets', bets: {}, results: {} };
 
-type Open = { c: number; q: number; origin?: { x: number; y: number } };
+/** intro: the special cell's surprise screen comes before the question. */
+type Open = { c: number; q: number; origin?: { x: number; y: number }; intro?: boolean };
 
 export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
@@ -84,8 +85,36 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
       return;
     }
     const r = e.currentTarget.getBoundingClientRect();
-    setOpen({ c, q, origin: { x: r.left + r.width / 2, y: r.top + r.height / 2 } });
+    const origin = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    // A special cell found by the team whose turn it is: remember who found it (and draw the Imprevisto card).
+    const sp = game.specials?.[key];
+    const team = turn.team;
+    if (sp && !game.played[key] && team) {
+      setGame((g) => {
+        const cur = g.specials![key];
+        const gift = cur.kind === 'gift' ? (cur.gift ?? drawGift(g, quiz, key, team.id)) : undefined;
+        return { ...g, specials: { ...g.specials, [key]: { ...cur, by: cur.by ?? team.id, gift } } };
+      });
+      setOpen({ c, q, origin, intro: true });
+      return;
+    }
+    // An Imprevisto already drawn shows its card again (it has no question).
+    setOpen({ c, q, origin, intro: sp?.kind === 'gift' && !!sp.by });
   };
+
+  const setTarget = (key: string, teamId?: string) =>
+    setGame((g) => {
+      const sp = g.specials?.[key];
+      if (!sp) return g;
+      // Taking back a pass also removes the answer of the team it was passed to.
+      let results = g.results;
+      if (sp.kind === 'pass' && sp.target && !teamId) {
+        const byTeam = { ...(g.results[key] ?? {}) };
+        delete byTeam[sp.target];
+        results = { ...g.results, [key]: byTeam };
+      }
+      return { ...g, results, specials: { ...g.specials, [key]: { ...sp, target: teamId } } };
+    });
 
   const close = () => {
     if (open) {
@@ -102,12 +131,13 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
     if (confirm('Azzerare punteggi e caselle giocate? Le squadre restano.')) setGame((g) => resetGame(g, quiz));
   };
 
-  // What the open cell needs: a Raddoppio bet first, or the question.
+  // The open cell's special rule, active only if it was found by a team on its turn.
   const openKey = open ? cellKey(open.c, open.q) : '';
-  const isDouble = !!open && !!game.doubles?.includes(openKey);
-  const bet = open ? game.bets?.[openKey] : undefined;
-  const betTeam = bet ? game.teams.find((t) => t.id === bet.teamId) : undefined;
-  const needsBet = isDouble && !bet && !game.played[openKey] && !!turn.team;
+  const teamById = (id?: string) => game.teams.find((t) => t.id === id);
+  const openSpecial = open ? game.specials?.[openKey] : undefined;
+  const finder = teamById(openSpecial?.by);
+  const special = openSpecial && finder ? openSpecial : undefined;
+  const showIntro = !!open?.intro && !!special;
 
   // The final is either the last leftover cell or the quiz's own final question.
   const finalCell = game.final?.cell?.split('-').map(Number);
@@ -171,7 +201,8 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
             const key = cellKey(c, q);
             const results = game.results[key] ?? {};
             const played = game.played[key];
-            const wasDouble = played && game.bets?.[key];
+            const sp = game.specials?.[key];
+            const shownSpecial = played && sp?.by ? SPECIAL_INFO[sp.kind] : undefined;
             const isFinalCell = game.final?.cell === key || (turn.lastCell && !played);
             return (
               <button
@@ -181,7 +212,11 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
                 onClick={(e) => openCell(c, q, e)}
               >
                 <span className="points">{question.points}</span>
-                {wasDouble && <span className="double-mark" title="Raddoppio">🎲</span>}
+                {shownSpecial && (
+                  <span className="double-mark" title={shownSpecial.name}>
+                    {shownSpecial.icon}
+                  </span>
+                )}
                 {isFinalCell && <span className="double-mark" title="Domanda finale">🏆</span>}
                 <span className="dots">
                   {game.teams
@@ -211,18 +246,19 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
         ))}
       </footer>
 
-      {open && needsBet && turn.team && (
-        <DoubleBet
-          team={turn.team}
+      {open && showIntro && special && finder && (
+        <SpecialIntro
+          special={special}
+          team={finder}
           category={quiz.categories[open.c].name}
           points={quiz.categories[open.c].questions[open.q].points}
-          max={Math.max(boardScore(turn.team, game, quiz), maxPoints(quiz))}
           origin={open.origin}
-          onClose={() => setOpen(null)}
-          onBet={(amount) => setGame((g) => ({ ...g, bets: { ...g.bets, [openKey]: { teamId: turn.team!.id, amount } } }))}
+          onContinue={() => setOpen({ ...open, intro: false })}
+          // The Imprevisto card is the whole cell: closing it plays the cell.
+          onClose={special.kind === 'gift' ? close : () => setOpen(null)}
         />
       )}
-      {open && !needsBet && (
+      {open && !showIntro && special?.kind !== 'gift' && (
         <QuestionModal
           resolveUrl={(src) => mediaUrl(slug, src)}
           category={quiz.categories[open.c].name}
@@ -233,8 +269,12 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           onClose={close}
           answering={game.played[openKey] ? undefined : turn.shared ? 'all' : turn.team}
           timer={settings.timer}
-          bet={bet && betTeam ? { team: betTeam, amount: bet.amount } : undefined}
-          origin={isDouble ? undefined : open.origin}
+          special={
+            special && finder
+              ? { kind: special.kind, by: finder, target: teamById(special.target), setTarget: (id) => setTarget(openKey, id) }
+              : undefined
+          }
+          origin={special ? undefined : open.origin}
         />
       )}
       {showFinal && finalQuestion && (

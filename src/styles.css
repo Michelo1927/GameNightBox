@@ -221,7 +221,7 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .timer.hurry { animation: pulse 1s ease-in-out infinite; }
 .timer.over { background: var(--ko); }
 
-/* ---------- Raddoppio ---------- */
+/* ---------- Special cell surprise screen ---------- */
 .double { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, color-mix(in srgb, var(--team) 35%, var(--cell)) 0%, var(--bg) 75%); }
 .double-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px; text-align: center; max-width: 720px; }
 .double-title { font-family: 'Anton', sans-serif; font-size: clamp(3rem, 11vw, 8rem); color: var(--gold); text-shadow: 4px 5px 0 #000; animation: wobble 0.8s ease-out; }
@@ -341,7 +341,7 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .q-side > .answer { gap: 2px; padding: 6px 14px; }
 .q-side .host-note { font-size: 0.85rem; }
 
-/* ---------- Raddoppio / winner: sized on the screen height too, never cut off ---------- */
+/* ---------- Special cell / winner: sized on the screen height too, never cut off ---------- */
 .double { overflow-y: auto; align-items: safe center; justify-content: safe center; }
 .double-box { gap: min(10px, 1.4vh); padding: min(24px, 3vh) 16px; }
 .double-title { white-space: nowrap; font-size: clamp(2.2rem, min(11vw, 15vh), 8rem); line-height: 1.05; }
@@ -351,3 +351,16 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .double-input { font-size: clamp(1.8rem, 8vh, 3rem); width: 200px; }
 .overlay:has(.ranking) { overflow-y: auto; align-items: safe center; }
 .winner-name { font-size: clamp(2rem, min(7vw, 10vh), 4.5rem); }
+
+/* ---------- Special cells (Furto, Passa la mano, Imprevisto) ---------- */
+.special-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-weight: 700; }
+.special-pick .pick { padding: 6px 12px; border-radius: 999px; border: 2px solid var(--team, var(--line)); background: rgba(0, 0, 0, 0.35); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.special-pick .pick:hover, .special-pick .pick.on { background: var(--team, var(--line)); color: #000; }
+.gift-card { display: flex; flex-direction: column; align-items: center; gap: min(6px, 1vh); padding: min(20px, 2.5vh) 28px; max-width: 520px; border-radius: 16px; background: #fff8e7; color: #222; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: flip-in 0.6s ease-out 0.3s both; }
+.gift-icon { font-size: clamp(2.2rem, 9vh, 4rem); line-height: 1; }
+.gift-title { font-family: 'Anton', sans-serif; font-size: clamp(1.4rem, 5vh, 2.2rem); text-transform: uppercase; }
+.gift-text { margin: 0; font-size: clamp(1rem, 3.2vh, 1.4rem); text-align: center; }
+@keyframes flip-in { from { transform: perspective(600px) rotateY(90deg) scale(0.8); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gift-card { animation: none; } }
+.double-box { max-width: min(760px, 100%); box-sizing: border-box; }
+.double-title { white-space: normal; text-wrap: balance; font-size: clamp(2rem, min(8vw, 13vh), 6rem); }

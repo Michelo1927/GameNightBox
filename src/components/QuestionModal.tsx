@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import { sounds } from '../game/sounds';
 import Timer from './Timer';
 import type { Result, Team } from '../game/state';
+import { SPECIAL_INFO } from './SpecialIntro';
 import { findCorrectChoice, type Question } from '../quiz/schema';
 import MediaView, { MaybeSplit } from './Media';
 
@@ -18,8 +19,8 @@ interface Props {
   answering?: Team | 'all';
   /** Default seconds for the timer. */
   timer?: number;
-  /** Raddoppio: only the betting team plays, for the amount it bet. */
-  bet?: { team: Team; amount: number };
+  /** Furto / Passa la mano: only the team that found the cell plays (or the one it passed it to). */
+  special?: { kind: 'steal' | 'pass'; by: Team; target?: Team; setTarget: (teamId?: string) => void };
   /** Screen point the question grows from (the clicked cell). */
   origin?: { x: number; y: number };
 }
@@ -32,7 +33,7 @@ function textSize(text: string) {
   return 'md';
 }
 
-export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl, answering, timer = 0, bet, origin }: Props) {
+export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl, answering, timer = 0, special, origin }: Props) {
   const [revealed, setRevealed] = useState(false);
   const reveal = () =>
     setRevealed((r) => {
@@ -56,11 +57,16 @@ export default function QuestionModal({ category, question, teams, results, onRe
   const split = question.media?.type === 'image' && !!question.choices;
   const correct = question.choices ? findCorrectChoice(question.choices, question.answer) : -1;
   const toggle = (teamId: string, r: Result) => onResult(teamId, results[teamId] === r ? null : r);
-  const turnTeam = bet ? bet.team : answering && answering !== 'all' ? answering : undefined;
+  const passedTo = special?.kind === 'pass' ? special.target : undefined;
+  const turnTeam = passedTo ?? special?.by ?? (answering && answering !== 'all' ? answering : undefined);
   // The team whose turn it is goes first; the others stay available for the host.
-  // On a Raddoppio only the team that bet can play.
-  const ordered = bet ? [bet.team] : turnTeam ? [...teams.filter((t) => t.id === turnTeam.id), ...teams.filter((t) => t.id !== turnTeam.id)] : teams;
-  const points = bet ? bet.amount : question.points;
+  // On a special cell only the team that found it plays (or the team it was passed to).
+  const ordered = special ? [turnTeam!] : turnTeam ? [...teams.filter((t) => t.id === turnTeam.id), ...teams.filter((t) => t.id !== turnTeam.id)] : teams;
+  const points = question.points;
+  const others = special ? teams.filter((t) => t.id !== special.by.id) : [];
+  // Furto: after a right answer the team picks who to rob. Passa la mano: before answering, it can pass.
+  const pickVictim = special?.kind === 'steal' && results[special.by.id] === 'right' && others.length > 0;
+  const canPass = special?.kind === 'pass' && !passedTo && !results[special.by.id] && others.length > 0;
   const style = origin ? ({ transformOrigin: `${origin.x}px ${origin.y}px` } as CSSProperties) : undefined;
 
   const answerBox = (
@@ -83,8 +89,8 @@ export default function QuestionModal({ category, question, teams, results, onRe
               Risponde <b>{turnTeam.name}</b>
             </span>
           )}
-          {answering === 'all' && !bet && <span className="q-turn shared">🔥 Per tutte le squadre</span>}
-          <span className="q-points">{bet ? `🎲 ${points}` : points}</span>
+          {answering === 'all' && !special && <span className="q-turn shared">🔥 Per tutte le squadre</span>}
+          <span className="q-points">{special ? `${SPECIAL_INFO[special.kind].icon} ${points}` : points}</span>
         </header>
 
         <div className="q-body">
@@ -110,6 +116,14 @@ export default function QuestionModal({ category, question, teams, results, onRe
 
         <footer className="q-footer">
           <div className="q-teams">
+            {passedTo && special && (
+              <span className="special-pick">
+                🎯 Passata da <b>{special.by.name}</b>
+                <button className="pick" onClick={() => special.setTarget()}>
+                  ↩ Annulla
+                </button>
+              </span>
+            )}
             {ordered.map((t) => (
               <div key={t.id} className={`q-team ${turnTeam && t.id !== turnTeam.id ? 'other' : ''}`} style={{ ['--team' as string]: t.color }}>
                 <span className="q-team-name">{t.name}</span>
@@ -121,6 +135,31 @@ export default function QuestionModal({ category, question, teams, results, onRe
                 </button>
               </div>
             ))}
+            {canPass && (
+              <span className="special-pick">
+                🎯 Passa a:
+                {others.map((t) => (
+                  <button key={t.id} className="pick" style={{ ['--team' as string]: t.color }} onClick={() => special!.setTarget(t.id)}>
+                    {t.name}
+                  </button>
+                ))}
+              </span>
+            )}
+            {pickVictim && (
+              <span className="special-pick">
+                🥷 Rubate a:
+                {others.map((t) => (
+                  <button
+                    key={t.id}
+                    className={`pick ${special!.target?.id === t.id ? 'on' : ''}`}
+                    style={{ ['--team' as string]: t.color }}
+                    onClick={() => special!.setTarget(special!.target?.id === t.id ? undefined : t.id)}
+                  >
+                    {t.name}
+                  </button>
+                ))}
+              </span>
+            )}
           </div>
           <div className="q-actions">
             <Timer seconds={timer} />
