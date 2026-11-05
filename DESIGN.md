@@ -132,7 +132,9 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
    - `Esc`: chiude; la casella diventa "giocata" (si può riaprire).
    - Caselle **Raddoppio** (scelte a caso a inizio partita, salvate nello stato): prima della domanda
      la squadra di turno scommette; vale solo per lei.
-5. **Domanda finale** (se il quiz ha `final`): puntate inserite dall'host, poi domanda e ✓/✗.
+5. **Domanda finale**, quando tutte le squadre hanno avuto lo stesso numero di turni: è l'ultima
+   casella avanzata (se 25 non è divisibile per il numero di squadre; le altre avanzate sono per
+   tutti), altrimenti la `final` del quiz, se c'è. Puntate inserite dall'host, poi domanda e ✓/✗.
 6. **Fine**: schermata del vincitore con coriandoli e classifica.
 
 Sempre disponibili: **Annulla** (Ctrl+Z, ultime 50 azioni, solo in memoria), schermo intero (F),

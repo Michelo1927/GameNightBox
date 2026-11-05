@@ -10,6 +10,7 @@ import {
   settingsOf,
   teamScore,
   useGame,
+  usesQuizFinal,
   type FinalState,
   type Result,
 } from '../game/state';
@@ -74,6 +75,13 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   };
 
   const openCell = (c: number, q: number, e: MouseEvent) => {
+    const key = cellKey(c, q);
+    // The last leftover cell (or the cell already used as final) opens as the final question.
+    if (game.final?.cell === key || (turn.lastCell && !game.played[key])) {
+      if (game.final?.cell !== key) setGame((g) => ({ ...g, final: { ...NEW_FINAL, cell: key } }));
+      setShowFinal(true);
+      return;
+    }
     const r = e.currentTarget.getBoundingClientRect();
     setOpen({ c, q, origin: { x: r.left + r.width / 2, y: r.top + r.height / 2 } });
   };
@@ -100,6 +108,16 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   const betTeam = bet ? game.teams.find((t) => t.id === bet.teamId) : undefined;
   const needsBet = isDouble && !bet && !game.played[openKey] && !!turn.team;
 
+  // The final is either the last leftover cell or the quiz's own final question.
+  const finalCell = game.final?.cell?.split('-').map(Number);
+  const finalQuestion = finalCell
+    ? (() => {
+        const cat = quiz.categories[finalCell[0]];
+        const { points: _, ...q } = cat.questions[finalCell[1]];
+        return { ...q, category: cat.name };
+      })()
+    : quiz.final;
+
   return (
     <div className="board-page">
       <header className="board-header">
@@ -111,7 +129,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
         <TurnBadge
           turn={turn}
           over={over}
-          hasFinal={!!quiz.final}
+          hasFinal={usesQuizFinal(game, quiz)}
           onRanking={() => setRanking(over ? 'celebrate' : 'normal')}
           onFinal={() => {
             if (!game.final) setGame((g) => ({ ...g, final: NEW_FINAL }));
@@ -151,15 +169,17 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
             const results = game.results[key] ?? {};
             const played = game.played[key];
             const wasDouble = played && game.bets?.[key];
+            const isFinalCell = game.final?.cell === key || (turn.lastCell && !played);
             return (
               <button
                 key={key}
-                className={`cell ${played ? 'played' : ''}`}
+                className={`cell ${played ? 'played' : ''} ${isFinalCell ? 'final-cell' : ''}`}
                 style={{ animationDelay: `${0.15 + quiz.categories.length * 0.35 + (q * quiz.categories.length + c) * 0.025}s` }}
                 onClick={(e) => openCell(c, q, e)}
               >
                 <span className="points">{question.points}</span>
                 {wasDouble && <span className="double-mark" title="Raddoppio">🎲</span>}
+                {isFinalCell && <span className="double-mark" title="Domanda finale">🏆</span>}
                 <span className="dots">
                   {game.teams
                     .filter((t) => results[t.id])
@@ -177,7 +197,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
 
       <footer className="teams-bar">
         {game.teams.map((t) => (
-          <div key={t.id} className={`team-score ${turn.team?.id === t.id || turn.shared ? 'active' : ''}`} style={{ ['--team' as string]: t.color }}>
+          <div key={t.id} className={`team-score ${turn.team?.id === t.id || turn.shared || turn.lastCell ? 'active' : ''}`} style={{ ['--team' as string]: t.color }}>
             <div className="team-name">{t.name}</div>
             <ScoreEdit score={teamScore(t, game, quiz)} onChange={(delta) => adjust(t.id, delta)} />
             <div className="team-adjust">
@@ -214,15 +234,22 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           origin={isDouble ? undefined : open.origin}
         />
       )}
-      {showFinal && quiz.final && (
+      {showFinal && finalQuestion && (
         <FinalModal
-          final={quiz.final}
+          final={finalQuestion}
           state={game.final ?? NEW_FINAL}
           teams={game.teams}
           scores={Object.fromEntries(game.teams.map((t) => [t.id, boardScore(t, game, quiz)]))}
           timer={settings.timer}
           resolveUrl={(src) => mediaUrl(slug, src)}
-          onChange={(final) => setGame((g) => ({ ...g, final }))}
+          onChange={(final) =>
+            setGame((g) => ({
+              ...g,
+              final,
+              // A board cell used as final counts as played once the final is over.
+              played: final.cell && final.stage === 'done' ? { ...g.played, [final.cell]: true } : g.played,
+            }))
+          }
           onClose={() => setShowFinal(false)}
         />
       )}
@@ -263,6 +290,7 @@ function TurnBadge({ turn, over, hasFinal, onRanking, onFinal }: BadgeProps) {
         🏁 Partita finita: vedi la classifica
       </button>
     );
+  if (turn.lastCell) return <span className="turn-badge final">🏆 Ultima casella: domanda finale con le puntate!</span>;
   if (turn.shared) return <span className="turn-badge shared">🔥 Domanda per tutti!</span>;
   if (!turn.team) return null;
   return (

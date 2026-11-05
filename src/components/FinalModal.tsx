@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { sounds } from '../game/sounds';
 import type { FinalState, Result, Team } from '../game/state';
-import type { FinalQuestion } from '../quiz/schema';
+import { findCorrectChoice, type FinalQuestion } from '../quiz/schema';
 import MediaView from './Media';
 import Timer from './Timer';
 
@@ -101,6 +101,15 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
             {final.question && <p className="q-text lg">{final.question}</p>}
             {final.media && <MediaView media={final.media} url={resolveUrl(final.media.src)} />}
             {final.rules && <p className="rules">📢 {final.rules}</p>}
+            {final.choices && (
+              <ol className="choices">
+                {final.choices.map((c, i) => (
+                  <li key={i} className={revealed ? (i === findCorrectChoice(final.choices!, final.answer) ? 'correct' : 'dim') : ''}>
+                    <b>{'ABCDEFGH'[i]}</b> {c}
+                  </li>
+                ))}
+              </ol>
+            )}
             {revealed && (
               <div className="answer">
                 <div className="answer-label">Risposta</div>

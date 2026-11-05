@@ -123,6 +123,8 @@ Nel riepilogo per l'utente segnala le 1-2 domande di cui sei meno sicuro sul liv
 - Regole per i giocatori in `rules`; suggerimenti per giudicare la risposta in `hostNote`.
 
 ### Domanda finale (facoltativa)
+Si gioca solo quando le 25 caselle si dividono in parti uguali tra le squadre (1 o 5 squadre);
+negli altri casi la domanda finale è l'ultima casella rimasta del tabellone.
 Se l'utente la chiede, o se il quiz è per una serata "importante", aggiungi `final` (vedi
 `FinalQuestion` in `schema.ts`): `category` (si vede prima delle puntate), `question`, `answer` e i soliti
 campi facoltativi. Livello: come un 500 difficile ma "giusto", con una risposta univoca. Proponila

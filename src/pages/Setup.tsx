@@ -1,6 +1,7 @@
 import { go } from '../nav';
 import { newTeam, pickDoubles, resetGame, settingsOf, TEAM_COLORS, useGame, type Settings, type Team } from '../game/state';
 import type { LoadedQuiz } from '../quiz/load';
+import type { Quiz } from '../quiz/schema';
 
 export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
@@ -106,7 +107,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
             ))}
           </div>
         </div>
-        {quiz.final && <p className="muted">🏆 Questo quiz ha una domanda finale: si gioca dopo l'ultima casella.</p>}
+        <p className="muted">🏆 {finalInfo(quiz, game.teams.length)}</p>
       </div>
 
       <div className="setup-actions">
@@ -121,4 +122,16 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       </div>
     </div>
   );
+}
+
+/** How the game ends with this many teams (see currentTurn). */
+function finalInfo(quiz: Quiz, teams: number): string {
+  const total = quiz.categories.reduce((n, c) => n + c.questions.length, 0);
+  if (teams === 0) return '';
+  const each = Math.floor(total / teams);
+  const left = total - each * teams;
+  const turns = `Con ${teams} squadre: ${each} domande a testa`;
+  if (left === 0) return quiz.final ? `${turns}, poi la domanda finale del quiz con le puntate.` : `${turns}. Questo quiz non ha una domanda finale.`;
+  if (left === 1) return `${turns}; l'ultima casella rimasta è la domanda finale, con le puntate.`;
+  return `${turns}, poi ${left - 1} per tutti; l'ultima casella rimasta è la domanda finale, con le puntate.`;
 }

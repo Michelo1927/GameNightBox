@@ -25,6 +25,8 @@ export interface Bet {
 
 export interface FinalState {
   stage: 'bets' | 'question' | 'done';
+  /** Set when the final is the last leftover cell of the board instead of the quiz's own final question. */
+  cell?: string;
   bets: Record<string, number>;
   results: Record<string, Result>;
 }
@@ -124,13 +126,17 @@ export interface Turn {
   shared?: boolean;
   /** Every cell has been played. */
   finished?: boolean;
+  /** Only the last leftover cell remains: it is played as the final question, with bets. */
+  lastCell?: boolean;
   played: number;
   total: number;
 }
 
 /**
  * Teams take turns in order; each gets floor(total / teams) questions.
- * The remaining questions (e.g. the 25th with 2 or 3 teams) are shared by everyone.
+ * The remaining questions are shared by everyone, and the very last one is the final question
+ * (with bets): e.g. 2 teams = 12 turns each + the 25th as final; 7 teams = 3 each, 3 shared, 1 final.
+ * When nothing is left over (5 teams) the quiz's own final question is played, if it has one.
  * Derived from how many cells were played, so it survives reloads and re-opening a cell.
  */
 export function currentTurn(game: GameState, quiz: Quiz): Turn {
@@ -139,12 +145,25 @@ export function currentTurn(game: GameState, quiz: Quiz): Turn {
   const n = game.teams.length;
   if (played >= total) return { finished: true, played, total };
   if (n === 0) return { played, total };
-  if (played >= Math.floor(total / n) * n) return { shared: true, played, total };
+  if (played >= Math.floor(total / n) * n) {
+    if (total - played === 1) return { lastCell: true, played, total };
+    return { shared: true, played, total };
+  }
   return { team: game.teams[played % n], played, total };
 }
 
-/** The whole game is over: board done and, if the quiz has one, the final question played. */
-export const gameOver = (game: GameState, quiz: Quiz) => !!currentTurn(game, quiz).finished && (!quiz.final || game.final?.stage === 'done');
+/** The quiz's own final question is played only when the board splits evenly between the teams. */
+export function usesQuizFinal(game: GameState, quiz: Quiz): boolean {
+  const total = quiz.categories.reduce((n, c) => n + c.questions.length, 0);
+  return !!quiz.final && game.teams.length > 0 && total % game.teams.length === 0;
+}
+
+/** The whole game is over: board done and the final question (if any) played. */
+export function gameOver(game: GameState, quiz: Quiz): boolean {
+  if (!currentTurn(game, quiz).finished) return false;
+  if (game.final?.cell) return game.final.stage === 'done';
+  return !usesQuizFinal(game, quiz) || game.final?.stage === 'done';
+}
 
 const storageKey = (slug: string) => `jeopardy-quiz:game:${slug}`;
 

@@ -39,6 +39,7 @@ export interface FinalQuestion {
   answer: string;
   media?: Media;
   answerMedia?: Media;
+  choices?: string[];
   rules?: string;
   hostNote?: string;
 }

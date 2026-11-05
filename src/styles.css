@@ -267,3 +267,4 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
   .board.intro .cat-cell, .board.intro .cell, .question-overlay, .double-title, .winner-name { animation: none; }
   .confetti { display: none; }
 }
+.cell.final-cell { box-shadow: 0 0 0 3px var(--gold), 0 0 28px rgba(255, 204, 0, 0.55); animation: pulse 1.4s ease-in-out infinite; }

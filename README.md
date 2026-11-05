@@ -26,15 +26,20 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 al proprio punteggio (o fino al valore più alto del tabellone, se ha meno punti) prima di vedere la
 domanda: giusta = vince la puntata, sbagliata = la perde. Risponde solo quella squadra.
 
-**🏆 Domanda finale:** se il quiz ne ha una, dopo l'ultima casella compare il pulsante *Domanda finale!*.
+**🏆 Domanda finale:** si gioca quando tutte le squadre hanno avuto lo stesso numero di turni.
+- Se avanzano caselle (es. 2 squadre: 12 a testa, ne avanza 1), **l'ultima casella rimasta è la
+  domanda finale**; le eventuali altre caselle avanzate si giocano prima, per tutti
+  (es. 7 squadre: 3 a testa, 3 per tutti, 1 finale).
+- Se non avanza niente (es. 5 squadre: 5 a testa), si gioca la domanda finale del quiz, se ce l'ha.
+
 Si vede solo la categoria; ogni squadra scrive su un foglio quanto scommette (da 0 al proprio
 punteggio) e l'host inserisce le puntate. Poi domanda, risposta e ✓/✗ per ogni squadra.
-Alla fine parte la schermata del vincitore.
+Alla fine parte la schermata del vincitore. La pagina delle squadre dice come finirà la partita.
 
 **Turni:** le squadre giocano a turno, nell'ordine della pagina delle squadre. La squadra di turno
 (evidenziata) sceglie una casella e risponde; chiusa la domanda, tocca alla squadra successiva.
-Ogni squadra ha lo stesso numero di domande: quelle che avanzano alla fine (es. la 25ª con 2 o 3
-squadre) sono **per tutti**. Riaprire una domanda già giocata non fa avanzare il turno.
+Ogni squadra ha lo stesso numero di domande: quelle che avanzano alla fine sono **per tutti**, e
+l'ultima è la domanda finale. Riaprire una domanda già giocata non fa avanzare il turno.
 
 La partita è salvata nel browser: ricaricando la pagina non si perde nulla.
 
