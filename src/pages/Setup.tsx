@@ -13,6 +13,8 @@ import {
   type Team,
 } from '../game/state';
 import { SPECIAL_INFO } from '../components/SpecialIntro';
+import OrderWheel from '../components/OrderWheel';
+import { useState } from 'react';
 
 const SPECIAL_HELP: Record<SpecialKind, string> = {
   steal: 'con la risposta giusta rubi i punti a una squadra a scelta',
@@ -42,15 +44,14 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       [teams[i], teams[i + d]] = [teams[i + d], teams[i]];
       return { ...g, teams };
     });
-  const shuffle = () =>
-    setGame((g) => {
-      const teams = [...g.teams];
-      for (let i = teams.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [teams[i], teams[j]] = [teams[j], teams[i]];
-      }
-      return { ...g, teams };
-    });
+  const [wheel, setWheel] = useState(false);
+  const play = () => go(`/q/${slug}/play`);
+  // A new game with several teams starts with the wheel that draws the order.
+  const start = () => (!inProgress && game.teams.length > 1 ? setWheel(true) : play());
+  const startWith = (order: Team[]) => {
+    setGame((g) => ({ ...g, teams: order }));
+    play();
+  };
   const setSetting = (patch: Partial<Settings>) =>
     setGame((g) => {
       const next = { ...settingsOf(g), ...patch };
@@ -66,7 +67,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       {quiz.description && <p className="muted">{quiz.description}</p>}
 
       <h2>Squadre</h2>
-      <p className="muted">Si gioca a turno in quest'ordine: la prima squadra inizia.</p>
+      <p className="muted">Si gioca a turno: l'ordine lo decide la ruota quando inizi la partita.</p>
       <div className="team-list">
         {game.teams.map((t, i) => (
           <div className="team-row" key={t.id} style={{ borderColor: t.color }}>
@@ -96,11 +97,6 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
         {game.teams.length < 10 && (
           <button className="btn ghost" onClick={add}>
             + Aggiungi squadra
-          </button>
-        )}
-        {game.teams.length > 1 && (
-          <button className="btn ghost" onClick={shuffle}>
-            🎲 Sorteggia l'ordine
           </button>
         )}
       </div>
@@ -141,7 +137,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       </div>
 
       <div className="setup-actions">
-        <button className="btn primary big" onClick={() => go(`/q/${slug}/play`)} disabled={game.teams.length === 0}>
+        <button className="btn primary big" onClick={start} disabled={game.teams.length === 0}>
           {inProgress ? 'Continua la partita' : 'Inizia la partita'}
         </button>
         {inProgress && (
@@ -150,6 +146,8 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
           </button>
         )}
       </div>
+
+      {wheel && <OrderWheel teams={game.teams} onDone={startWith} onSkip={play} onClose={() => setWheel(false)} />}
     </div>
   );
 }

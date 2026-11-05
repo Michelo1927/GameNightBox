@@ -122,8 +122,10 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 ## Flusso di gioco (schermo TV/proiettore)
 
 1. **Home**: scegli il quiz.
-2. **Setup**: aggiungi le squadre (nome e colore), ordine dei turni (▲ ▼ o sorteggio), opzioni
-   (durata del timer, quante caselle speciali di ogni tipo, 0-5).
+2. **Setup**: aggiungi le squadre (nome e colore), opzioni (durata del timer, quante caselle
+   speciali di ogni tipo, 0-5). Prima del tabellone, una ruota della fortuna estrae l'ordine dei turni una
+   squadra alla volta (si può saltare e tenere l'ordine della lista, modificabile con ▲ ▼). Compare solo a
+   partita nuova con almeno due squadre.
 3. **Tabellone**: 5 colonne con le categorie, caselle 100–500, punteggi delle squadre in basso.
 4. **Domanda** (click sulla casella): testo e media a schermo intero.
    - `Spazio`: svela la risposta.

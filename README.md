@@ -9,8 +9,9 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 ## Giocare
 
 1. Apri il sito e scegli un quiz.
-2. Crea le squadre (nome e colore). L'ordine delle squadre è l'ordine dei turni: si cambia con ▲ ▼
-   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli la durata del timer e quante caselle speciali di ogni tipo usare (da 0 a 5, di default una per tipo).
+2. Crea le squadre (nome e colore). Nelle **Opzioni** scegli la durata del timer e quante caselle speciali di ogni tipo usare (da 0 a 5, di default una per tipo).
+   Con **Inizia la partita** compare la **🎡 ruota**: a ogni giro esce la squadra che gioca per prima, poi la seconda, e così via
+   (oppure salti e tieni l'ordine della lista, che si cambia con ▲ ▼).
 3. Clicca una casella, poi:
    - **Spazio**: mostra o nasconde la risposta;
    - **T** (o il pulsante ⏱): fa partire il timer; ripremendo ricomincia, ▾ sceglie un'altra durata, ✕ lo ferma;
@@ -43,7 +44,7 @@ Si vede solo la categoria; ogni squadra scrive su un foglio quanto scommette (da
 punteggio) e l'host inserisce le puntate. Poi domanda, risposta e ✓/✗ per ogni squadra.
 Alla fine parte la schermata del vincitore. La pagina delle squadre dice come finirà la partita.
 
-**Turni:** le squadre giocano a turno, nell'ordine della pagina delle squadre. La squadra di turno
+**Turni:** le squadre giocano a turno, nell'ordine estratto dalla ruota (o in quello della lista delle squadre). La squadra di turno
 (evidenziata) sceglie una casella e risponde; chiusa la domanda, tocca alla squadra successiva.
 Ogni squadra ha lo stesso numero di domande: quelle che avanzano alla fine sono **per tutti**, e
 l'ultima è la domanda finale. Riaprire una domanda già giocata non fa avanzare il turno.
