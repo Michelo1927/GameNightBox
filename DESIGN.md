@@ -123,7 +123,7 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 
 1. **Home**: scegli il quiz.
 2. **Setup**: aggiungi le squadre (nome e colore), ordine dei turni (▲ ▼ o sorteggio), opzioni
-   (durata del timer, caselle speciali 0-5).
+   (durata del timer, quante caselle speciali di ogni tipo, 0-5).
 3. **Tabellone**: 5 colonne con le categorie, caselle 100–500, punteggi delle squadre in basso.
 4. **Domanda** (click sulla casella): testo e media a schermo intero.
    - `Spazio`: svela la risposta.

@@ -14,9 +14,11 @@ export interface Team {
 export interface Settings {
   /** Default seconds for the timer (older games may have 0: the timer then uses 30). */
   timer: number;
-  /** How many hidden special cells (Furto, Passa la mano, Imprevisto) the board has. */
-  specials: number;
+  /** How many hidden special cells of each kind (Furto, Passa la mano, Imprevisto) the board has. */
+  specialCounts: SpecialCounts;
 }
+
+export type SpecialCounts = Record<SpecialKind, number>;
 
 /**
  * Hidden special cells, revealed when opened by the team whose turn it is:
@@ -71,8 +73,12 @@ export interface GameState {
   final?: FinalState;
 }
 
-export const DEFAULT_SETTINGS: Settings = { timer: 30, specials: 3 };
-export const settingsOf = (g: GameState): Settings => ({ ...DEFAULT_SETTINGS, ...g.settings });
+export const DEFAULT_SETTINGS: Settings = { timer: 30, specialCounts: { steal: 1, pass: 1, gift: 1 } };
+export const settingsOf = (g: GameState): Settings => ({
+  ...DEFAULT_SETTINGS,
+  ...g.settings,
+  specialCounts: { ...DEFAULT_SETTINGS.specialCounts, ...g.settings?.specialCounts },
+});
 
 export const TEAM_COLORS = ['#e63946', '#2a9d8f', '#f4a261', '#8e44ad', '#3a86ff', '#ff70a6', '#70e000', '#adb5bd', '#ffbe0b', '#00bbf9'];
 
@@ -98,12 +104,26 @@ function shuffled<T>(a: T[]): T[] {
   return b;
 }
 
-/** Picks the special cells at random among the cells not played yet, mixing the kinds as evenly as possible. */
-export function pickSpecials(quiz: Quiz, count: number, played: Record<string, boolean> = {}): Record<string, Special> {
+export const MAX_PER_KIND = 5;
+
+/**
+ * Places the special cells at random among the cells not played yet, as many of each kind as the settings say.
+ * The special cells already played are kept and count towards their kind.
+ */
+export function pickSpecials(
+  quiz: Quiz,
+  counts: SpecialCounts,
+  played: Record<string, boolean> = {},
+  old: Record<string, Special> = {},
+): Record<string, Special> {
+  const kept = Object.fromEntries(Object.entries(old).filter(([k]) => played[k]));
+  const kinds = SPECIAL_KINDS.flatMap((kind) => {
+    const done = Object.values(kept).filter((s) => s.kind === kind).length;
+    return Array<SpecialKind>(Math.max(0, counts[kind] - done)).fill(kind);
+  });
   const free = quiz.categories.flatMap((c, ci) => c.questions.map((_, qi) => cellKey(ci, qi)).filter((k) => !played[k]));
-  const kinds: SpecialKind[] = [];
-  while (kinds.length < count) kinds.push(...shuffled(SPECIAL_KINDS));
-  return Object.fromEntries(shuffled(free).slice(0, count).map((k, i) => [k, { kind: kinds[i] }]));
+  const picked = shuffled(free).slice(0, kinds.length).map((k, i): [string, Special] => [k, { kind: kinds[i] }]);
+  return { ...kept, ...Object.fromEntries(picked) };
 }
 
 /** New game with the same teams and settings: scores, played cells and special cells start over. */
@@ -113,7 +133,7 @@ export function resetGame(g: GameState, quiz: Quiz): GameState {
     ...emptyGame(),
     teams: g.teams.map((t) => ({ ...t, adjust: 0 })),
     settings,
-    specials: pickSpecials(quiz, settings.specials),
+    specials: pickSpecials(quiz, settings.specialCounts),
   };
 }
 
@@ -275,7 +295,7 @@ export function hasSavedGame(slug: string): boolean {
 /** Older saved games have no special cells yet: pick them now among the cells not played. */
 function withDefaults(g: GameState, quiz: Quiz): GameState {
   if (g.specials) return g;
-  return { ...g, specials: pickSpecials(quiz, settingsOf(g).specials, g.played) };
+  return { ...g, specials: pickSpecials(quiz, settingsOf(g).specialCounts, g.played) };
 }
 
 const UNDO_LIMIT = 50;

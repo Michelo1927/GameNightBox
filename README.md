@@ -10,7 +10,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 1. Apri il sito e scegli un quiz.
 2. Crea le squadre (nome e colore). L'ordine delle squadre è l'ordine dei turni: si cambia con ▲ ▼
-   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli la durata del timer e quante caselle speciali usare.
+   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli la durata del timer e quante caselle speciali di ogni tipo usare (da 0 a 5, di default una per tipo).
 3. Clicca una casella, poi:
    - **Spazio**: mostra o nasconde la risposta;
    - **T** (o il pulsante ⏱): fa partire il timer; ripremendo ricomincia, ▾ sceglie un'altra durata, ✕ lo ferma;
@@ -23,7 +23,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 6. Il pulsante **⏱** c'è anche sul tabellone (tasto T), per cronometrare quello che vuoi durante la partita.
 7. **⛶** (o **F**) mette lo schermo intero; **🔊/🔇** accende o spegne i suoni.
 
-**✨ Caselle speciali:** alcune caselle nascoste (di default 3, da 0 a 5 nelle opzioni) si rivelano
+**✨ Caselle speciali:** alcune caselle nascoste si rivelano
 quando la squadra di turno le apre:
 - **🥷 Furto**: se la squadra risponde giusto, i punti li ruba a una squadra a scelta (+ a sé, − all'altra).
   Se sbaglia li perde come sempre.

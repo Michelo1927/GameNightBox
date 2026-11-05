@@ -1,5 +1,24 @@
 import { go } from '../nav';
-import { newTeam, pickSpecials, resetGame, settingsOf, TEAM_COLORS, useGame, type Settings, type Team } from '../game/state';
+import {
+  MAX_PER_KIND,
+  newTeam,
+  pickSpecials,
+  resetGame,
+  settingsOf,
+  SPECIAL_KINDS,
+  TEAM_COLORS,
+  useGame,
+  type Settings,
+  type SpecialKind,
+  type Team,
+} from '../game/state';
+import { SPECIAL_INFO } from '../components/SpecialIntro';
+
+const SPECIAL_HELP: Record<SpecialKind, string> = {
+  steal: 'con la risposta giusta rubi i punti a una squadra a scelta',
+  pass: "puoi passare la domanda: se l'altra squadra sbaglia, i punti sono tuoi",
+  gift: 'niente domanda, una carta a sorpresa cambia i punteggi',
+};
 import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';
 import { TIMER_CHOICES } from '../components/Timer';
@@ -35,10 +54,9 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const setSetting = (patch: Partial<Settings>) =>
     setGame((g) => {
       const next = { ...settingsOf(g), ...patch };
-      if (patch.specials === undefined) return { ...g, settings: next };
-      // A new number of special cells: pick them again among the cells not played yet (played ones stay).
-      const kept = Object.fromEntries(Object.entries(g.specials ?? {}).filter(([k]) => g.played[k]));
-      return { ...g, settings: next, specials: { ...kept, ...pickSpecials(quiz, next.specials, g.played) } };
+      if (!patch.specialCounts) return { ...g, settings: next };
+      // New numbers of special cells: place them again among the cells not played yet (played ones stay).
+      return { ...g, settings: next, specials: pickSpecials(quiz, next.specialCounts, g.played, g.specials) };
     });
 
   return (
@@ -99,19 +117,25 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
             ))}
           </div>
         </div>
-        <div className="option">
-          <span>
-            ✨ Caselle speciali nascoste: 🥷 Furto (rubi i punti a chi vuoi), 🎯 Passa la mano (passi la domanda: se l'altra sbaglia, i punti
-            sono tuoi), 🎁 Imprevisto (una carta a sorpresa)
-          </span>
-          <div className="seg">
-            {[0, 1, 2, 3, 4, 5].map((n) => (
-              <button key={n} className={settings.specials === n ? 'on' : ''} onClick={() => setSetting({ specials: n })}>
-                {n || 'No'}
-              </button>
-            ))}
+        <p className="muted">✨ Caselle speciali, nascoste nel tabellone: quante di ognuna?</p>
+        {SPECIAL_KINDS.map((kind) => (
+          <div className="option" key={kind}>
+            <span>
+              {SPECIAL_INFO[kind].icon} <b>{SPECIAL_INFO[kind].name}</b>: {SPECIAL_HELP[kind]}
+            </span>
+            <div className="seg">
+              {Array.from({ length: MAX_PER_KIND + 1 }, (_, n) => (
+                <button
+                  key={n}
+                  className={settings.specialCounts[kind] === n ? 'on' : ''}
+                  onClick={() => setSetting({ specialCounts: { ...settings.specialCounts, [kind]: n } })}
+                >
+                  {n || 'No'}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
         <p className="muted">🏆 {finalInfo(quiz, game.teams.length)}</p>
       </div>
 
