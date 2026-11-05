@@ -1,12 +1,15 @@
 // Checks every quizzes/<slug>/quiz.json: format, and that referenced media files exist.
-// Usage: npm run validate            (all quizzes)
-//        npm run validate -- <slug>  (one quiz)
+// Usage: npm run validate                     (all quizzes)
+//        npm run validate -- <slug>           (one quiz)
+//        npm run validate -- <slug> --online  (also checks YouTube links and prints the video titles)
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { localMediaFiles, validateQuiz, type Quiz } from '../src/quiz/schema';
+import { localMediaFiles, validateQuiz, youtubeId, type Quiz } from '../src/quiz/schema';
 
 const root = join(import.meta.dirname, '..', 'quizzes');
-const only = process.argv[2];
+const args = process.argv.slice(2);
+const online = args.includes('--online');
+const only = args.find((a) => !a.startsWith('--'));
 const slugs = readdirSync(root, { withFileTypes: true })
   .filter((d) => d.isDirectory() && (!only || d.name === only))
   .map((d) => d.name);
@@ -14,6 +17,16 @@ const slugs = readdirSync(root, { withFileTypes: true })
 if (only && slugs.length === 0) {
   console.error(`Quiz "${only}" non trovato in quizzes/`);
   process.exit(1);
+}
+
+/** Looks a video up via YouTube oEmbed: returns its title, or an error message. */
+async function checkYouTube(src: string): Promise<{ title?: string; error?: string }> {
+  const id = youtubeId(src);
+  const res = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`);
+  if (res.status === 401 || res.status === 403) return { error: 'il video non può essere incorporato in altri siti' };
+  if (!res.ok) return { error: 'video inesistente o privato' };
+  const data = (await res.json()) as { title: string; author_name: string };
+  return { title: `${data.title} (${data.author_name})` };
 }
 
 let failed = 0;
@@ -33,14 +46,30 @@ for (const slug of slugs) {
     continue;
   }
   const { errors, warnings } = validateQuiz(data);
+  const info: string[] = [];
   if (errors.length === 0) {
-    for (const src of localMediaFiles(data as Quiz)) {
+    const quiz = data as Quiz;
+    for (const src of localMediaFiles(quiz)) {
       if (!existsSync(join(root, slug, src))) errors.push(`file media mancante: ${src}`);
+    }
+    if (online) {
+      for (const cat of quiz.categories) for (const q of cat.questions) for (const m of [q.media, q.answerMedia]) {
+        if (m?.type !== 'youtube') continue;
+        const where = `${cat.name} ${q.points}`;
+        try {
+          const r = await checkYouTube(m.src);
+          if (r.error) errors.push(`${where}: YouTube ${m.src} - ${r.error}`);
+          else info.push(`${where}: YouTube → ${r.title}`);
+        } catch (e) {
+          warnings.push(`${where}: impossibile verificare ${m.src} (${(e as Error).message})`);
+        }
+      }
     }
   }
   console.log(`${errors.length ? '✗' : '✓'} ${slug}`);
   for (const e of errors) console.log(`   errore: ${e}`);
   for (const w of warnings) console.log(`   avviso: ${w}`);
+  for (const i of info) console.log(`   ${i}`);
   if (errors.length) failed++;
 }
 

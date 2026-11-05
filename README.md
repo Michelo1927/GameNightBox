@@ -18,7 +18,24 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 La partita è salvata nel browser: ricaricando la pagina non si perde nulla.
 
-## Creare un quiz
+## Creare un quiz con Claude
+
+Apri la cartella del progetto con Claude Code e usa la skill `/crea-quiz`:
+
+```
+/crea-quiz tema: cena di Natale con la famiglia
+/crea-quiz categorie: Musica anni 80, Pokémon, Geografia, Cucina, Film Disney
+/crea-quiz tema: Halloween  pubblico: amici 25-30 anni  media: tante canzoni
+```
+
+- Con **tema**, Claude sceglie le 5 categorie e scrive le 25 domande.
+- Con **categorie**, Claude usa le tue categorie e scrive solo le domande.
+
+Le domande sono ordinate per difficoltà (100 facile → 500 difficile). Claude può aggiungere immagini
+libere da Wikimedia e canzoni da YouTube ("solo audio"), verifica i link, ti mostra il tabellone e,
+quando approvi, lo pubblica.
+
+## Creare un quiz a mano
 
 Ogni quiz è una cartella in `quizzes/` con un file `quiz.json` e i suoi media:
 
@@ -35,7 +52,8 @@ c'è [quizzes/esempio/quiz.json](quizzes/esempio/quiz.json).
 Prima di pubblicare, controlla il quiz con:
 
 ```bash
-npm run validate
+npm run validate                    # tutti i quiz
+npm run validate -- <slug> --online # un quiz, controllando anche i link YouTube
 ```
 
 ## Sviluppo
