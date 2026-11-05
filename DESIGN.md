@@ -121,12 +121,13 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 
 ## Editor locale
 
-- Si avvia con `npm run dev` e si apre `/editor`.
-- Crea un nuovo quiz o modifica un quiz esistente con una griglia 5×5 identica al tabellone.
-- Ogni casella ha un form: testo, risposta, scelte, nota, e media con drag & drop dei file.
-- Un piccolo plugin di Vite, attivo **solo in sviluppo**, scrive `quiz.json` e i media nella
-  cartella del quiz. Il sito pubblicato non contiene l'editor.
-- Pulsante "Prova" per giocare subito il quiz.
+- Si avvia con `npm run dev` e si apre `/editor.html` (pagina separata dal gioco, non pubblicata).
+- Crea un nuovo quiz o ne modifica uno esistente con una griglia identica al tabellone.
+- Ogni casella ha un form: testo, risposta, scelte, nota, e media con drag & drop o incolla.
+- Il plugin `vite-plugin-editor.ts` (attivo **solo in sviluppo**) scrive `quiz.json` e i media nella
+  cartella del quiz. È una pagina a sé perché non importa l'elenco dei quiz: così il ricaricamento
+  automatico che parte quando salvi o carichi un file non resetta l'editor.
+- Pulsanti "Anteprima" (singola domanda) e "Prova" (quiz salvato).
 - Per pubblicare: `git commit` + `git push` (oppure lo fa Claude).
 
 ## Skill Claude: `/crea-quiz`

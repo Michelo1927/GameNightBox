@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { mediaUrl } from '../quiz/load';
 import { youtubeId, type Media } from '../quiz/schema';
 
-export default function MediaView({ slug, media }: { slug: string; media: Media }) {
-  const url = mediaUrl(slug, media);
-  if (!url) return <div className="media-missing">File non trovato: {media.src}</div>;
+/** `url` is the resolved file URL (ignored for YouTube, which uses media.src). */
+export default function MediaView({ media, url }: { media: Media; url: string }) {
+  if (!url && media.type !== 'youtube') return <div className="media-missing">File non trovato: {media.src}</div>;
 
   let content;
   if (media.type === 'image') content = <ZoomImage src={url} alt={media.caption ?? ''} />;

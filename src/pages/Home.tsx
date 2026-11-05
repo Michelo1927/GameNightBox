@@ -7,6 +7,9 @@ export default function Home() {
       <header className="home-header">
         <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>
         <p className="muted">Scegli un quiz per iniziare</p>
+        {import.meta.env.DEV && (
+          <a className="btn ghost" href="/editor.html">✏️ Editor quiz</a>
+        )}
       </header>
       <div className="quiz-grid">
         {quizzes.map(({ slug, quiz, errors }) => (

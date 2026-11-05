@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { go } from '../nav';
 import { cellKey, emptyGame, teamScore, useGame, type Result } from '../game/state';
-import type { LoadedQuiz } from '../quiz/load';
+import { mediaUrl, type LoadedQuiz } from '../quiz/load';
 import QuestionModal from '../components/QuestionModal';
 import Ranking from '../components/Ranking';
 
@@ -101,7 +101,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
 
       {open && (
         <QuestionModal
-          slug={slug}
+          resolveUrl={(src) => mediaUrl(slug, src)}
           category={quiz.categories[open.c].name}
           question={quiz.categories[open.c].questions[open.q]}
           teams={game.teams}

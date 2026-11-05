@@ -35,6 +35,25 @@ Le domande sono ordinate per difficoltà (100 facile → 500 difficile). Claude 
 libere da Wikimedia e canzoni da YouTube ("solo audio"), verifica i link, ti mostra il tabellone e,
 quando approvi, lo pubblica.
 
+## Creare un quiz con l'editor
+
+```bash
+npm run dev
+```
+
+Apri http://localhost:5173/editor.html (oppure il pulsante **✏️ Editor quiz** nella home in locale).
+
+- Crea un quiz nuovo o aprine uno esistente: compare il tabellone; clicca una casella per modificarla.
+- Per ogni domanda puoi impostare testo, risposta, scelta multipla, nota per l'host e i media
+  (della domanda e della risposta): **trascina un file**, sceglilo o incollalo con Ctrl+V.
+  Per YouTube incolla il link e, se serve, imposta inizio, fine e "solo audio".
+- Le categorie si rinominano direttamente nel tabellone; ◀ ▶ le spostano e 🗑 le elimina.
+- **Ctrl+S** salva `quiz.json` e i media nella cartella del quiz. **👁 Anteprima** mostra la domanda
+  come la vedranno i giocatori; **▶ Prova** apre il quiz salvato.
+- Per pubblicare: commit e push (oppure chiedi a Claude di farlo).
+
+L'editor esiste solo in locale: il sito pubblicato contiene solo il gioco.
+
 ## Creare un quiz a mano
 
 Ogni quiz è una cartella in `quizzes/` con un file `quiz.json` e i suoi media:

@@ -8,6 +8,7 @@ import { findQuiz } from './quiz/load';
 //   #/                 home
 //   #/q/<slug>/setup   teams
 //   #/q/<slug>/play    board
+// The editor is a separate page (editor.html), available only with `npm run dev`.
 function useHash() {
   const [hash, setHash] = useState(location.hash);
   useEffect(() => {

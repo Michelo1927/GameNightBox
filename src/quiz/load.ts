@@ -1,4 +1,4 @@
-import { validateQuiz, type Media, type Quiz } from './schema';
+import { validateQuiz, type Quiz } from './schema';
 
 // Every quizzes/<slug>/quiz.json is bundled at build time.
 const quizModules = import.meta.glob('/quizzes/*/quiz.json', { eager: true, import: 'default' }) as Record<string, unknown>;
@@ -31,8 +31,8 @@ export function findQuiz(slug: string): LoadedQuiz | undefined {
 }
 
 /** Turns a media src (file name in the quiz folder, or URL) into a usable URL. */
-export function mediaUrl(slug: string, media: Media): string {
-  if (/^https?:\/\//i.test(media.src) || media.type === 'youtube') return media.src;
-  const clean = media.src.replace(/^\.?\//, '');
+export function mediaUrl(slug: string, src: string): string {
+  if (/^https?:\/\//i.test(src)) return src;
+  const clean = src.replace(/^\.?\//, '');
   return mediaModules[`/quizzes/${slug}/${clean}`] ?? '';
 }

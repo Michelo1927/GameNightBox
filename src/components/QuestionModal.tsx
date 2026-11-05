@@ -4,13 +4,14 @@ import { findCorrectChoice, type Question } from '../quiz/schema';
 import MediaView from './Media';
 
 interface Props {
-  slug: string;
   category: string;
   question: Question;
   teams: Team[];
   results: Record<string, Result>;
   onResult: (teamId: string, r: Result | null) => void;
   onClose: () => void;
+  /** Turns a media src (file name or URL) into a playable URL. */
+  resolveUrl: (src: string) => string;
 }
 
 const LETTERS = 'ABCDEFGH';
@@ -21,7 +22,7 @@ function textSize(text: string) {
   return 'md';
 }
 
-export default function QuestionModal({ slug, category, question, teams, results, onResult, onClose }: Props) {
+export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl }: Props) {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function QuestionModal({ slug, category, question, teams, results
 
         <div className="q-body">
           {question.question && <p className={`q-text ${textSize(question.question)}`}>{question.question}</p>}
-          {question.media && <MediaView slug={slug} media={question.media} />}
+          {question.media && <MediaView media={question.media} url={resolveUrl(question.media.src)} />}
           {question.choices && (
             <ol className="choices">
               {question.choices.map((c, i) => (
@@ -63,7 +64,7 @@ export default function QuestionModal({ slug, category, question, teams, results
             <div className="answer">
               <div className="answer-label">Risposta</div>
               <div className={`answer-text ${textSize(question.answer)}`}>{question.answer}</div>
-              {question.answerMedia && <MediaView slug={slug} media={question.answerMedia} />}
+              {question.answerMedia && <MediaView media={question.answerMedia} url={resolveUrl(question.answerMedia.src)} />}
             </div>
           )}
           {question.hostNote && <p className="host-note">📝 {question.hostNote}</p>}
