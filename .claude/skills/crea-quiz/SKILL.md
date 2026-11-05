@@ -122,6 +122,12 @@ Nel riepilogo per l'utente segnala le 1-2 domande di cui sei meno sicuro sul liv
 - **Immagine**: "che cos'è / chi è / dove si trova?" con una foto o un dettaglio.
 - Regole per i giocatori in `rules`; suggerimenti per giudicare la risposta in `hostNote`.
 
+### Domanda finale (facoltativa)
+Se l'utente la chiede, o se il quiz è per una serata "importante", aggiungi `final` (vedi
+`FinalQuestion` in `schema.ts`): `category` (si vede prima delle puntate), `question`, `answer` e i soliti
+campi facoltativi. Livello: come un 500 difficile ma "giusto", con una risposta univoca. Proponila
+sempre nel riepilogo, anche se non l'hai aggiunta.
+
 ## 4. Media
 
 Usa i media solo dove migliorano la domanda. Ogni media deve funzionare: niente link inventati.

@@ -83,3 +83,7 @@ code { background: rgba(0, 0, 0, 0.3); padding: 1px 5px; border-radius: 4px; }
 .media-preview .yt-frame { width: 100%; }
 .media-preview .player { width: 100%; }
 .media-preview .player .play { width: 44px; height: 44px; font-size: 1.1rem; }
+
+.ed-board-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.ed-final-cat { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; font-weight: 600; }
+.ed-final-cat input { font: inherit; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.3); color: var(--text); }

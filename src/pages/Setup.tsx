@@ -1,10 +1,11 @@
 import { go } from '../nav';
-import { emptyGame, newTeam, TEAM_COLORS, useGame, type Team } from '../game/state';
+import { newTeam, pickDoubles, resetGame, settingsOf, TEAM_COLORS, useGame, type Settings, type Team } from '../game/state';
 import type { LoadedQuiz } from '../quiz/load';
 
 export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
-  const [game, setGame] = useGame(slug);
+  const { game, setGame } = useGame(slug, quiz);
+  const settings = settingsOf(game);
   const inProgress = Object.keys(game.played).length > 0 || Object.keys(game.results).length > 0;
 
   const update = (id: string, patch: Partial<Team>) =>
@@ -12,8 +13,30 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const remove = (id: string) => setGame((g) => ({ ...g, teams: g.teams.filter((t) => t.id !== id) }));
   const add = () => setGame((g) => ({ ...g, teams: [...g.teams, newTeam(g.teams.length)] }));
   const restart = () => {
-    if (confirm('Azzerare punteggi e caselle giocate?')) setGame((g) => ({ ...emptyGame(), teams: g.teams.map((t) => ({ ...t, adjust: 0 })) }));
+    if (confirm('Azzerare punteggi e caselle giocate?')) setGame((g) => resetGame(g, quiz));
   };
+  const move = (i: number, d: number) =>
+    setGame((g) => {
+      const teams = [...g.teams];
+      [teams[i], teams[i + d]] = [teams[i + d], teams[i]];
+      return { ...g, teams };
+    });
+  const shuffle = () =>
+    setGame((g) => {
+      const teams = [...g.teams];
+      for (let i = teams.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [teams[i], teams[j]] = [teams[j], teams[i]];
+      }
+      return { ...g, teams };
+    });
+  const setSetting = (patch: Partial<Settings>) =>
+    setGame((g) => {
+      const next = { ...settingsOf(g), ...patch };
+      // A new number of Raddoppio cells: pick them again among the cells not played yet.
+      const doubles = patch.doubles !== undefined ? pickDoubles(quiz, next.doubles, g.played) : g.doubles;
+      return { ...g, settings: next, doubles };
+    });
 
   return (
     <div className="page setup">
@@ -22,9 +45,14 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       {quiz.description && <p className="muted">{quiz.description}</p>}
 
       <h2>Squadre</h2>
+      <p className="muted">Si gioca a turno in quest'ordine: la prima squadra inizia.</p>
       <div className="team-list">
-        {game.teams.map((t) => (
+        {game.teams.map((t, i) => (
           <div className="team-row" key={t.id} style={{ borderColor: t.color }}>
+            <span className="team-order">
+              <button onClick={() => move(i, -1)} disabled={i === 0} aria-label="Sposta su">▲</button>
+              <button onClick={() => move(i, 1)} disabled={i === game.teams.length - 1} aria-label="Sposta giù">▼</button>
+            </span>
             <input value={t.name} onChange={(e) => update(t.id, { name: e.target.value })} aria-label="Nome squadra" />
             <div className="swatches">
               {TEAM_COLORS.map((c) => (
@@ -43,11 +71,43 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
           </div>
         ))}
       </div>
-      {game.teams.length < 10 && (
-        <button className="btn ghost" onClick={add}>
-          + Aggiungi squadra
-        </button>
-      )}
+      <div className="setup-row">
+        {game.teams.length < 10 && (
+          <button className="btn ghost" onClick={add}>
+            + Aggiungi squadra
+          </button>
+        )}
+        {game.teams.length > 1 && (
+          <button className="btn ghost" onClick={shuffle}>
+            🎲 Sorteggia l'ordine
+          </button>
+        )}
+      </div>
+
+      <h2>Opzioni</h2>
+      <div className="options">
+        <div className="option">
+          <span>⏱ Timer per rispondere</span>
+          <div className="seg">
+            {[0, 10, 20, 30, 45, 60].map((n) => (
+              <button key={n} className={settings.timer === n ? 'on' : ''} onClick={() => setSetting({ timer: n })}>
+                {n ? `${n}s` : 'No'}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="option">
+          <span>🎲 Caselle Raddoppio (nascoste: chi le trova scommette i suoi punti)</span>
+          <div className="seg">
+            {[0, 1, 2, 3].map((n) => (
+              <button key={n} className={settings.doubles === n ? 'on' : ''} onClick={() => setSetting({ doubles: n })}>
+                {n || 'No'}
+              </button>
+            ))}
+          </div>
+        </div>
+        {quiz.final && <p className="muted">🏆 Questo quiz ha una domanda finale: si gioca dopo l'ultima casella.</p>}
+      </div>
 
       <div className="setup-actions">
         <button className="btn primary big" onClick={() => go(`/q/${slug}/play`)} disabled={game.teams.length === 0}>

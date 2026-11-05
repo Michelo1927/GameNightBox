@@ -54,6 +54,10 @@ quiz.categories.forEach((c, ci) =>
     q.answerMedia = extract(q.answerMedia, `c${ci + 1}-${q.points}-risposta`);
   }),
 );
+if (quiz.final) {
+  quiz.final.media = extract(quiz.final.media, 'finale');
+  quiz.final.answerMedia = extract(quiz.final.answerMedia, 'finale-risposta');
+}
 
 writeFileSync(join(dir, 'quiz.json'), JSON.stringify(quiz, null, 2) + '\n', 'utf8');
 console.log(`✓ Salvato in quizzes/${slug}/ (${n} immagini estratte)`);

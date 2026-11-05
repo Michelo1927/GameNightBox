@@ -32,12 +32,24 @@ export interface Category {
   questions: Question[];
 }
 
+/** Optional last question, played after the board: every team bets part of its score. */
+export interface FinalQuestion {
+  category: string;
+  question: string;
+  answer: string;
+  media?: Media;
+  answerMedia?: Media;
+  rules?: string;
+  hostNote?: string;
+}
+
 export interface Quiz {
   title: string;
   description?: string;
   author?: string;
   credits?: string[];
   categories: Category[];
+  final?: FinalQuestion;
 }
 
 export const POINTS = [100, 200, 300, 400, 500];
@@ -99,13 +111,27 @@ export function validateQuiz(data: unknown): ValidationResult {
       if (q.hostNote !== undefined && !isStr(q.hostNote)) errors.push(`${w}.hostNote: deve essere testo`);
     });
   });
+  if (data.final !== undefined) {
+    const f = data.final;
+    if (!isObj(f)) errors.push('final: deve essere un oggetto');
+    else {
+      if (!isStr(f.category) || !f.category.trim()) errors.push('final.category: obbligatorio');
+      if (!isStr(f.question)) errors.push('final.question: obbligatorio');
+      else if (!f.question.trim() && !f.media) errors.push('final: serve il testo della domanda oppure un media');
+      if (!isStr(f.answer) || !f.answer.trim()) errors.push('final.answer: obbligatorio');
+      if (f.media !== undefined) checkMedia(f.media, 'final.media', errors);
+      if (f.answerMedia !== undefined) checkMedia(f.answerMedia, 'final.answerMedia', errors);
+    }
+  }
   return { errors, warnings };
 }
 
 /** Lists every local media file a quiz references (for existence checks). */
 export function localMediaFiles(quiz: Quiz): string[] {
   const files: string[] = [];
-  for (const c of quiz.categories) for (const q of c.questions) for (const m of [q.media, q.answerMedia]) {
+  const all: { media?: Media; answerMedia?: Media }[] = quiz.categories.flatMap((c) => c.questions);
+  if (quiz.final) all.push(quiz.final);
+  for (const q of all) for (const m of [q.media, q.answerMedia]) {
     if (m && m.type !== 'youtube' && !isRemote(m.src)) files.push(m.src);
   }
   return files;

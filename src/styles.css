@@ -113,15 +113,16 @@ kbd {
 .turn-badge.shared { background: #ff7b00; color: #1a0a00; font-weight: 800; animation: pulse 1.4s ease-in-out infinite; }
 .turn-badge.finished { background: var(--gold); color: #1a1400; font-weight: 800; }
 @keyframes pulse { 50% { transform: scale(1.06); } }
-.team-name { font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.team-points { font-family: 'Anton', sans-serif; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.1; }
+.team-name { font-weight: 800; font-size: clamp(1rem, 1.6vw, 1.35rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.team-points { font-family: 'Anton', sans-serif; font-size: clamp(2rem, 3vw + 2vh, 4rem); line-height: 1.1; }
 .team-adjust { display: flex; justify-content: center; gap: 6px; }
 .team-adjust button { width: 32px; height: 26px; border-radius: 6px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.06); font-weight: 800; }
 .team-adjust button:hover { background: rgba(255, 255, 255, 0.16); }
 
 /* ---------- Overlays ---------- */
 .overlay { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(2, 4, 20, 0.85); padding: 16px; }
-.question-overlay { padding: 0; background: var(--bg); animation: pop 0.2s ease-out; }
+.question-overlay { padding: 0; background: var(--bg); animation: grow 0.35s cubic-bezier(0.2, 0.8, 0.3, 1); }
+@keyframes grow { from { opacity: 0.4; transform: scale(0.12); } }
 @keyframes pop { from { opacity: 0; transform: scale(0.96); } }
 .question { width: 100%; height: 100%; display: flex; flex-direction: column; background: linear-gradient(170deg, var(--cell), var(--cell-2)); }
 .q-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; font-family: 'Anton', sans-serif; font-size: clamp(1.1rem, 2.5vw, 1.8rem); letter-spacing: 0.5px; text-transform: uppercase; background: rgba(0, 0, 0, 0.25); }
@@ -193,3 +194,76 @@ kbd {
 button.team-points { display: block; width: 100%; background: none; border: 0; color: inherit; cursor: text; border-radius: 6px; }
 button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .team-points-input { display: block; width: 100%; box-sizing: border-box; text-align: center; color: inherit; background: rgba(255, 255, 255, 0.12); border: 1px solid var(--team, var(--line)); border-radius: 6px; padding: 0; }
+
+/* ---------- Animated scores ---------- */
+.anim-num { display: inline-block; padding: 0 10px; border-radius: 8px; }
+.flash-up { animation: flash-up 0.9s ease-out; }
+.flash-down { animation: flash-down 0.9s ease-out; }
+@keyframes flash-up { 0% { background: var(--ok); color: #002b12; transform: scale(1.25); } 100% { background: transparent; transform: scale(1); } }
+@keyframes flash-down { 0% { background: var(--ko); transform: scale(0.85) rotate(-3deg); } 100% { background: transparent; transform: none; } }
+
+/* ---------- Header extras ---------- */
+.btn.icon { padding: 8px 12px; }
+.turn-badge.final { background: var(--gold); color: #1a1400; font-weight: 800; animation: pulse 1.4s ease-in-out infinite; }
+
+/* ---------- Board intro: categories revealed one by one ---------- */
+.board.intro .cat-cell { animation: cat-in 0.5s both; }
+.board.intro .cell { animation: cell-in 0.3s both; }
+@keyframes cat-in { from { opacity: 0; transform: rotateX(90deg) scale(0.8); } }
+@keyframes cell-in { from { opacity: 0; transform: scale(0.6); } }
+.double-mark { position: absolute; top: 4px; right: 6px; font-size: 0.9rem; }
+
+/* ---------- Timer ---------- */
+.timer { position: relative; min-width: 120px; height: 38px; border-radius: 8px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.35); overflow: hidden; font-weight: 800; padding: 0 12px; }
+.timer-bar { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--gold) 45%, transparent); transition: width 1s linear; }
+.timer-text { position: relative; }
+.timer.hurry .timer-bar { background: color-mix(in srgb, var(--ko) 70%, transparent); }
+.timer.hurry { animation: pulse 1s ease-in-out infinite; }
+.timer.over { background: var(--ko); }
+
+/* ---------- Raddoppio ---------- */
+.double { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, color-mix(in srgb, var(--team) 35%, var(--cell)) 0%, var(--bg) 75%); }
+.double-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px; text-align: center; max-width: 720px; }
+.double-title { font-family: 'Anton', sans-serif; font-size: clamp(3rem, 11vw, 8rem); color: var(--gold); text-shadow: 4px 5px 0 #000; animation: wobble 0.8s ease-out; }
+@keyframes wobble { 0% { transform: scale(0.2) rotate(-20deg); } 60% { transform: scale(1.15) rotate(4deg); } 100% { transform: none; } }
+.double-cat { margin: 0; font-family: 'Anton', sans-serif; font-size: clamp(1.2rem, 3vw, 2rem); text-transform: uppercase; }
+.double-team { margin: 0; font-size: clamp(1.2rem, 2.6vw, 1.8rem); }
+.double-team b { color: var(--team); }
+.double-input { width: 220px; font-family: 'Anton', sans-serif; font-size: 3rem; text-align: center; color: var(--text); background: rgba(0, 0, 0, 0.4); border: 2px solid var(--team); border-radius: 10px; }
+.double-quick, .double-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+/* ---------- Final question ---------- */
+.final .question { background: radial-gradient(circle at 50% 30%, #3a2a00 0%, var(--cell-2) 70%); }
+.gold { color: var(--gold); }
+.final-help { margin: 0; max-width: 760px; font-size: clamp(1rem, 2vw, 1.3rem); color: var(--muted); }
+.final-bets { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.final-bet { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 16px; border-radius: 10px; background: rgba(0, 0, 0, 0.35); border-top: 5px solid var(--team); }
+.final-bet input { width: 140px; font-family: 'Anton', sans-serif; font-size: 2rem; text-align: center; color: var(--text); background: rgba(0, 0, 0, 0.4); border: 1px solid var(--line); border-radius: 8px; }
+
+/* ---------- Winner ---------- */
+.ranking.celebrate { position: relative; z-index: 1; animation: pop 0.4s ease-out; }
+.winner { margin-bottom: 18px; }
+.winner-label { font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+.winner-name { font-family: 'Anton', sans-serif; font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: 1.1; text-shadow: 3px 3px 0 #000; animation: wobble 0.9s ease-out; }
+.confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: -20px; border-radius: 2px; animation: fall linear infinite; }
+@keyframes fall { to { transform: translate(var(--drift), 110vh) rotate(720deg); } }
+
+/* ---------- Setup ---------- */
+.team-order { display: flex; flex-direction: column; gap: 2px; }
+.team-order button { width: 28px; height: 20px; padding: 0; font-size: 0.7rem; border-radius: 4px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.06); }
+.setup-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.options { display: flex; flex-direction: column; gap: 14px; }
+.option { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: var(--radius); background: var(--bg-2); }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button { min-width: 48px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.06); font-weight: 700; }
+.seg button.on { background: var(--gold); border-color: var(--gold); color: #1a1400; }
+
+/* ---------- Home: each quiz gets its own color ---------- */
+.quiz-card[style*='--hue'] { background: linear-gradient(160deg, hsl(var(--hue) 75% 38%), hsl(var(--hue) 80% 22%)); }
+.quiz-card .quiz-icon { font-size: 2rem; line-height: 1; margin-bottom: 6px; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .board.intro .cat-cell, .board.intro .cell, .question-overlay, .double-title, .winner-name { animation: none; }
+  .confetti { display: none; }
+}

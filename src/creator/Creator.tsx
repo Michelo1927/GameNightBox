@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import QuestionModal from '../components/QuestionModal';
-import { cleanQuestion, cleanQuiz, isQuestionComplete } from '../quiz/clean';
+import { cleanFinal, cleanQuestion, cleanQuiz, isQuestionComplete } from '../quiz/clean';
 import { saveImported } from '../quiz/imported';
-import { findCorrectChoice, validateQuiz, type Question, type Quiz } from '../quiz/schema';
+import { findCorrectChoice, validateQuiz, type FinalQuestion, type Question, type Quiz } from '../quiz/schema';
 import { encodeQuiz } from '../quiz/share';
 import { go } from '../nav';
 import { blankQuiz, copyText, loadDraft, saveDraft } from './draft';
@@ -29,6 +29,8 @@ export default function Creator({ sub }: { sub: string }) {
       {storageFull && <div className="cr-warning">⚠ Memoria del browser piena: le ultime modifiche non sono salvate. Usa foto più piccole o link alle immagini.</div>}
       {cell ? (
         <QuestionStep quiz={quiz} setQuiz={setQuiz} c={Number(cell[1])} q={Number(cell[2])} />
+      ) : sub === 'finale' ? (
+        <FinalStep quiz={quiz} setQuiz={setQuiz} />
       ) : sub === 'codice' ? (
         <ShareStep quiz={quiz} />
       ) : (
@@ -49,6 +51,9 @@ function missing(quiz: Quiz) {
       if (!isQuestionComplete(q)) list.push({ label: `${cat.name || `Categoria ${ci + 1}`} ${q.points}`, href: `#/crea/${ci}-${qi}` });
     });
   });
+  // The final question is optional, but once started it must be complete.
+  const f = cleanFinal(quiz.final);
+  if (f && (!f.category || !f.answer || (!f.question && !f.media))) list.push({ label: 'Domanda finale', href: '#/crea/finale' });
   return list;
 }
 
@@ -97,6 +102,10 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
           </div>
         </section>
       ))}
+
+      <a className={`cr-final ${cleanFinal(quiz.final) ? 'done' : ''}`} href="#/crea/finale">
+        🏆 Domanda finale <small>{cleanFinal(quiz.final) ? '✓' : 'facoltativa: ogni squadra scommette i suoi punti'}</small>
+      </a>
 
       <div className="cr-secondary">
         <a className="btn ghost" href="#/carica">📥 Modifica un quiz da codice</a>
@@ -223,6 +232,60 @@ function QuestionStep({ quiz, setQuiz, c, q }: { quiz: Quiz; setQuiz: SetQuiz; c
           resolveUrl={(src) => src}
         />
       )}
+    </>
+  );
+}
+
+const EMPTY_FINAL: FinalQuestion = { category: '', question: '', answer: '' };
+
+function FinalStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
+  const f = quiz.final ?? EMPTY_FINAL;
+  const set = (patch: Partial<FinalQuestion>) => setQuiz((z) => ({ ...z, final: { ...(z.final ?? EMPTY_FINAL), ...patch } }));
+  const remove = () => {
+    if (confirm('Togliere la domanda finale?')) {
+      setQuiz((z) => ({ ...z, final: undefined }));
+      go('/crea');
+    }
+  };
+  return (
+    <>
+      <header className="cr-header">
+        <a className="back" href="#/crea">←</a>
+        <h1>🏆 Domanda finale</h1>
+      </header>
+      <p className="cr-tip small">
+        Si gioca dopo l'ultima casella. Prima si vede solo la categoria: ogni squadra scommette quanti punti vuole (fino al suo punteggio), poi
+        arriva la domanda. Meglio una domanda difficile ma "giusta".
+      </p>
+      <label className="cr-field">
+        <span className="cr-label">Categoria</span>
+        <input value={f.category} onChange={(e) => set({ category: e.target.value })} placeholder="Es. Storia d'Italia" />
+      </label>
+      <label className="cr-field">
+        <span className="cr-label">Domanda</span>
+        <textarea rows={3} value={f.question} onChange={(e) => set({ question: e.target.value })} placeholder="Scrivi la domanda" />
+      </label>
+      <MediaPicker key="final-q" label="Foto o video con la domanda (facoltativo)" media={f.media} onChange={(media) => set({ media })} />
+      <label className="cr-field">
+        <span className="cr-label">Risposta</span>
+        <input value={f.answer} onChange={(e) => set({ answer: e.target.value })} placeholder="La risposta giusta" />
+      </label>
+      <details className="cr-more" open={!!(f.rules || f.hostNote || f.answerMedia)}>
+        <summary>Altre opzioni</summary>
+        <label className="cr-field">
+          <span className="cr-label">Regole (le vedono tutti con la domanda)</span>
+          <input value={f.rules ?? ''} onChange={(e) => set({ rules: e.target.value })} />
+        </label>
+        <label className="cr-field">
+          <span className="cr-label">Nota per l'host (compare solo dopo la risposta)</span>
+          <input value={f.hostNote ?? ''} onChange={(e) => set({ hostNote: e.target.value })} />
+        </label>
+        <MediaPicker key="final-a" label="Foto o video con la risposta" media={f.answerMedia} onChange={(answerMedia) => set({ answerMedia })} />
+      </details>
+      <footer className="cr-bar cr-nav">
+        {quiz.final && <button className="btn ghost" onClick={remove}>🗑 Togli</button>}
+        <button className="btn primary" onClick={() => go('/crea')}>Fatto ✓</button>
+      </footer>
     </>
   );
 }

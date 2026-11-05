@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QuestionModal from '../components/QuestionModal';
-import { POINTS, validateQuiz, type Media, type Question, type Quiz } from '../quiz/schema';
-import { cleanQuiz, isQuestionComplete } from '../quiz/clean';
+import { POINTS, validateQuiz, type FinalQuestion, type Media, type Question, type Quiz } from '../quiz/schema';
+import { cleanQuestion, cleanQuiz, isQuestionComplete } from '../quiz/clean';
 import { devFileUrl, loadQuiz, saveQuiz } from './api';
 import QuestionForm from './QuestionForm';
 
@@ -72,12 +72,24 @@ export default function QuizEditor({ slug }: { slug: string }) {
   if (loadError) return <div className="page"><a className="back" href="#/">← Editor</a><p className="error-text">{loadError}</p></div>;
   if (!quiz) return <div className="page muted">Caricamento…</div>;
 
-  const cat = quiz.categories[sel.c];
-  const question = cat?.questions[sel.q];
+  // sel.c === -1 is the final question.
+  const isFinal = sel.c === -1;
+  const final: FinalQuestion = quiz.final ?? { category: '', question: '', answer: '' };
+  const cat = isFinal ? { name: final.category, questions: [] } : quiz.categories[sel.c];
+  const question: Question | undefined = isFinal ? { ...final, points: 0 } : cat?.questions[sel.q];
   const rows = Math.max(...quiz.categories.map((c) => c.questions.length));
 
   // Functional update: async changes (file uploads) must not overwrite edits made meanwhile.
+  const setFinal = (fn: (f: FinalQuestion) => FinalQuestion) =>
+    update((z) => ({ ...z, final: fn(z.final ?? { category: '', question: '', answer: '' }) }));
   const setQuestion = (fn: (q: Question) => Question) => {
+    if (isFinal) {
+      setFinal((f) => {
+        const { points: _, ...rest } = fn({ ...f, points: 0 });
+        return { ...rest, category: f.category };
+      });
+      return;
+    }
     const { c: sc, q: sq } = sel;
     update((z) => ({
       ...z,
@@ -167,14 +179,26 @@ export default function QuizEditor({ slug }: { slug: string }) {
               }),
             )}
           </div>
-          {quiz.categories.length < MAX_CATEGORIES && (
-            <button className="btn ghost small" onClick={addCategory}>+ Categoria</button>
+          <div className="ed-board-tools">
+            {quiz.categories.length < MAX_CATEGORIES && (
+              <button className="btn ghost small" onClick={addCategory}>+ Categoria</button>
+            )}
+            <button className={`btn small ${isFinal ? 'primary' : 'ghost'}`} onClick={() => setSel({ c: -1, q: 0 })}>
+              🏆 Domanda finale {quiz.final?.answer ? '✓' : '(facoltativa)'}
+            </button>
+          </div>
+          {isFinal && (
+            <label className="ed-final-cat">
+              Categoria della domanda finale (si vede prima delle puntate)
+              <input value={final.category} onChange={(e) => setFinal((f) => ({ ...f, category: e.target.value }))} placeholder="Es. Storia d'Italia" />
+            </label>
           )}
         </div>
 
         {question && (
           <QuestionForm
             key={`${sel.c}-${sel.q}`}
+            isFinal={isFinal}
             slug={slug}
             category={cat.name}
             question={question}
@@ -188,7 +212,7 @@ export default function QuizEditor({ slug }: { slug: string }) {
         <QuestionModal
 
           category={cat.name}
-          question={cleanQuiz({ title: '', categories: [{ name: '', questions: [question] }] }).categories[0].questions[0]}
+          question={cleanQuestion(question)}
           teams={[]}
           results={{}}
           onResult={() => {}}

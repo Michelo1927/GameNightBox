@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { sounds } from '../game/sounds';
+import Timer from './Timer';
 import type { Result, Team } from '../game/state';
 import { findCorrectChoice, type Question } from '../quiz/schema';
 import MediaView from './Media';
@@ -14,6 +16,12 @@ interface Props {
   resolveUrl: (src: string) => string;
   /** Who answers: the team whose turn it is, or 'all' for a shared question. */
   answering?: Team | 'all';
+  /** Seconds for the timer (0 = no timer). */
+  timer?: number;
+  /** Raddoppio: only the betting team plays, for the amount it bet. */
+  bet?: { team: Team; amount: number };
+  /** Screen point the question grows from (the clicked cell). */
+  origin?: { x: number; y: number };
 }
 
 const LETTERS = 'ABCDEFGH';
@@ -24,14 +32,20 @@ function textSize(text: string) {
   return 'md';
 }
 
-export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl, answering }: Props) {
+export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl, answering, timer = 0, bet, origin }: Props) {
   const [revealed, setRevealed] = useState(false);
+  const reveal = () =>
+    setRevealed((r) => {
+      if (!r) sounds.reveal();
+      return !r;
+    });
 
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
+        if ((e.target as HTMLElement).closest('input, textarea')) return;
         e.preventDefault();
-        setRevealed((r) => !r);
+        reveal();
       } else if (e.key === 'Escape') onClose();
     };
     addEventListener('keydown', on, true);
@@ -40,12 +54,15 @@ export default function QuestionModal({ category, question, teams, results, onRe
 
   const correct = question.choices ? findCorrectChoice(question.choices, question.answer) : -1;
   const toggle = (teamId: string, r: Result) => onResult(teamId, results[teamId] === r ? null : r);
-  const turnTeam = answering && answering !== 'all' ? answering : undefined;
+  const turnTeam = bet ? bet.team : answering && answering !== 'all' ? answering : undefined;
   // The team whose turn it is goes first; the others stay available for the host.
-  const ordered = turnTeam ? [...teams.filter((t) => t.id === turnTeam.id), ...teams.filter((t) => t.id !== turnTeam.id)] : teams;
+  // On a Raddoppio only the team that bet can play.
+  const ordered = bet ? [bet.team] : turnTeam ? [...teams.filter((t) => t.id === turnTeam.id), ...teams.filter((t) => t.id !== turnTeam.id)] : teams;
+  const points = bet ? bet.amount : question.points;
+  const style = origin ? ({ transformOrigin: `${origin.x}px ${origin.y}px` } as CSSProperties) : undefined;
 
   return (
-    <div className="overlay question-overlay">
+    <div className="overlay question-overlay" style={style}>
       <div className="question">
         <header className="q-header">
           <span>{category}</span>
@@ -54,8 +71,8 @@ export default function QuestionModal({ category, question, teams, results, onRe
               Risponde <b>{turnTeam.name}</b>
             </span>
           )}
-          {answering === 'all' && <span className="q-turn shared">🔥 Per tutte le squadre</span>}
-          <span className="q-points">{question.points}</span>
+          {answering === 'all' && !bet && <span className="q-turn shared">🔥 Per tutte le squadre</span>}
+          <span className="q-points">{bet ? `🎲 ${points}` : points}</span>
         </header>
 
         <div className="q-body">
@@ -88,17 +105,18 @@ export default function QuestionModal({ category, question, teams, results, onRe
             {ordered.map((t) => (
               <div key={t.id} className={`q-team ${turnTeam && t.id !== turnTeam.id ? 'other' : ''}`} style={{ ['--team' as string]: t.color }}>
                 <span className="q-team-name">{t.name}</span>
-                <button className={`ok ${results[t.id] === 'right' ? 'on' : ''}`} onClick={() => toggle(t.id, 'right')} title={`+${question.points}`}>
+                <button className={`ok ${results[t.id] === 'right' ? 'on' : ''}`} onClick={() => toggle(t.id, 'right')} title={`+${points}`}>
                   ✓
                 </button>
-                <button className={`ko ${results[t.id] === 'wrong' ? 'on' : ''}`} onClick={() => toggle(t.id, 'wrong')} title={`-${question.points}`}>
+                <button className={`ko ${results[t.id] === 'wrong' ? 'on' : ''}`} onClick={() => toggle(t.id, 'wrong')} title={`-${points}`}>
                   ✗
                 </button>
               </div>
             ))}
           </div>
           <div className="q-actions">
-            <button className="btn primary" onClick={() => setRevealed((r) => !r)}>
+            <Timer seconds={timer} />
+            <button className="btn primary" onClick={reveal}>
               {revealed ? 'Nascondi risposta' : 'Mostra risposta'} <kbd>Spazio</kbd>
             </button>
             <button className="btn ghost" onClick={onClose}>

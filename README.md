@@ -9,16 +9,29 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 ## Giocare
 
 1. Apri il sito e scegli un quiz.
-2. Crea le squadre (nome e colore).
+2. Crea le squadre (nome e colore). L'ordine delle squadre è l'ordine dei turni: si cambia con ▲ ▼
+   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli il timer e quante caselle Raddoppio usare.
 3. Clicca una casella, poi:
    - **Spazio**: mostra o nasconde la risposta;
+   - **T** (o il pulsante ⏱): fa partire il timer; ripremendo ricomincia;
    - **✓ / ✗** sotto ogni squadra: aggiunge o toglie i punti della casella (cliccando di nuovo annulli);
    - **Esc**: torna al tabellone.
 4. Per correggere un punteggio a mano (regole speciali, errori): **clicca il punteggio** e scrivi il
    valore esatto (es. `350`), oppure `+120` / `-30` per aggiungere o togliere punti; Invio conferma,
    Esc annulla. I pulsanti **− / +** sotto i punteggi tolgono o aggiungono 50 punti.
+5. **↶ Annulla** (o **Ctrl+Z**) torna indietro di un'azione: un ✓/✗, una casella chiusa, una correzione.
+6. **⛶** (o **F**) mette lo schermo intero; **🔊/🔇** accende o spegne i suoni.
 
-**Turni:** le squadre giocano a turno, nell'ordine in cui sono state create. La squadra di turno
+**🎲 Raddoppio:** alcune caselle nascoste (di default 1, mai tra le 100). Chi la trova scommette da 0
+al proprio punteggio (o fino al valore più alto del tabellone, se ha meno punti) prima di vedere la
+domanda: giusta = vince la puntata, sbagliata = la perde. Risponde solo quella squadra.
+
+**🏆 Domanda finale:** se il quiz ne ha una, dopo l'ultima casella compare il pulsante *Domanda finale!*.
+Si vede solo la categoria; ogni squadra scrive su un foglio quanto scommette (da 0 al proprio
+punteggio) e l'host inserisce le puntate. Poi domanda, risposta e ✓/✗ per ogni squadra.
+Alla fine parte la schermata del vincitore.
+
+**Turni:** le squadre giocano a turno, nell'ordine della pagina delle squadre. La squadra di turno
 (evidenziata) sceglie una casella e risponde; chiusa la domanda, tocca alla squadra successiva.
 Ogni squadra ha lo stesso numero di domande: quelle che avanzano alla fine (es. la 25ª con 2 o 3
 squadre) sono **per tutti**. Riaprire una domanda già giocata non fa avanzare il turno.
@@ -45,7 +58,13 @@ npm run import -- codice.txt      # oppure il codice o il link direttamente
 
 Lo script crea `quizzes/<nome>/` estraendo le foto in file; poi commit e push.
 
-## Creare un quiz con Claude
+## Creare un quiz con Claude (dal sito)
+
+Sul sito tocca **🤖 Crea con Claude**: scrivi il tema (o le 5 categorie), copia il prompt e incollalo
+su [claude.ai](https://claude.ai). Poi incolla qui la risposta di Claude: il quiz si carica e si gioca.
+Funziona anche dal telefono e non serve installare niente (le domande sono solo testo).
+
+## Creare un quiz con Claude Code
 
 Apri la cartella del progetto con Claude Code e usa la skill `/crea-quiz`:
 

@@ -104,6 +104,15 @@ Campi della domanda:
 | `rules` | no | regole visibili a tutti insieme alla domanda (es. "servono titolo e artista") |
 | `hostNote` | no | nota privata per l'host: compare **solo dopo** aver mostrato la risposta |
 
+Domanda finale facoltativa, a livello del quiz (accanto a `categories`):
+
+```jsonc
+"final": {
+  "category": "Storia d'Italia",       // si vede prima delle puntate
+  "question": "…", "answer": "…",      // più media, answerMedia, rules, hostNote come le altre domande
+}
+```
+
 Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 `start`/`end` in secondi sono facoltativi (per audio, video e YouTube).
 
@@ -113,13 +122,22 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 ## Flusso di gioco (schermo TV/proiettore)
 
 1. **Home**: scegli il quiz.
-2. **Setup**: aggiungi le squadre (nome e colore).
+2. **Setup**: aggiungi le squadre (nome e colore), ordine dei turni (▲ ▼ o sorteggio), opzioni
+   (timer 0-60 s, caselle Raddoppio 0-3).
 3. **Tabellone**: 5 colonne con le categorie, caselle 100–500, punteggi delle squadre in basso.
 4. **Domanda** (click sulla casella): testo e media a schermo intero.
    - `Spazio`: svela la risposta.
    - Per ogni squadra ci sono i bottoni ✅ (+punti) e ❌ (−punti).
+   - `T`: timer (tick negli ultimi 5 secondi, suono alla fine).
    - `Esc`: chiude; la casella diventa "giocata" (si può riaprire).
-5. **Fine**: classifica finale.
+   - Caselle **Raddoppio** (scelte a caso a inizio partita, salvate nello stato): prima della domanda
+     la squadra di turno scommette; vale solo per lei.
+5. **Domanda finale** (se il quiz ha `final`): puntate inserite dall'host, poi domanda e ✓/✗.
+6. **Fine**: schermata del vincitore con coriandoli e classifica.
+
+Sempre disponibili: **Annulla** (Ctrl+Z, ultime 50 azioni, solo in memoria), schermo intero (F),
+suoni sintetizzati con Web Audio (nessun file, 🔇 per spegnerli, scelta salvata nel browser).
+La pagina `#/claude` costruisce un prompt per claude.ai e carica il JSON che Claude risponde.
 
 ## Editor locale
 

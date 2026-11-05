@@ -1,4 +1,4 @@
-import type { Media, Question, Quiz } from './schema';
+import type { FinalQuestion, Media, Question, Quiz } from './schema';
 
 function cleanMedia(m?: Media): Media | undefined {
   if (!m || !m.src.trim()) return undefined;
@@ -32,7 +32,16 @@ export function cleanQuiz(quiz: Quiz): Quiz {
   if (quiz.author?.trim()) out.author = quiz.author.trim();
   if (quiz.credits?.length) out.credits = quiz.credits;
   out.categories = quiz.categories.map((c) => ({ name: c.name.trim(), questions: c.questions.map(cleanQuestion) }));
+  const final = cleanFinal(quiz.final);
+  if (final) out.final = final;
   return out;
+}
+
+/** The final question is optional: an untouched one (no category, question or answer) is dropped. */
+export function cleanFinal(f?: FinalQuestion): FinalQuestion | undefined {
+  if (!f || (!f.category.trim() && !f.question.trim() && !f.answer.trim() && !f.media?.src.trim())) return undefined;
+  const { points: _, ...q } = cleanQuestion({ ...f, points: 0 });
+  return { category: f.category.trim(), ...q };
 }
 
 /** A question is ready to play when it has an answer and either text or media. */

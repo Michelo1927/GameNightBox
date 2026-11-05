@@ -226,5 +226,11 @@
         }
       ]
     }
-  ]
+  ],
+  "final": {
+    "category": "Italia",
+    "question": "Quanti anni dura il mandato del Presidente della Repubblica italiana?",
+    "answer": "7 anni",
+    "hostNote": "Art. 85 della Costituzione"
+  }
 }

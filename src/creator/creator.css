@@ -83,3 +83,8 @@
 .home-actions .btn { padding: 12px 20px; font-size: 1.05rem; }
 .home h3 { margin: 32px 0 12px; color: var(--muted); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
 .quiz-card .remove { position: absolute; bottom: 10px; right: 10px; border: 0; background: rgba(0, 0, 0, 0.35); border-radius: 8px; padding: 4px 8px; }
+
+.cr-final { display: flex; flex-direction: column; gap: 2px; margin: 14px 0; padding: 14px 16px; border-radius: 10px; border: 2px dashed var(--gold); font-weight: 800; color: var(--gold); }
+.cr-final small { font-weight: 500; color: var(--muted); }
+.cr-final.done { border-style: solid; background: rgba(255, 204, 0, 0.08); }
+.prompt-text { white-space: pre-wrap; font-size: 0.8rem; color: var(--muted); max-height: 300px; overflow: auto; }

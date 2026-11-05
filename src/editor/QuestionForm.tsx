@@ -7,9 +7,11 @@ interface Props {
   question: Question;
   onChange: (fn: (q: Question) => Question) => void;
   onPreview: () => void;
+  /** Final question: no points (each team bets). */
+  isFinal?: boolean;
 }
 
-export default function QuestionForm({ slug, category, question: q, onChange, onPreview }: Props) {
+export default function QuestionForm({ slug, category, question: q, onChange, onPreview, isFinal }: Props) {
   const set = (patch: Partial<Question>) => onChange((prev) => ({ ...prev, ...patch }));
   const correct = q.choices ? findCorrectChoice(q.choices, q.answer) : -1;
 
@@ -28,16 +30,18 @@ export default function QuestionForm({ slug, category, question: q, onChange, on
     <div className="question-form">
       <div className="form-head">
         <h2>
-          {category || 'Categoria'} <span className="gold">· {q.points}</span>
+          {category || 'Categoria'} <span className="gold">· {isFinal ? '🏆 finale' : q.points}</span>
         </h2>
         <button className="btn ghost" onClick={onPreview}>👁 Anteprima</button>
       </div>
 
       <div className="row">
-        <label>
-          Punti
-          <input type="number" step={100} min={0} value={q.points} onChange={(e) => set({ points: Number(e.target.value) })} />
-        </label>
+        {!isFinal && (
+          <label>
+            Punti
+            <input type="number" step={100} min={0} value={q.points} onChange={(e) => set({ points: Number(e.target.value) })} />
+          </label>
+        )}
       </div>
 
       <label className="block">

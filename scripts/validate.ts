@@ -4,7 +4,7 @@
 //        npm run validate -- <slug> --online  (also checks YouTube links and prints the video titles)
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { localMediaFiles, validateQuiz, youtubeId, type Quiz } from '../src/quiz/schema';
+import { localMediaFiles, validateQuiz, youtubeId, type Media, type Quiz } from '../src/quiz/schema';
 
 const root = join(import.meta.dirname, '..', 'quizzes');
 const args = process.argv.slice(2);
@@ -53,9 +53,10 @@ for (const slug of slugs) {
       if (!existsSync(join(root, slug, src))) errors.push(`file media mancante: ${src}`);
     }
     if (online) {
-      for (const cat of quiz.categories) for (const q of cat.questions) for (const m of [q.media, q.answerMedia]) {
+      const items = quiz.categories.flatMap((cat) => cat.questions.map((q) => ({ where: `${cat.name} ${q.points}`, q: q as { media?: Media; answerMedia?: Media } })));
+      if (quiz.final) items.push({ where: 'Domanda finale', q: quiz.final });
+      for (const { where, q } of items) for (const m of [q.media, q.answerMedia]) {
         if (m?.type !== 'youtube') continue;
-        const where = `${cat.name} ${q.points}`;
         try {
           const r = await checkYouTube(m.src);
           if (r.error) errors.push(`${where}: YouTube ${m.src} - ${r.error}`);
