@@ -20,7 +20,8 @@ e creazione dei quiz tramite Claude.
 - Si gioca a squadre; chi ha creato il quiz fa da host e gestisce il tabellone.
 - Risposta corretta: la squadra **guadagna** i punti della casella.
 - Risposta sbagliata: la squadra **perde** i punti della casella.
-- Più squadre possono rispondere alla stessa domanda (es. una sbaglia e un'altra indovina).
+- Si gioca a turni: la squadra di turno sceglie la casella e risponde, poi tocca alla successiva.
+  Le domande che avanzano dopo un numero uguale di turni per squadra (25 mod n) sono per tutti.
 - L'host può sempre correggere un punteggio a mano (per regole speciali tipo "±10%" o punteggi a tempo).
 
 ## Architettura

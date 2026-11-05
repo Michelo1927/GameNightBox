@@ -1,0 +1,182 @@
+{
+  "title": "Quiz Misto",
+  "description": "Musica anni 2000, serie TV, calcio, cucina italiana e videogiochi.",
+  "credits": [
+    "Cannoli_siciliani.jpg - Stefano Mortellaro, CC BY 2.0 (Wikimedia Commons)",
+    "Pizzoccheri.jpg - Nnaluci, CC BY-SA 3.0 (Wikimedia Commons)",
+    "Stadio_San_Siro_-_Giuseppe_Meazza,_Milano.jpg - Samoano, CC BY-SA 3.0 (Wikimedia Commons)"
+  ],
+  "categories": [
+    {
+      "name": "Musica anni 2000",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Titolo e artista?",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=uSD4vsh1zDA", "start": 0, "end": 15, "audioOnly": true },
+          "answer": "I Gotta Feeling - The Black Eyed Peas",
+          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=uSD4vsh1zDA" },
+          "hostNote": "Servono titolo e artista"
+        },
+        {
+          "points": 200,
+          "question": "Di quale canzone è questo riff? Titolo e gruppo.",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=0J2QdDbelmY", "start": 0, "end": 12, "audioOnly": true },
+          "answer": "Seven Nation Army - The White Stripes",
+          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=0J2QdDbelmY" },
+          "hostNote": "Servono titolo e gruppo"
+        },
+        {
+          "points": 300,
+          "question": "Titolo e artista?",
+          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=-N4jf6rtyuw", "start": 0, "end": 15, "audioOnly": true },
+          "answer": "Crazy - Gnarls Barkley",
+          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=-N4jf6rtyuw" },
+          "hostNote": "Servono titolo e artista (il duo di Cee Lo Green e Danger Mouse)"
+        },
+        {
+          "points": 400,
+          "question": "Chi ha vinto il Festival di Sanremo 2009 con \"La forza mia\"?",
+          "answer": "Marco Carta"
+        },
+        {
+          "points": 500,
+          "question": "Qual è il singolo di debutto di Lady Gaga, uscito nel 2008?",
+          "answer": "Just Dance"
+        }
+      ]
+    },
+    {
+      "name": "Serie TV",
+      "questions": [
+        {
+          "points": 100,
+          "question": "In quale città vivono i protagonisti di \"Friends\"?",
+          "answer": "New York"
+        },
+        {
+          "points": 200,
+          "question": "In quale serie un professore di chimica malato diventa un produttore di metanfetamina?",
+          "answer": "Breaking Bad"
+        },
+        {
+          "points": 300,
+          "question": "Come si chiama la cittadina dell'Indiana in cui è ambientata \"Stranger Things\"?",
+          "answer": "Hawkins"
+        },
+        {
+          "points": 400,
+          "question": "Qual è il vero nome del Professore ne \"La casa di carta\"?",
+          "choices": ["Andrés de Fonollosa", "Sergio Marquina", "Aníbal Cortés", "Martín Berrote"],
+          "answer": "Sergio Marquina",
+          "hostNote": "Gli altri sono Berlino, Rio e Palermo"
+        },
+        {
+          "points": 500,
+          "question": "Come si chiama il pub dove si ritrovano i protagonisti di \"How I Met Your Mother\"?",
+          "answer": "MacLaren's",
+          "hostNote": "Accettare anche \"McLaren's\""
+        }
+      ]
+    },
+    {
+      "name": "Calcio",
+      "questions": [
+        {
+          "points": 100,
+          "question": "In che anno l'Italia ha vinto il suo ultimo Mondiale?",
+          "answer": "2006"
+        },
+        {
+          "points": 200,
+          "question": "Quale calciatore ha vinto più Palloni d'Oro nella storia?",
+          "answer": "Lionel Messi (8)"
+        },
+        {
+          "points": 300,
+          "question": "Quale stadio è questo?",
+          "media": { "type": "image", "src": "san-siro.jpg" },
+          "answer": "San Siro (Stadio Giuseppe Meazza), Milano",
+          "hostNote": "Accettare sia \"San Siro\" sia \"Meazza\""
+        },
+        {
+          "points": 400,
+          "question": "Come si chiamava la mascotte dei Mondiali di Italia '90, un omino stilizzato con il pallone come testa?",
+          "answer": "Ciao"
+        },
+        {
+          "points": 500,
+          "question": "Quale squadra ha vinto la prima edizione della UEFA Champions League, nel 1992-93?",
+          "answer": "Olympique Marsiglia",
+          "hostNote": "In finale batté il Milan 1-0"
+        }
+      ]
+    },
+    {
+      "name": "Cucina italiana",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Quali sono i tre ingredienti che condiscono la pizza Margherita?",
+          "answer": "Pomodoro, mozzarella e basilico",
+          "hostNote": "Servono tutti e tre"
+        },
+        {
+          "points": 200,
+          "question": "Che dolce è questo?",
+          "media": { "type": "image", "src": "cannoli.jpg" },
+          "answer": "Cannoli siciliani"
+        },
+        {
+          "points": 300,
+          "question": "Quale formaggio si usa nella vera carbonara romana?",
+          "answer": "Pecorino romano",
+          "hostNote": "\"Parmigiano\" è sbagliato; \"pecorino\" basta"
+        },
+        {
+          "points": 400,
+          "question": "Cosa sono i pizzoccheri, tipici della Valtellina?",
+          "choices": ["Gnocchi di patate e spinaci", "Ravioli di zucca", "Tagliatelle di grano saraceno", "Polpette di riso"],
+          "answer": "Tagliatelle di grano saraceno",
+          "answerMedia": { "type": "image", "src": "pizzoccheri.jpg" }
+        },
+        {
+          "points": 500,
+          "question": "In quale città è nato il tiramisù, secondo la versione più accreditata?",
+          "answer": "Treviso",
+          "hostNote": "Accettare anche \"Veneto\". Il Friuli rivendica una versione nata a Tolmezzo"
+        }
+      ]
+    },
+    {
+      "name": "Videogiochi",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Come si chiama il fratello di Super Mario?",
+          "answer": "Luigi"
+        },
+        {
+          "points": 200,
+          "question": "In quale videogioco si costruisce con i blocchi e si scappa dai Creeper?",
+          "answer": "Minecraft"
+        },
+        {
+          "points": 300,
+          "question": "Quale console Nintendo, uscita nel 2006, si controllava muovendo il telecomando?",
+          "answer": "Wii"
+        },
+        {
+          "points": 400,
+          "question": "Come si chiama la città immaginaria in cui è ambientato GTA V?",
+          "answer": "Los Santos"
+        },
+        {
+          "points": 500,
+          "question": "Quale azienda giapponese ha creato Pac-Man nel 1980?",
+          "answer": "Namco"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { go } from '../nav';
-import { cellKey, emptyGame, teamScore, useGame, type Result } from '../game/state';
+import { cellKey, currentTurn, emptyGame, teamScore, useGame, type Result } from '../game/state';
 import { mediaUrl, type LoadedQuiz } from '../quiz/load';
 import QuestionModal from '../components/QuestionModal';
 import Ranking from '../components/Ranking';
@@ -14,8 +14,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   const [showRanking, setShowRanking] = useState(false);
 
   const rows = Math.max(...quiz.categories.map((c) => c.questions.length));
-  const totalCells = quiz.categories.reduce((n, c) => n + c.questions.length, 0);
-  const playedCount = Object.keys(game.played).length;
+  const turn = currentTurn(game, quiz);
 
   const setResult = (key: string, teamId: string, r: Result | null) =>
     setGame((g) => {
@@ -47,8 +46,9 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
         <a className="back" href="#/">←</a>
         <h1 className="title">{quiz.title}</h1>
         <span className="muted progress">
-          {playedCount}/{totalCells}
+          {turn.played}/{turn.total}
         </span>
+        <TurnBadge turn={turn} onRanking={() => setShowRanking(true)} />
         <div className="header-actions">
           <button className="btn ghost" onClick={() => go(`/q/${slug}/setup`)}>Squadre</button>
           <button className="btn ghost" onClick={restart}>Ricomincia</button>
@@ -88,7 +88,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
 
       <footer className="teams-bar">
         {game.teams.map((t) => (
-          <div key={t.id} className="team-score" style={{ ['--team' as string]: t.color }}>
+          <div key={t.id} className={`team-score ${turn.team?.id === t.id || turn.shared ? 'active' : ''}`} style={{ ['--team' as string]: t.color }}>
             <div className="team-name">{t.name}</div>
             <div className="team-points">{teamScore(t, game, quiz)}</div>
             <div className="team-adjust">
@@ -108,9 +108,26 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           results={game.results[cellKey(open.c, open.q)] ?? {}}
           onResult={(teamId, r) => setResult(cellKey(open.c, open.q), teamId, r)}
           onClose={close}
+          answering={game.played[cellKey(open.c, open.q)] ? undefined : turn.shared ? 'all' : turn.team}
         />
       )}
       {showRanking && <Ranking teams={game.teams.map((t) => ({ ...t, score: teamScore(t, game, quiz) }))} onClose={() => setShowRanking(false)} />}
     </div>
+  );
+}
+
+function TurnBadge({ turn, onRanking }: { turn: ReturnType<typeof currentTurn>; onRanking: () => void }) {
+  if (turn.finished)
+    return (
+      <button className="turn-badge finished" onClick={onRanking}>
+        🏁 Partita finita: vedi la classifica
+      </button>
+    );
+  if (turn.shared) return <span className="turn-badge shared">🔥 Domanda per tutti!</span>;
+  if (!turn.team) return null;
+  return (
+    <span className="turn-badge" style={{ ['--team' as string]: turn.team.color }}>
+      Tocca a <b>{turn.team.name}</b>
+    </span>
   );
 }

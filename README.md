@@ -16,6 +16,11 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
    - **Esc**: torna al tabellone.
 4. I pulsanti **− / +** sotto i punteggi correggono a mano di 50 punti (per regole speciali).
 
+**Turni:** le squadre giocano a turno, nell'ordine in cui sono state create. La squadra di turno
+(evidenziata) sceglie una casella e risponde; chiusa la domanda, tocca alla squadra successiva.
+Ogni squadra ha lo stesso numero di domande: quelle che avanzano alla fine (es. la 25ª con 2 o 3
+squadre) sono **per tutti**. Riaprire una domanda già giocata non fa avanzare il turno.
+
 La partita è salvata nel browser: ricaricando la pagina non si perde nulla.
 
 ## Creare un quiz con Claude

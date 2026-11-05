@@ -43,7 +43,32 @@ export function teamScore(team: Team, game: GameState, quiz: Quiz): number {
   return score;
 }
 
-const storageKey = (slug: string) => `jeopardy-quiz:game:${slug}`;
+export interface Turn {
+  /** Team whose turn it is (it picks and answers the question). */
+  team?: Team;
+  /** The leftover questions after an equal number of turns each: every team can answer. */
+  shared?: boolean;
+  finished?: boolean;
+  played: number;
+  total: number;
+}
+
+/**
+ * Teams take turns in order; each gets floor(total / teams) questions.
+ * The remaining questions (e.g. the 25th with 2 or 3 teams) are shared by everyone.
+ * Derived from how many cells were played, so it survives reloads and re-opening a cell.
+ */
+export function currentTurn(game: GameState, quiz: Quiz): Turn {
+  const total = quiz.categories.reduce((n, c) => n + c.questions.length, 0);
+  const played = quiz.categories.reduce((n, c, ci) => n + c.questions.filter((_, qi) => game.played[cellKey(ci, qi)]).length, 0);
+  const n = game.teams.length;
+  if (played >= total) return { finished: true, played, total };
+  if (n === 0) return { played, total };
+  if (played >= Math.floor(total / n) * n) return { shared: true, played, total };
+  return { team: game.teams[played % n], played, total };
+}
+
+const storageKey =(slug: string) => `jeopardy-quiz:game:${slug}`;
 
 function loadGame(slug: string): GameState | null {
   try {
