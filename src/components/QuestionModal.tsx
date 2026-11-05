@@ -16,7 +16,7 @@ interface Props {
   resolveUrl: (src: string) => string;
   /** Who answers: the team whose turn it is, or 'all' for a shared question. */
   answering?: Team | 'all';
-  /** Seconds for the timer (0 = no timer). */
+  /** Default seconds for the timer. */
   timer?: number;
   /** Raddoppio: only the betting team plays, for the amount it bet. */
   bet?: { team: Team; amount: number };

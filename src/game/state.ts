@@ -12,7 +12,7 @@ export interface Team {
 }
 
 export interface Settings {
-  /** Seconds for the question timer (0 = no timer). */
+  /** Default seconds for the timer (older games may have 0: the timer then uses 30). */
   timer: number;
   /** How many hidden "Raddoppio" (Daily Double) cells the board has. */
   doubles: number;

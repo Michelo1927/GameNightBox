@@ -2,6 +2,7 @@ import { go } from '../nav';
 import { newTeam, pickDoubles, resetGame, settingsOf, TEAM_COLORS, useGame, type Settings, type Team } from '../game/state';
 import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';
+import { TIMER_CHOICES } from '../components/Timer';
 
 export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
@@ -88,11 +89,11 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       <h2>Opzioni</h2>
       <div className="options">
         <div className="option">
-          <span>⏱ Timer per rispondere</span>
+          <span>⏱ Durata del timer (lo avvii tu, dal tabellone o dalla domanda)</span>
           <div className="seg">
-            {[0, 10, 20, 30, 45, 60].map((n) => (
+            {TIMER_CHOICES.map((n) => (
               <button key={n} className={settings.timer === n ? 'on' : ''} onClick={() => setSetting({ timer: n })}>
-                {n ? `${n}s` : 'No'}
+                {n}s
               </button>
             ))}
           </div>

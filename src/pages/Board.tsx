@@ -21,6 +21,7 @@ import DoubleBet from '../components/DoubleBet';
 import FinalModal from '../components/FinalModal';
 import Ranking from '../components/Ranking';
 import AnimatedNumber from '../components/AnimatedNumber';
+import Timer from '../components/Timer';
 
 const SCORE_STEP = 50;
 const NEW_FINAL: FinalState = { stage: 'bets', bets: {}, results: {} };
@@ -137,6 +138,8 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           }}
         />
         <div className="header-actions">
+          {/* Always available on the board; T starts it only while no question is open (that one has its own). */}
+          <Timer seconds={settings.timer} hotkey={!open && !showFinal} />
           <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title="Annulla l'ultima azione (Ctrl+Z)">
             ↶ Annulla
           </button>

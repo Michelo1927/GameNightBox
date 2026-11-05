@@ -10,17 +10,18 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 1. Apri il sito e scegli un quiz.
 2. Crea le squadre (nome e colore). L'ordine delle squadre è l'ordine dei turni: si cambia con ▲ ▼
-   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli il timer e quante caselle Raddoppio usare.
+   oppure con **🎲 Sorteggia l'ordine**. Nelle **Opzioni** scegli la durata del timer e quante caselle Raddoppio usare.
 3. Clicca una casella, poi:
    - **Spazio**: mostra o nasconde la risposta;
-   - **T** (o il pulsante ⏱): fa partire il timer; ripremendo ricomincia;
+   - **T** (o il pulsante ⏱): fa partire il timer; ripremendo ricomincia, ▾ sceglie un'altra durata, ✕ lo ferma;
    - **✓ / ✗** sotto ogni squadra: aggiunge o toglie i punti della casella (cliccando di nuovo annulli);
    - **Esc**: torna al tabellone.
 4. Per correggere un punteggio a mano (regole speciali, errori): **clicca il punteggio** e scrivi il
    valore esatto (es. `350`), oppure `+120` / `-30` per aggiungere o togliere punti; Invio conferma,
    Esc annulla. I pulsanti **− / +** sotto i punteggi tolgono o aggiungono 50 punti.
 5. **↶ Annulla** (o **Ctrl+Z**) torna indietro di un'azione: un ✓/✗, una casella chiusa, una correzione.
-6. **⛶** (o **F**) mette lo schermo intero; **🔊/🔇** accende o spegne i suoni.
+6. Il pulsante **⏱** c'è anche sul tabellone (tasto T), per cronometrare quello che vuoi durante la partita.
+7. **⛶** (o **F**) mette lo schermo intero; **🔊/🔇** accende o spegne i suoni.
 
 **🎲 Raddoppio:** alcune caselle nascoste (di default 1, mai tra le 100). Chi la trova scommette da 0
 al proprio punteggio (o fino al valore più alto del tabellone, se ha meno punti) prima di vedere la
