@@ -1,0 +1,185 @@
+{
+  "title": "Natura",
+  "description": "Animali, cuccioli, piante e meraviglie naturali, dall'Italia al resto del mondo.",
+  "credits": [
+    "Niagara-Falls-Horseshoe-Falls-view.jpg - Helen Filatova, CC BY 2.0 (Wikimedia Commons)",
+    "Grand_Canyon_Mather_Point_2013.jpg - Tuxyso, CC BY-SA 3.0 (Wikimedia Commons)",
+    "Uluru_at_Sunset_in_November_2018.jpg - Riley Boughton, CC BY-SA 4.0 (Wikimedia Commons)",
+    "Halong_Bay_in_Vietnam.jpg - Thomas Hirsch / User:Ravn, CC BY-SA 3.0 (Wikimedia Commons)",
+    "Salar_de_Uyuni,_Bolivia,_2016-02-04,_DD_10-12_HDR.JPG - Diego Delso, CC BY-SA 4.0 (Wikimedia Commons)"
+  ],
+  "categories": [
+    {
+      "name": "Animali da record",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Qual è l'animale terrestre più veloce del mondo?",
+          "answer": "Il ghepardo"
+        },
+        {
+          "points": 200,
+          "question": "Qual è l'uccello più grande del mondo?",
+          "answer": "Lo struzzo"
+        },
+        {
+          "points": 300,
+          "question": "Qual è l'animale più grande mai esistito sulla Terra, più grande anche dei dinosauri?",
+          "answer": "La balenottera azzurra",
+          "hostNote": "Accettare anche \"balena blu\""
+        },
+        {
+          "points": 400,
+          "question": "Quale animale australiano dorme fino a 20-22 ore al giorno e mangia quasi solo foglie di eucalipto?",
+          "answer": "Il koala"
+        },
+        {
+          "points": 500,
+          "question": "Come si chiama il minuscolo animale detto \"orso d'acqua\", capace di sopravvivere perfino nel vuoto dello spazio?",
+          "answer": "Il tardigrado"
+        }
+      ]
+    },
+    {
+      "name": "Cuccioli",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Come si chiama il cucciolo del cavallo?",
+          "answer": "Puledro"
+        },
+        {
+          "points": 200,
+          "question": "Come si chiama il cucciolo della mucca?",
+          "answer": "Vitello"
+        },
+        {
+          "points": 300,
+          "question": "Prima di diventare una rana, nuota con la coda e respira con le branchie. Come si chiama?",
+          "answer": "Girino"
+        },
+        {
+          "points": 400,
+          "question": "Come si chiama il cucciolo del cervo?",
+          "answer": "Cerbiatto"
+        },
+        {
+          "points": 500,
+          "question": "Come si chiama il cucciolo del canguro, che cresce nel marsupio della madre?",
+          "choices": ["Kit", "Joey", "Pup", "Cub"],
+          "answer": "Joey"
+        }
+      ]
+    },
+    {
+      "name": "Italia selvaggia",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Come si chiama il vulcano attivo più alto d'Europa, in Sicilia?",
+          "answer": "Etna"
+        },
+        {
+          "points": 200,
+          "question": "Qual è il fiume più lungo d'Italia?",
+          "answer": "Il Po"
+        },
+        {
+          "points": 300,
+          "question": "Qual è il lago più grande d'Italia?",
+          "answer": "Il lago di Garda"
+        },
+        {
+          "points": 400,
+          "question": "Quali montagne, patrimonio UNESCO, diventano rosa al tramonto con il fenomeno chiamato \"enrosadira\"?",
+          "answer": "Le Dolomiti"
+        },
+        {
+          "points": 500,
+          "question": "Qual è il lago più profondo d'Italia, con oltre 400 metri di profondità?",
+          "answer": "Il lago di Como",
+          "hostNote": "Circa 410 m. Accettare anche \"Lario\""
+        }
+      ]
+    },
+    {
+      "name": "Dove si trova?",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Come si chiamano queste cascate?",
+          "media": { "type": "image", "src": "niagara.jpg" },
+          "answer": "Cascate del Niagara",
+          "hostNote": "Al confine tra Stati Uniti e Canada"
+        },
+        {
+          "points": 200,
+          "question": "Come si chiama questo canyon?",
+          "media": { "type": "image", "src": "grand-canyon.jpg" },
+          "answer": "Grand Canyon",
+          "hostNote": "Arizona, Stati Uniti"
+        },
+        {
+          "points": 300,
+          "question": "In quale paese si trova questa enorme roccia rossa?",
+          "media": { "type": "image", "src": "uluru.jpg" },
+          "answer": "Australia",
+          "hostNote": "È Uluru (Ayers Rock)"
+        },
+        {
+          "points": 400,
+          "question": "In quale paese si trova questa baia con migliaia di isolotti di roccia?",
+          "media": { "type": "image", "src": "ha-long.jpg" },
+          "answer": "Vietnam",
+          "hostNote": "È la baia di Ha Long"
+        },
+        {
+          "points": 500,
+          "question": "In quale paese si trova questo deserto di sale, il più grande del mondo, che con la pioggia diventa uno specchio?",
+          "media": { "type": "image", "src": "uyuni.jpg" },
+          "choices": ["Cile", "Perù", "Bolivia", "Argentina"],
+          "answer": "Bolivia",
+          "hostNote": "È il Salar de Uyuni"
+        }
+      ]
+    },
+    {
+      "name": "Piante e fiori",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Quale fiore, simbolo dell'amore, ha il gambo pieno di spine?",
+          "answer": "La rosa"
+        },
+        {
+          "points": 200,
+          "question": "Qual è il fiore simbolo dell'Olanda?",
+          "answer": "Il tulipano"
+        },
+        {
+          "points": 300,
+          "question": "Quale albero, sacro alla dea Atena, è da sempre simbolo di pace?",
+          "answer": "L'olivo",
+          "hostNote": "Accettare anche \"ulivo\""
+        },
+        {
+          "points": 400,
+          "question": "Come si chiamano gli alberi più alti del mondo, che in California superano i 110 metri?",
+          "answer": "Le sequoie"
+        },
+        {
+          "points": 500,
+          "question": "Come si chiama il fiore più grande del mondo, largo fino a un metro, che puzza di carne marcia?",
+          "choices": ["Rafflesia", "Victoria amazonica", "Fiore di loto", "Orchidea vaniglia"],
+          "answer": "Rafflesia"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "category": "L'aria che respiriamo",
+    "question": "Quale gas forma circa il 78% dell'aria che respiriamo?",
+    "answer": "L'azoto",
+    "hostNote": "L'ossigeno è solo il 21% circa"
+  }
+}
