@@ -68,7 +68,7 @@ JeopardyQuiz/
           "question": "Di chi è questa canzone?",
           "media": { "type": "audio", "src": "thriller.mp3", "start": 0, "end": 3 },
           "answer": "Thriller - Michael Jackson",
-          "hostNote": "Max 3 secondi di ascolto"
+          "rules": "Max 3 secondi di ascolto"
         },
         {
           "points": 200,
@@ -101,7 +101,8 @@ Campi della domanda:
 | `media` | no | media mostrato con la domanda |
 | `answerMedia` | no | media mostrato quando si svela la risposta |
 | `choices` | no | opzioni per la scelta multipla |
-| `hostNote` | no | nota per l'host (regole speciali), visibile in piccolo |
+| `rules` | no | regole visibili a tutti insieme alla domanda (es. "servono titolo e artista") |
+| `hostNote` | no | nota privata per l'host: compare **solo dopo** aver mostrato la risposta |
 
 Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 `start`/`end` in secondi sono facoltativi (per audio, video e YouTube).
@@ -130,6 +131,16 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
   automatico che parte quando salvi o carichi un file non resetta l'editor.
 - Pulsanti "Anteprima" (singola domanda) e "Prova" (quiz salvato).
 - Per pubblicare: `git commit` + `git push` (oppure lo fa Claude).
+
+## Crea quiz da telefono e codice condivisibile
+
+- Pagina `#/crea` sul sito pubblicato, pensata per il telefono: una domanda per schermata, bozza salvata
+  in `localStorage`, foto ridimensionate (480px JPEG) e incorporate come `data:` URL.
+- "Genera il codice": `JQ1.` + base64url del JSON compresso (deflate). Condivisibile come testo, link
+  (`#/carica/<codice>`) o file `.txt` (quando le foto lo rendono troppo lungo per un messaggio).
+- `#/carica`: incolla codice/link o apri file → il quiz viene salvato nel browser (`localStorage`) e
+  compare in home tra "Caricati su questo dispositivo".
+- `npm run import -- <file|codice|link>` salva un quiz condiviso in `quizzes/` estraendo le foto.
 
 ## Skill Claude: `/crea-quiz`
 

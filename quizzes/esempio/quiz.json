@@ -6,11 +6,51 @@
     {
       "name": "Bandiere",
       "questions": [
-        { "points": 100, "question": "Di quale paese è questa bandiera?", "media": { "type": "image", "src": "giappone.svg" }, "answer": "Giappone" },
-        { "points": 200, "question": "Di quale paese è questa bandiera?", "media": { "type": "image", "src": "germania.svg" }, "answer": "Germania" },
-        { "points": 300, "question": "Di quale paese è questa bandiera?", "media": { "type": "image", "src": "svezia.svg" }, "answer": "Svezia" },
-        { "points": 400, "question": "Di quale paese è questa bandiera?", "media": { "type": "image", "src": "grecia.svg" }, "answer": "Grecia" },
-        { "points": 500, "question": "Di quale paese è questa bandiera?", "media": { "type": "image", "src": "repubblica-ceca.svg" }, "answer": "Repubblica Ceca" }
+        {
+          "points": 100,
+          "question": "Di quale paese è questa bandiera?",
+          "media": {
+            "type": "image",
+            "src": "giappone.svg"
+          },
+          "answer": "Giappone"
+        },
+        {
+          "points": 200,
+          "question": "Di quale paese è questa bandiera?",
+          "media": {
+            "type": "image",
+            "src": "germania.svg"
+          },
+          "answer": "Germania"
+        },
+        {
+          "points": 300,
+          "question": "Di quale paese è questa bandiera?",
+          "media": {
+            "type": "image",
+            "src": "svezia.svg"
+          },
+          "answer": "Svezia"
+        },
+        {
+          "points": 400,
+          "question": "Di quale paese è questa bandiera?",
+          "media": {
+            "type": "image",
+            "src": "grecia.svg"
+          },
+          "answer": "Grecia"
+        },
+        {
+          "points": 500,
+          "question": "Di quale paese è questa bandiera?",
+          "media": {
+            "type": "image",
+            "src": "repubblica-ceca.svg"
+          },
+          "answer": "Repubblica Ceca"
+        }
       ]
     },
     {
@@ -19,45 +59,171 @@
         {
           "points": 100,
           "question": "Chi canta questa canzone?",
-          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "start": 43, "end": 53, "audioOnly": true },
+          "media": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "start": 43,
+            "end": 53,
+            "audioOnly": true
+          },
           "answer": "Rick Astley - Never Gonna Give You Up",
-          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "start": 43 },
-          "hostNote": "Massimo 10 secondi di ascolto"
+          "rules": "Massimo 10 secondi di ascolto",
+          "answerMedia": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "start": 43
+          }
         },
-        { "points": 200, "question": "Quanti tasti ha un pianoforte standard?", "answer": "88" },
-        { "points": 300, "question": "Che nota è questa?", "media": { "type": "audio", "src": "la440.wav" }, "answer": "La (440 Hz, il La del diapason)" },
-        { "points": 400, "question": "In che anno è uscito l'album \"The Dark Side of the Moon\" dei Pink Floyd?", "answer": "1973", "hostNote": "Accettare ±1 anno a discrezione dell'host" },
-        { "points": 500, "question": "Chi ha composto l'opera \"Il barbiere di Siviglia\" (1816)?", "answer": "Gioachino Rossini" }
+        {
+          "points": 200,
+          "question": "Quanti tasti ha un pianoforte standard?",
+          "answer": "88"
+        },
+        {
+          "points": 300,
+          "question": "Che nota è questa?",
+          "media": {
+            "type": "audio",
+            "src": "la440.wav"
+          },
+          "answer": "La (440 Hz, il La del diapason)"
+        },
+        {
+          "points": 400,
+          "question": "In che anno è uscito l'album \"The Dark Side of the Moon\" dei Pink Floyd?",
+          "answer": "1973",
+          "hostNote": "Accettare ±1 anno a discrezione dell'host"
+        },
+        {
+          "points": 500,
+          "question": "Chi ha composto l'opera \"Il barbiere di Siviglia\" (1816)?",
+          "answer": "Gioachino Rossini"
+        }
       ]
     },
     {
       "name": "Scienza",
       "questions": [
-        { "points": 100, "question": "Quanti lati ha un esagono?", "answer": "6", "answerMedia": { "type": "image", "src": "esagono.svg" } },
-        { "points": 200, "question": "Qual è il simbolo chimico dell'oro?", "answer": "Au" },
-        { "points": 300, "question": "Quante ossa ha il corpo umano adulto?", "answer": "206" },
-        { "points": 400, "question": "Quale pianeta del Sistema Solare ha più lune conosciute?", "answer": "Saturno" },
-        { "points": 500, "question": "Qual è, circa, la velocità della luce nel vuoto in km/s?", "answer": "Circa 300.000 km/s (299.792 km/s)" }
+        {
+          "points": 100,
+          "question": "Quanti lati ha un esagono?",
+          "answer": "6",
+          "answerMedia": {
+            "type": "image",
+            "src": "esagono.svg"
+          }
+        },
+        {
+          "points": 200,
+          "question": "Qual è il simbolo chimico dell'oro?",
+          "answer": "Au"
+        },
+        {
+          "points": 300,
+          "question": "Quante ossa ha il corpo umano adulto?",
+          "answer": "206"
+        },
+        {
+          "points": 400,
+          "question": "Quale pianeta del Sistema Solare ha più lune conosciute?",
+          "answer": "Saturno"
+        },
+        {
+          "points": 500,
+          "question": "Qual è, circa, la velocità della luce nel vuoto in km/s?",
+          "answer": "Circa 300.000 km/s (299.792 km/s)"
+        }
       ]
     },
     {
       "name": "Cinema",
       "questions": [
-        { "points": 100, "question": "Come si chiama il leone protagonista de \"Il Re Leone\"?", "answer": "Simba" },
-        { "points": 200, "question": "Chi ha diretto \"Jurassic Park\" (1993)?", "answer": "Steven Spielberg" },
-        { "points": 300, "question": "In quale film Ivan Drago dice \"Ti spezzo in due\"?", "answer": "Rocky IV" },
-        { "points": 400, "question": "Quale film ha vinto il primo Oscar come miglior film d'animazione (2002)?", "answer": "Shrek" },
-        { "points": 500, "question": "Quanti premi Oscar ha vinto \"Titanic\" (1997)?", "answer": "11" }
+        {
+          "points": 100,
+          "question": "Come si chiama il leone protagonista de \"Il Re Leone\"?",
+          "answer": "Simba"
+        },
+        {
+          "points": 200,
+          "question": "Chi ha diretto \"Jurassic Park\" (1993)?",
+          "answer": "Steven Spielberg"
+        },
+        {
+          "points": 300,
+          "question": "In quale film Ivan Drago dice \"Ti spezzo in due\"?",
+          "answer": "Rocky IV"
+        },
+        {
+          "points": 400,
+          "question": "Quale film ha vinto il primo Oscar come miglior film d'animazione (2002)?",
+          "answer": "Shrek"
+        },
+        {
+          "points": 500,
+          "question": "Quanti premi Oscar ha vinto \"Titanic\" (1997)?",
+          "answer": "11"
+        }
       ]
     },
     {
       "name": "Etimologia",
       "questions": [
-        { "points": 100, "question": "Cosa significa la parola greca \"demos\", da cui deriva \"democrazia\"?", "choices": ["Popolo", "Potere", "Città", "Legge"], "answer": "Popolo" },
-        { "points": 200, "question": "Cosa voleva dire in latino la parola \"persona\"?", "choices": ["Individuo", "Maschera teatrale", "Anima", "Corpo"], "answer": "Maschera teatrale" },
-        { "points": 300, "question": "Da dove deriva il saluto \"ciao\"?", "choices": ["Dal francese \"chiot\"", "Dal veneziano \"s-ciào\" (schiavo vostro)", "Dal latino \"caelum\"", "Dal tedesco \"Tschüss\""], "answer": "Dal veneziano \"s-ciào\" (schiavo vostro)" },
-        { "points": 400, "question": "Da quale lingua deriva la parola \"algebra\"?", "choices": ["Greco", "Latino", "Arabo", "Sanscrito"], "answer": "Arabo" },
-        { "points": 500, "question": "Da cosa deriva la parola \"candidato\"?", "choices": ["Dal candelabro", "Dalla toga bianca", "Dalla candela votiva", "Dallo zucchero candito"], "answer": "Dalla toga bianca", "hostNote": "Nell'antica Roma chi si candidava indossava una toga \"candida\", cioè bianca" }
+        {
+          "points": 100,
+          "question": "Cosa significa la parola greca \"demos\", da cui deriva \"democrazia\"?",
+          "choices": [
+            "Popolo",
+            "Potere",
+            "Città",
+            "Legge"
+          ],
+          "answer": "Popolo"
+        },
+        {
+          "points": 200,
+          "question": "Cosa voleva dire in latino la parola \"persona\"?",
+          "choices": [
+            "Individuo",
+            "Maschera teatrale",
+            "Anima",
+            "Corpo"
+          ],
+          "answer": "Maschera teatrale"
+        },
+        {
+          "points": 300,
+          "question": "Da dove deriva il saluto \"ciao\"?",
+          "choices": [
+            "Dal francese \"chiot\"",
+            "Dal veneziano \"s-ciào\" (schiavo vostro)",
+            "Dal latino \"caelum\"",
+            "Dal tedesco \"Tschüss\""
+          ],
+          "answer": "Dal veneziano \"s-ciào\" (schiavo vostro)"
+        },
+        {
+          "points": 400,
+          "question": "Da quale lingua deriva la parola \"algebra\"?",
+          "choices": [
+            "Greco",
+            "Latino",
+            "Arabo",
+            "Sanscrito"
+          ],
+          "answer": "Arabo"
+        },
+        {
+          "points": 500,
+          "question": "Da cosa deriva la parola \"candidato\"?",
+          "choices": [
+            "Dal candelabro",
+            "Dalla toga bianca",
+            "Dalla candela votiva",
+            "Dallo zucchero candito"
+          ],
+          "answer": "Dalla toga bianca",
+          "hostNote": "Nell'antica Roma chi si candidava indossava una toga \"candida\", cioè bianca"
+        }
       ]
     }
   ]

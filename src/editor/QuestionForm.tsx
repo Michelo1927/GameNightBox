@@ -80,7 +80,12 @@ export default function QuestionForm({ slug, category, question: q, onChange, on
       <MediaField label="Media della risposta" slug={slug} media={q.answerMedia} onChange={(answerMedia) => set({ answerMedia })} />
 
       <label className="block">
-        Nota per l'host
+        Regole (le vedono tutti, insieme alla domanda)
+        <input value={q.rules ?? ''} onChange={(e) => set({ rules: e.target.value })} placeholder="Es. servono titolo e artista, massimo 10 secondi…" />
+      </label>
+
+      <label className="block">
+        Nota per l'host (compare solo dopo aver mostrato la risposta)
         <input value={q.hostNote ?? ''} onChange={(e) => set({ hostNote: e.target.value })} placeholder="Es. accettare ±10%, basta il cognome…" />
       </label>
     </div>

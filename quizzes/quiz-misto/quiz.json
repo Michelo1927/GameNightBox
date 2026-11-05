@@ -13,26 +13,54 @@
         {
           "points": 100,
           "question": "Titolo e artista?",
-          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=uSD4vsh1zDA", "start": 0, "end": 15, "audioOnly": true },
+          "media": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=uSD4vsh1zDA",
+            "start": 0,
+            "end": 15,
+            "audioOnly": true
+          },
           "answer": "I Gotta Feeling - The Black Eyed Peas",
-          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=uSD4vsh1zDA" },
-          "hostNote": "Servono titolo e artista"
+          "rules": "Servono titolo e artista",
+          "answerMedia": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=uSD4vsh1zDA"
+          }
         },
         {
           "points": 200,
           "question": "Di quale canzone è questo riff? Titolo e gruppo.",
-          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=0J2QdDbelmY", "start": 0, "end": 12, "audioOnly": true },
+          "media": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=0J2QdDbelmY",
+            "start": 0,
+            "end": 12,
+            "audioOnly": true
+          },
           "answer": "Seven Nation Army - The White Stripes",
-          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=0J2QdDbelmY" },
-          "hostNote": "Servono titolo e gruppo"
+          "rules": "Servono titolo e gruppo",
+          "answerMedia": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=0J2QdDbelmY"
+          }
         },
         {
           "points": 300,
           "question": "Titolo e artista?",
-          "media": { "type": "youtube", "src": "https://www.youtube.com/watch?v=-N4jf6rtyuw", "start": 0, "end": 15, "audioOnly": true },
+          "media": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=-N4jf6rtyuw",
+            "start": 0,
+            "end": 15,
+            "audioOnly": true
+          },
           "answer": "Crazy - Gnarls Barkley",
-          "answerMedia": { "type": "youtube", "src": "https://www.youtube.com/watch?v=-N4jf6rtyuw" },
-          "hostNote": "Servono titolo e artista (il duo di Cee Lo Green e Danger Mouse)"
+          "rules": "Servono titolo e artista",
+          "answerMedia": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=-N4jf6rtyuw"
+          },
+          "hostNote": "Gnarls Barkley è il duo di Cee Lo Green e Danger Mouse"
         },
         {
           "points": 400,
@@ -67,7 +95,12 @@
         {
           "points": 400,
           "question": "Qual è il vero nome del Professore ne \"La casa di carta\"?",
-          "choices": ["Andrés de Fonollosa", "Sergio Marquina", "Aníbal Cortés", "Martín Berrote"],
+          "choices": [
+            "Andrés de Fonollosa",
+            "Sergio Marquina",
+            "Aníbal Cortés",
+            "Martín Berrote"
+          ],
           "answer": "Sergio Marquina",
           "hostNote": "Gli altri sono Berlino, Rio e Palermo"
         },
@@ -95,7 +128,10 @@
         {
           "points": 300,
           "question": "Quale stadio è questo?",
-          "media": { "type": "image", "src": "san-siro.jpg" },
+          "media": {
+            "type": "image",
+            "src": "san-siro.jpg"
+          },
           "answer": "San Siro (Stadio Giuseppe Meazza), Milano",
           "hostNote": "Accettare sia \"San Siro\" sia \"Meazza\""
         },
@@ -119,12 +155,15 @@
           "points": 100,
           "question": "Quali sono i tre ingredienti che condiscono la pizza Margherita?",
           "answer": "Pomodoro, mozzarella e basilico",
-          "hostNote": "Servono tutti e tre"
+          "rules": "Servono tutti e tre"
         },
         {
           "points": 200,
           "question": "Che dolce è questo?",
-          "media": { "type": "image", "src": "cannoli.jpg" },
+          "media": {
+            "type": "image",
+            "src": "cannoli.jpg"
+          },
           "answer": "Cannoli siciliani"
         },
         {
@@ -136,9 +175,17 @@
         {
           "points": 400,
           "question": "Cosa sono i pizzoccheri, tipici della Valtellina?",
-          "choices": ["Gnocchi di patate e spinaci", "Ravioli di zucca", "Tagliatelle di grano saraceno", "Polpette di riso"],
+          "choices": [
+            "Gnocchi di patate e spinaci",
+            "Ravioli di zucca",
+            "Tagliatelle di grano saraceno",
+            "Polpette di riso"
+          ],
           "answer": "Tagliatelle di grano saraceno",
-          "answerMedia": { "type": "image", "src": "pizzoccheri.jpg" }
+          "answerMedia": {
+            "type": "image",
+            "src": "pizzoccheri.jpg"
+          }
         },
         {
           "points": 500,

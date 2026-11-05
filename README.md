@@ -4,7 +4,7 @@ Quiz in stile Jeopardy per giocare a squadre con gli amici: 5 categorie × 5 dom
 Risposta giusta = +punti, risposta sbagliata = −punti. Chi ha creato il quiz fa da host.
 
 Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" per indovinare le canzoni),
-**scelta multipla** e **note per l'host**.
+**scelta multipla**, **regole** visibili a tutti e **note per l'host** (che compaiono solo dopo la risposta).
 
 ## Giocare
 
@@ -22,6 +22,26 @@ Ogni squadra ha lo stesso numero di domande: quelle che avanzano alla fine (es. 
 squadre) sono **per tutti**. Riaprire una domanda già giocata non fa avanzare il turno.
 
 La partita è salvata nel browser: ricaricando la pagina non si perde nulla.
+
+## Creare un quiz dal telefono (anche per gli amici)
+
+Sul sito tocca **✏️ Crea un quiz**: si compila una domanda alla volta, con foto dalla galleria,
+link a immagini, video YouTube (anche "solo audio" per le canzoni) e risposte multiple.
+La bozza si salva da sola sul telefono.
+
+Alla fine **✨ Genera il codice** produce un testo (`JQ1.…`) e un link da mandare a chi fa da host:
+- aprendo il **link** il quiz si carica e si gioca subito;
+- oppure, sul sito, **📥 Carica un quiz** e incolla il codice (o apri il file `.txt`).
+
+Le foto allungano molto il codice: se è troppo lungo per un messaggio, il sito propone di
+condividerlo come file. I quiz caricati restano salvati solo su quel dispositivo; per renderne uno
+permanente sul sito:
+
+```bash
+npm run import -- codice.txt      # oppure il codice o il link direttamente
+```
+
+Lo script crea `quizzes/<nome>/` estraendo le foto in file; poi commit e push.
 
 ## Creare un quiz con Claude
 
@@ -46,10 +66,10 @@ quando approvi, lo pubblica.
 npm run dev
 ```
 
-Apri http://localhost:5173/editor.html (oppure il pulsante **✏️ Editor quiz** nella home in locale).
+Apri http://localhost:5173/editor.html (oppure il pulsante **🛠 Editor (locale)** nella home).
 
 - Crea un quiz nuovo o aprine uno esistente: compare il tabellone; clicca una casella per modificarla.
-- Per ogni domanda puoi impostare testo, risposta, scelta multipla, nota per l'host e i media
+- Per ogni domanda puoi impostare testo, risposta, scelta multipla, regole, nota per l'host e i media
   (della domanda e della risposta): **trascina un file**, sceglilo o incollalo con Ctrl+V.
   Per YouTube incolla il link e, se serve, imposta inizio, fine e "solo audio".
 - Le categorie si rinominano direttamente nel tabellone; ◀ ▶ le spostano e 🗑 le elimina.

@@ -4,7 +4,7 @@ export type MediaType = 'image' | 'audio' | 'video' | 'youtube';
 
 export interface Media {
   type: MediaType;
-  /** File name inside the quiz folder, or a full URL. */
+  /** File name inside the quiz folder, a full URL, or a data: URL (quizzes shared as a code). */
   src: string;
   /** Clip start/end in seconds (audio, video, youtube). */
   start?: number;
@@ -21,6 +21,9 @@ export interface Question {
   media?: Media;
   answerMedia?: Media;
   choices?: string[];
+  /** Rules shown to everyone together with the question (e.g. "servono titolo e artista"). */
+  rules?: string;
+  /** Private hints for the host: shown only after the answer is revealed. */
   hostNote?: string;
 }
 
@@ -92,6 +95,7 @@ export function validateQuiz(data: unknown): ValidationResult {
         if (!Array.isArray(q.choices) || q.choices.length < 2 || !q.choices.every(isStr)) errors.push(`${w}.choices: servono almeno 2 opzioni di testo`);
         else if (isStr(q.answer) && findCorrectChoice(q.choices, q.answer) < 0) warnings.push(`${w}: la risposta non corrisponde a nessuna delle scelte`);
       }
+      if (q.rules !== undefined && !isStr(q.rules)) errors.push(`${w}.rules: deve essere testo`);
       if (q.hostNote !== undefined && !isStr(q.hostNote)) errors.push(`${w}.hostNote: deve essere testo`);
     });
   });
@@ -102,9 +106,22 @@ export function validateQuiz(data: unknown): ValidationResult {
 export function localMediaFiles(quiz: Quiz): string[] {
   const files: string[] = [];
   for (const c of quiz.categories) for (const q of c.questions) for (const m of [q.media, q.answerMedia]) {
-    if (m && m.type !== 'youtube' && !/^https?:\/\//i.test(m.src)) files.push(m.src);
+    if (m && m.type !== 'youtube' && !isRemote(m.src)) files.push(m.src);
   }
   return files;
+}
+
+/** True for full URLs and embedded data: URLs, false for files in the quiz folder. */
+export const isRemote = (src: string) => /^(https?:|data:)/i.test(src);
+
+export function slugify(text: string) {
+  return text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 50);
 }
 
 const norm = (s: string) => s.trim().toLowerCase();

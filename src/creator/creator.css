@@ -1,0 +1,85 @@
+/* Quiz creator + import page: mobile first */
+.creator, .import-page { max-width: 640px; margin: 0 auto; padding: 12px 16px 140px; display: flex; flex-direction: column; gap: 14px; }
+.creator input, .creator textarea, .import-page textarea {
+  width: 100%; font: inherit; font-size: 16px; /* 16px avoids iOS zoom on focus */
+  color: var(--text); background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+}
+.creator input:focus, .creator textarea:focus, .import-page textarea:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+.creator textarea { resize: vertical; }
+.creator input[type='checkbox'], .creator input[type='radio'] { width: 22px; height: 22px; flex: none; accent-color: var(--gold); padding: 0; }
+
+.cr-header { display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 5; margin: -12px -16px 0; padding: 12px 16px; background: rgba(7, 11, 46, 0.92); backdrop-filter: blur(8px); }
+.cr-header .back { font-size: 1.5rem; padding: 4px 8px 4px 0; }
+.cr-header h1 { margin: 0; flex: 1; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 1.5rem; letter-spacing: 0.5px; text-transform: uppercase; overflow-wrap: anywhere; }
+.cr-count { color: var(--muted); font-weight: 600; }
+.cr-tip { margin: 0; color: var(--muted); line-height: 1.45; }
+.cr-tip.small { font-size: 0.9rem; }
+.cr-tip b { color: var(--text); }
+.cr-field { display: flex; flex-direction: column; gap: 6px; }
+.cr-label { font-size: 0.85rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.cr-hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.cr-error { margin: 0; color: #ff8a8a; font-weight: 600; font-size: 0.9rem; }
+.cr-warning { padding: 10px 14px; border-radius: 10px; background: #5a1a22; color: #ffd0d0; font-weight: 600; }
+.gold { color: var(--gold); }
+
+.cr-cat { padding: 12px; border-radius: 14px; background: var(--bg-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.cr-cat-name { font-family: 'Anton', sans-serif !important; font-size: 1.2rem !important; letter-spacing: 0.5px; text-transform: uppercase; background: linear-gradient(170deg, var(--cell), var(--cell-2)) !important; border-color: transparent !important; }
+.cr-cat-name::placeholder { text-transform: none; font-family: 'Inter', sans-serif; font-size: 1rem; color: rgba(255, 255, 255, 0.5); }
+.cr-chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.cr-chips a {
+  display: flex; flex-direction: column; align-items: center; padding: 8px 0 6px; border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3); border: 1px dashed var(--line); font-family: 'Anton', sans-serif; font-size: 1.15rem; color: var(--muted);
+}
+.cr-chips a small { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 800; }
+.cr-chips a.done { background: linear-gradient(170deg, var(--cell), var(--cell-2)); border: 1px solid transparent; color: var(--gold); }
+.cr-chips a.done small { color: var(--ok); }
+.cr-secondary { display: flex; flex-wrap: wrap; gap: 8px; }
+.cr-secondary .btn { flex: 1 1 200px; text-align: center; }
+
+.cr-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(7, 11, 46, 0.95); backdrop-filter: blur(8px); border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 8px; align-items: center;
+}
+.cr-bar > * { width: min(608px, 100%); text-align: center; }
+.cr-progress { height: 6px; border-radius: 99px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.cr-progress div { height: 100%; background: var(--gold); transition: width 0.3s; }
+.cr-missing { margin: 0; font-size: 0.8rem; color: var(--muted); }
+.cr-nav { flex-direction: row; justify-content: center; }
+.cr-nav > * { width: auto; }
+.cr-nav .btn { padding: 12px 18px; font-size: 1rem; }
+.cr-nav .btn.primary { flex: 1; max-width: 300px; }
+
+.cr-check { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+.cr-choices { display: flex; flex-direction: column; gap: 8px; }
+.cr-choice { display: flex; align-items: center; gap: 10px; }
+.cr-more { border: 1px solid var(--line); border-radius: 12px; padding: 4px 12px; }
+.cr-more[open] { padding-bottom: 12px; }
+.cr-more summary { padding: 10px 0; font-weight: 700; cursor: pointer; color: var(--muted); }
+.cr-more > * + * { margin-top: 12px; }
+
+.cr-media { display: flex; flex-direction: column; gap: 8px; }
+.cr-seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.cr-seg button { flex: 1 1 auto; padding: 9px 10px; border-radius: 99px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.05); font-weight: 600; font-size: 0.9rem; }
+.cr-seg button.on { background: var(--gold); color: #1a1400; border-color: var(--gold); }
+.cr-file { display: block; padding: 16px; text-align: center; border-radius: 10px; border: 2px dashed var(--line); font-weight: 700; cursor: pointer; }
+.cr-row { display: flex; gap: 10px; }
+.cr-row label { flex: 1; display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+.cr-preview .media { width: 100%; }
+.cr-preview .media img { width: 100%; height: 200px; }
+.cr-preview .yt-frame { width: 100%; }
+.cr-preview .player { width: 100%; }
+.cr-preview .player .play { width: 48px; height: 48px; font-size: 1.1rem; }
+
+.cr-code { font-family: ui-monospace, monospace; font-size: 12px !important; word-break: break-all; }
+.cr-share { display: flex; flex-direction: column; gap: 8px; }
+.cr-share .btn { padding: 12px; font-size: 1rem; }
+.cr-toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 30; padding: 10px 18px; border-radius: 99px; background: var(--ok); color: #002b12; font-weight: 800; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+.cr-todo { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.cr-todo a { color: var(--gold); font-weight: 600; }
+
+/* Home actions */
+.home-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
+.home-actions .btn { padding: 12px 20px; font-size: 1.05rem; }
+.home h3 { margin: 32px 0 12px; color: var(--muted); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+.quiz-card .remove { position: absolute; bottom: 10px; right: 10px; border: 0; background: rgba(0, 0, 0, 0.35); border-radius: 8px; padding: 4px 8px; }

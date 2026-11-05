@@ -50,6 +50,12 @@ domande se l'ordine non è giusto.
 ### Qualità
 - Risposta **univoca** e breve (un nome, un numero, una parola). Se servono tolleranze
   ("accettare ±1 anno", "basta il cognome"), scrivile in `hostNote`.
+- **Regole vs nota per l'host**: lo schermo lo vedono tutti.
+  - `rules`: cosa devono fare i giocatori, mostrato con la domanda (es. "servono titolo e artista",
+    "massimo 10 secondi", "valida entro ±10%").
+  - `hostNote`: tolleranze e spiegazioni che possono suggerire la risposta (es. "accettare anche il
+    solo cognome", "gli altri sono…"); compare **solo dopo** aver mostrato la risposta.
+    Non mettere mai in `rules` qualcosa che aiuti a indovinare.
 - **Verifica i fatti**. Se un dato non è sicuro, controllalo con una ricerca web oppure cambia domanda.
   Evita i fatti che cambiano nel tempo ("il più ricco del mondo", "l'ultimo vincitore") o fissa la data
   nella domanda ("nel 2024...").
@@ -60,13 +66,13 @@ domande se l'ordine non è giusto.
 ### Formati speciali (l'utente li ama: usane qualcuno quando il tema lo permette)
 - **Scelta multipla** (`choices`, 3-4 opzioni): la risposta in `answer` deve essere identica a una delle
   scelte. Ottima per etimologie, "vero o falso", quiz in cui le risposte libere sarebbero ambigue.
-- **Indovina il prezzo**: domanda = prodotto, `answer` = prezzo, `hostNote` = tolleranza
-  (es. "valida entro ±10%, 1,43 € - 1,75 €").
+- **Indovina il prezzo**: domanda = prodotto, `answer` = prezzo, `rules` = tolleranza
+  (es. "valida entro ±10%"), `hostNote` = intervallo esatto (es. "1,43 € - 1,75 €").
 - **Indovina il personaggio / l'oggetto**: un indizio che diventa più facile man mano.
 - **Indovina la canzone**: YouTube con `audioOnly: true` e `start`/`end` sul ritornello o sull'intro
-  (vedi sotto). Domanda tipo "Titolo e artista?", `hostNote` con le regole (es. "basta il titolo").
+  (vedi sotto). Domanda tipo "Titolo e artista?", `rules` con cosa serve (es. "servono titolo e artista").
 - **Immagine**: "che cos'è / chi è / dove si trova?" con una foto o un dettaglio.
-- Le note e le regole per l'host vanno in `hostNote` (si vedono in piccolo sullo schermo).
+- Regole per i giocatori in `rules`; suggerimenti per giudicare la risposta in `hostNote`.
 
 ## 4. Media
 

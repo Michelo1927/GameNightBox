@@ -1,46 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QuestionModal from '../components/QuestionModal';
 import { POINTS, validateQuiz, type Media, type Question, type Quiz } from '../quiz/schema';
+import { cleanQuiz, isQuestionComplete } from '../quiz/clean';
 import { devFileUrl, loadQuiz, saveQuiz } from './api';
 import QuestionForm from './QuestionForm';
 
-
 const MAX_CATEGORIES = 8;
-
-function cleanMedia(m?: Media): Media | undefined {
-  if (!m || !m.src.trim()) return undefined;
-  const out: Media = { type: m.type, src: m.src.trim() };
-  if (m.start !== undefined && !Number.isNaN(m.start)) out.start = m.start;
-  if (m.end !== undefined && !Number.isNaN(m.end)) out.end = m.end;
-  if (m.audioOnly) out.audioOnly = true;
-  if (m.caption?.trim()) out.caption = m.caption.trim();
-  return out;
-}
-
-/** Drops empty optional fields so quiz.json stays tidy. */
-function cleanQuiz(quiz: Quiz): Quiz {
-  const out: Quiz = { title: quiz.title.trim(), categories: [] };
-  if (quiz.description?.trim()) out.description = quiz.description.trim();
-  if (quiz.author?.trim()) out.author = quiz.author.trim();
-  if (quiz.credits?.length) out.credits = quiz.credits;
-  out.categories = quiz.categories.map((c) => ({
-    name: c.name.trim(),
-    questions: c.questions.map((q) => {
-      const o: Question = { points: q.points, question: q.question.trim(), answer: q.answer.trim() };
-      const media = cleanMedia(q.media);
-      if (media) o.media = media;
-      if (q.choices) {
-        const choices = q.choices.map((x) => x.trim()).filter(Boolean);
-        if (choices.length) o.choices = choices;
-      }
-      const answerMedia = cleanMedia(q.answerMedia);
-      if (answerMedia) o.answerMedia = answerMedia;
-      if (q.hostNote?.trim()) o.hostNote = q.hostNote.trim();
-      return o;
-    }),
-  }));
-  return out;
-}
 
 function mediaIcon(m?: Media) {
   if (!m?.src) return '';
@@ -101,7 +66,7 @@ export default function QuizEditor({ slug }: { slug: string }) {
   }, [save, dirty]);
 
   const problems = useMemo(() => (quiz ? validateQuiz(cleanQuiz(quiz)) : { errors: [], warnings: [] }), [quiz]);
-  const isIncomplete = (q: Question) => !q.answer.trim() || (!q.question.trim() && !q.media?.src);
+  const isIncomplete = (q: Question) => !isQuestionComplete(q);
   const incomplete = quiz ? quiz.categories.reduce((n, c) => n + c.questions.filter(isIncomplete).length, 0) : 0;
 
   if (loadError) return <div className="page"><a className="back" href="#/">← Editor</a><p className="error-text">{loadError}</p></div>;

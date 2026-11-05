@@ -1,4 +1,5 @@
-import { validateQuiz, type Quiz } from './schema';
+import { importedQuizzes } from './imported';
+import { isRemote, validateQuiz, type Quiz } from './schema';
 
 // Every quizzes/<slug>/quiz.json is bundled at build time.
 const quizModules = import.meta.glob('/quizzes/*/quiz.json', { eager: true, import: 'default' }) as Record<string, unknown>;
@@ -12,6 +13,8 @@ export interface LoadedQuiz {
   quiz: Quiz;
   errors: string[];
   warnings: string[];
+  /** Loaded from a code and stored in this browser (not part of the site). */
+  imported?: boolean;
 }
 
 export const quizzes: LoadedQuiz[] = Object.entries(quizModules)
@@ -27,12 +30,12 @@ export const quizzes: LoadedQuiz[] = Object.entries(quizModules)
   .sort((a, b) => (a.quiz.title ?? a.slug).localeCompare(b.quiz.title ?? b.slug));
 
 export function findQuiz(slug: string): LoadedQuiz | undefined {
-  return quizzes.find((q) => q.slug === slug);
+  return quizzes.find((q) => q.slug === slug) ?? importedQuizzes().find((q) => q.slug === slug);
 }
 
-/** Turns a media src (file name in the quiz folder, or URL) into a usable URL. */
+/** Turns a media src (file name in the quiz folder, URL or data: URL) into a usable URL. */
 export function mediaUrl(slug: string, src: string): string {
-  if (/^https?:\/\//i.test(src)) return src;
+  if (isRemote(src)) return src;
   const clean = src.replace(/^\.?\//, '');
   return mediaModules[`/quizzes/${slug}/${clean}`] ?? '';
 }

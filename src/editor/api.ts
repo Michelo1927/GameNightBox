@@ -1,4 +1,4 @@
-import type { Quiz, ValidationResult } from '../quiz/schema';
+import { isRemote, type Quiz, type ValidationResult } from '../quiz/schema';
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/__editor/${path}`, init);
@@ -24,14 +24,6 @@ export async function uploadMedia(slug: string, file: File): Promise<string> {
 }
 
 /** Dev-server URL of a file in the quiz folder (works right after upload). */
-export const devFileUrl = (slug: string, src: string) => (/^https?:\/\//i.test(src) ? src : `/quizzes/${slug}/${src}`);
+export const devFileUrl = (slug: string, src: string) => (isRemote(src) ? src : `/quizzes/${slug}/${src}`);
 
-export function slugify(text: string) {
-  return text
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 50);
-}
+export { slugify } from '../quiz/schema';

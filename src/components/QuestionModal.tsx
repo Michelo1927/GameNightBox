@@ -61,6 +61,7 @@ export default function QuestionModal({ category, question, teams, results, onRe
         <div className="q-body">
           {question.question && <p className={`q-text ${textSize(question.question)}`}>{question.question}</p>}
           {question.media && <MediaView media={question.media} url={resolveUrl(question.media.src)} />}
+          {question.rules && <p className="rules">📢 {question.rules}</p>}
           {question.choices && (
             <ol className="choices">
               {question.choices.map((c, i) => (
@@ -76,9 +77,10 @@ export default function QuestionModal({ category, question, teams, results, onRe
               <div className="answer-label">Risposta</div>
               <div className={`answer-text ${textSize(question.answer)}`}>{question.answer}</div>
               {question.answerMedia && <MediaView media={question.answerMedia} url={resolveUrl(question.answerMedia.src)} />}
+              {/* Host notes can hint at the answer, so they appear only after the reveal. */}
+              {question.hostNote && <p className="host-note">📝 {question.hostNote}</p>}
             </div>
           )}
-          {question.hostNote && <p className="host-note">📝 {question.hostNote}</p>}
         </div>
 
         <footer className="q-footer">
