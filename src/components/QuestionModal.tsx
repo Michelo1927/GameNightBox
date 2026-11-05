@@ -20,7 +20,14 @@ interface Props {
   /** Default seconds for the timer. */
   timer?: number;
   /** Furto / Passa la mano: only the team that found the cell plays (or the one it passed it to). */
-  special?: { kind: 'steal' | 'pass'; by: Team; target?: Team; setTarget: (teamId?: string) => void };
+  special?: {
+    kind: 'steal' | 'pass';
+    by: Team;
+    target?: Team;
+    setTarget: (teamId?: string) => void;
+    /** Each team's score before this cell: a team can't be robbed of more points than it has. */
+    scores: Record<string, number>;
+  };
   /** Screen point the question grows from (the clicked cell). */
   origin?: { x: number; y: number };
 }
@@ -66,6 +73,8 @@ export default function QuestionModal({ category, question, teams, results, onRe
   const others = special ? teams.filter((t) => t.id !== special.by.id) : [];
   // Furto: after a right answer the team picks who to rob. Passa la mano: before answering, it can pass.
   const pickVictim = special?.kind === 'steal' && results[special.by.id] === 'right' && others.length > 0;
+  const canRob = (t: Team) => (special?.scores[t.id] ?? 0) >= points;
+  const robbable = others.filter(canRob);
   const canPass = special?.kind === 'pass' && !passedTo && !results[special.by.id] && others.length > 0;
   const style = origin ? ({ transformOrigin: `${origin.x}px ${origin.y}px` } as CSSProperties) : undefined;
 
@@ -145,7 +154,7 @@ export default function QuestionModal({ category, question, teams, results, onRe
                 ))}
               </span>
             )}
-            {pickVictim && (
+            {pickVictim && robbable.length > 0 && (
               <span className="special-pick">
                 🥷 Rubate a:
                 {others.map((t) => (
@@ -153,12 +162,17 @@ export default function QuestionModal({ category, question, teams, results, onRe
                     key={t.id}
                     className={`pick ${special!.target?.id === t.id ? 'on' : ''}`}
                     style={{ ['--team' as string]: t.color }}
+                    disabled={!canRob(t)}
+                    title={canRob(t) ? undefined : `Ha meno di ${points} punti`}
                     onClick={() => special!.setTarget(special!.target?.id === t.id ? undefined : t.id)}
                   >
-                    {t.name}
+                    {t.name} ({special!.scores[t.id] ?? 0})
                   </button>
                 ))}
               </span>
+            )}
+            {pickVictim && robbable.length === 0 && (
+              <span className="special-pick">🥷 Nessuna squadra ha {points} punti da rubare: li prendete dal banco.</span>
             )}
           </div>
           <div className="q-actions">

@@ -364,3 +364,4 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 @media (prefers-reduced-motion: reduce) { .gift-card { animation: none; } }
 .double-box { max-width: min(760px, 100%); box-sizing: border-box; }
 .double-title { white-space: normal; text-wrap: balance; font-size: clamp(2rem, min(8vw, 13vh), 6rem); }
+.special-pick .pick:disabled { opacity: 0.35; cursor: not-allowed; background: rgba(0, 0, 0, 0.35); color: var(--text); text-decoration: line-through; }

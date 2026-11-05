@@ -3,6 +3,7 @@ import { go } from '../nav';
 import {
   boardScore,
   cellKey,
+  cellDeltas,
   currentTurn,
   drawGift,
   gameOver,
@@ -271,7 +272,15 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           timer={settings.timer}
           special={
             special && finder
-              ? { kind: special.kind, by: finder, target: teamById(special.target), setTarget: (id) => setTarget(openKey, id) }
+              ? {
+                  kind: special.kind,
+                  by: finder,
+                  target: teamById(special.target),
+                  setTarget: (id) => setTarget(openKey, id),
+                  scores: Object.fromEntries(
+                    game.teams.map((t) => [t.id, boardScore(t, game, quiz) - (cellDeltas(game, quiz, openKey)[t.id] ?? 0)]),
+                  ),
+                }
               : undefined
           }
           origin={special ? undefined : open.origin}
