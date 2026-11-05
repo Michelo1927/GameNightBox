@@ -79,6 +79,8 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
 
   const openCell = (c: number, q: number, e: MouseEvent) => {
     const key = cellKey(c, q);
+    // Otherwise the cell stays focused and pressing Esc to close the question draws a focus ring around it.
+    e.currentTarget.blur();
     // The last leftover cell (or the cell already used as final) opens as the final question.
     if (game.final?.cell === key || (turn.lastCell && !game.played[key])) {
       if (game.final?.cell !== key) setGame((g) => ({ ...g, final: { ...NEW_FINAL, cell: key } }));
