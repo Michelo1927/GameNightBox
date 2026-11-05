@@ -14,7 +14,9 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
    - **Spazio**: mostra o nasconde la risposta;
    - **✓ / ✗** sotto ogni squadra: aggiunge o toglie i punti della casella (cliccando di nuovo annulli);
    - **Esc**: torna al tabellone.
-4. I pulsanti **− / +** sotto i punteggi correggono a mano di 50 punti (per regole speciali).
+4. Per correggere un punteggio a mano (regole speciali, errori): **clicca il punteggio** e scrivi il
+   valore esatto (es. `350`), oppure `+120` / `-30` per aggiungere o togliere punti; Invio conferma,
+   Esc annulla. I pulsanti **− / +** sotto i punteggi tolgono o aggiungono 50 punti.
 
 **Turni:** le squadre giocano a turno, nell'ordine in cui sono state create. La squadra di turno
 (evidenziata) sceglie una casella e risponde; chiusa la domanda, tocca alla squadra successiva.

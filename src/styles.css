@@ -190,3 +190,6 @@ kbd {
   .cat-cell { min-height: 48px; padding: 4px 2px; }
   .q-footer { flex-direction: column; align-items: stretch; }
 }
+button.team-points { display: block; width: 100%; background: none; border: 0; color: inherit; cursor: text; border-radius: 6px; }
+button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
+.team-points-input { display: block; width: 100%; box-sizing: border-box; text-align: center; color: inherit; background: rgba(255, 255, 255, 0.12); border: 1px solid var(--team, var(--line)); border-radius: 6px; padding: 0; }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { go } from '../nav';
 import { cellKey, currentTurn, emptyGame, teamScore, useGame, type Result } from '../game/state';
 import { mediaUrl, type LoadedQuiz } from '../quiz/load';
@@ -90,7 +90,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
         {game.teams.map((t) => (
           <div key={t.id} className={`team-score ${turn.team?.id === t.id || turn.shared ? 'active' : ''}`} style={{ ['--team' as string]: t.color }}>
             <div className="team-name">{t.name}</div>
-            <div className="team-points">{teamScore(t, game, quiz)}</div>
+            <ScoreEdit score={teamScore(t, game, quiz)} onChange={(delta) => adjust(t.id, delta)} />
             <div className="team-adjust">
               <button onClick={() => adjust(t.id, -SCORE_STEP)} title={`-${SCORE_STEP}`}>−</button>
               <button onClick={() => adjust(t.id, SCORE_STEP)} title={`+${SCORE_STEP}`}>+</button>
@@ -129,5 +129,58 @@ function TurnBadge({ turn, onRanking }: { turn: ReturnType<typeof currentTurn>; 
     <span className="turn-badge" style={{ ['--team' as string]: turn.team.color }}>
       Tocca a <b>{turn.team.name}</b>
     </span>
+  );
+}
+
+/**
+ * Click the score to type it: "350" sets it, "+120" / "-30" adds or removes points
+ * (so a negative score can only be reached by removing points, which is how it happens in play).
+ * Stored as a manual correction, so the per-question results stay intact.
+ */
+function ScoreEdit({ score, onChange }: { score: number; onChange: (delta: number) => void }) {
+  const [text, setText] = useState<string | null>(null);
+  const done = useRef(false); // Enter and the blur that follows must not apply the change twice
+
+  const open = () => {
+    done.current = false;
+    setText(String(score));
+  };
+
+  const commit = () => {
+    if (done.current) return;
+    done.current = true;
+    const t = (text ?? '').trim().replace(/\s/g, '');
+    setText(null);
+    if (!/^[+-]?\d+$/.test(t)) return;
+    const n = Number(t);
+    const relative = /^[+-]/.test(t) && t !== String(score);
+    const delta = relative ? n : n - score;
+    if (delta) onChange(delta);
+  };
+
+  if (text === null)
+    return (
+      <button className="team-points" title="Clicca per modificare il punteggio" onClick={open}>
+        {score}
+      </button>
+    );
+  return (
+    <input
+      className="team-points team-points-input"
+      autoFocus
+      inputMode="numeric"
+      value={text}
+      onFocus={(e) => e.target.select()}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        if (e.key === 'Enter') commit();
+        if (e.key === 'Escape') {
+          done.current = true;
+          setText(null);
+        }
+      }}
+    />
   );
 }
