@@ -174,15 +174,15 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title="Annulla l'ultima azione (Ctrl+Z)">
             ↶ Annulla
           </button>
-          <button className="btn ghost icon" onClick={() => setMuted(!muted)} title={muted ? 'Attiva i suoni' : 'Disattiva i suoni'}>
-            {muted ? '🔇' : '🔊'}
-          </button>
-          <button className="btn ghost icon" onClick={toggleFullscreen} title="Schermo intero (F)">
-            ⛶
-          </button>
-          <button className="btn ghost" onClick={() => go(`/q/${slug}/setup`)}>Squadre</button>
-          <button className="btn ghost" onClick={restart}>Ricomincia</button>
           <button className="btn primary" onClick={() => setRanking(over ? 'celebrate' : 'normal')}>Classifica</button>
+          <MoreMenu
+            items={[
+              { label: muted ? '🔊 Attiva i suoni' : '🔇 Disattiva i suoni', onClick: () => setMuted(!muted) },
+              { label: '⛶ Schermo intero', key: 'F', onClick: toggleFullscreen },
+              { label: '👥 Squadre e opzioni', onClick: () => go(`/q/${slug}/setup`) },
+              { label: '🔄 Ricomincia', onClick: restart },
+            ]}
+          />
         </div>
       </header>
 
@@ -205,11 +205,22 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
             const sp = game.specials?.[key];
             const shownSpecial = played && sp?.by ? SPECIAL_INFO[sp.kind] : undefined;
             const isFinalCell = game.final?.cell === key || (turn.lastCell && !played);
+            // A played cell takes the color of the team(s) that got it right.
+            const winners = played ? game.teams.filter((t) => results[t.id] === 'right').map((t) => t.color) : [];
+            const won =
+              winners.length === 0
+                ? undefined
+                : winners.length === 1
+                  ? winners[0]
+                  : `linear-gradient(135deg, ${winners.map((col, i) => `${col} ${(i / winners.length) * 100}% ${((i + 1) / winners.length) * 100}%`).join(', ')})`;
             return (
               <button
                 key={key}
-                className={`cell ${played ? 'played' : ''} ${isFinalCell ? 'final-cell' : ''}`}
-                style={{ animationDelay: `${0.15 + quiz.categories.length * 0.35 + (q * quiz.categories.length + c) * 0.025}s` }}
+                className={`cell ${played ? 'played' : ''} ${won ? 'won' : ''} ${isFinalCell ? 'final-cell' : ''}`}
+                style={{
+                  animationDelay: `${0.15 + quiz.categories.length * 0.35 + (q * quiz.categories.length + c) * 0.025}s`,
+                  ...(won ? { ['--won' as string]: won } : {}),
+                }}
                 onClick={(e) => openCell(c, q, e)}
               >
                 <span className="points">{question.points}</span>
@@ -316,6 +327,46 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   );
 }
 
+/** The "⋯" menu with the actions used less often, so the header stays on one line. */
+function MoreMenu({ items }: { items: { label: string; key?: string; onClick: () => void }[] }) {
+  const [open, setOpen] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => !wrap.current?.contains(e.target as Node) && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    addEventListener('pointerdown', onDown, true);
+    addEventListener('keydown', onKey);
+    return () => {
+      removeEventListener('pointerdown', onDown, true);
+      removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+  return (
+    <div className="more" ref={wrap}>
+      <button className="btn ghost icon" onClick={() => setOpen((o) => !o)} aria-label="Altre azioni" title="Altre azioni">
+        ⋯
+      </button>
+      {open && (
+        <div className="more-menu">
+          {items.map((it) => (
+            <button
+              key={it.label}
+              onClick={() => {
+                setOpen(false);
+                it.onClick();
+              }}
+            >
+              {it.label}
+              {it.key && <kbd>{it.key}</kbd>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function toggleFullscreen() {
   if (document.fullscreenElement) void document.exitFullscreen();
   else void document.documentElement.requestFullscreen?.().catch(() => {});
@@ -380,7 +431,7 @@ function ScoreEdit({ score, onChange }: { score: number; onChange: (delta: numbe
 
   if (text === null)
     return (
-      <button className="team-points" title="Clicca per modificare il punteggio" onClick={open}>
+      <button className={`team-points ${score < 0 ? 'neg' : ''}`} title="Clicca per modificare il punteggio" onClick={open}>
         <AnimatedNumber value={score} />
       </button>
     );

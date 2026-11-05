@@ -370,3 +370,56 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .steal-select { padding: 6px 10px; border-radius: 8px; border: 2px solid var(--team); background: var(--bg-2); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; max-width: 100%; }
 .steal-select option:disabled { color: #888; }
 .count-select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+
+/* ---------- Header on one line: less used actions in the "⋯" menu ---------- */
+.board-header { flex-wrap: nowrap; min-width: 0; }
+.board-header .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; }
+.board-header .turn-badge { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.header-actions { flex-wrap: nowrap; flex-shrink: 0; align-items: center; }
+.more { position: relative; }
+.more > .btn { font-size: 1.2rem; line-height: 1; padding-left: 12px; padding-right: 12px; }
+.more-menu { position: absolute; top: calc(100% + 4px); right: 0; z-index: 6; display: flex; flex-direction: column; min-width: 220px; padding: 6px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55); }
+.more-menu button { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 0; border-radius: 6px; background: none; text-align: left; font-weight: 600; }
+.more-menu button:hover { background: rgba(255, 255, 255, 0.1); }
+@media (max-width: 760px) {
+  .board-header { flex-wrap: wrap; }
+  .board-header .turn-badge { order: 3; }
+  .header-actions { margin-left: auto; }
+}
+
+/* ---------- Scores: always on one row, negative in red ---------- */
+.teams-bar { overflow: visible; padding-top: 4px; }
+.team-score { min-width: 0; }
+.team-points.neg { color: #ff6b6b; }
+
+/* ---------- Played cells take the color of who got them right ---------- */
+.cell.played.won { background: linear-gradient(rgba(5, 8, 30, 0.55), rgba(5, 8, 30, 0.55)), var(--won); }
+.cell.played.won .points { color: rgba(255, 255, 255, 0.55); }
+.dots i { width: 22px; height: 22px; line-height: 22px; font-size: 0.8rem; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5); }
+
+/* ---------- Question: bigger right/wrong buttons and turn badge ---------- */
+.q-team { padding: 6px 8px 6px 14px; gap: 8px; }
+.q-team-name { font-size: clamp(1rem, 1.6vw, 1.3rem); }
+.q-team button { width: 54px; height: 46px; font-size: 1.5rem; border-radius: 8px; }
+.q-team .ok:hover:not(.on) { background: color-mix(in srgb, var(--ok) 35%, transparent); }
+.q-team .ko:hover:not(.on) { background: color-mix(in srgb, var(--ko) 35%, transparent); }
+.q-turn { font-size: clamp(1rem, 2vw, 1.4rem); padding: 6px 18px; box-shadow: 0 0 18px color-mix(in srgb, var(--team) 60%, transparent); }
+@media (max-height: 640px) {
+  .q-team { padding: 2px 4px 2px 10px; gap: 6px; }
+  .q-team button { width: 40px; height: 32px; font-size: 1.05rem; }
+  .q-turn { font-size: 0.95rem; padding: 3px 12px; }
+  .dots i { width: 16px; height: 16px; line-height: 16px; font-size: 0.6rem; }
+}
+.team-score .team-name { min-width: 3em; }
+@media (max-height: 640px) {
+  .team-score .team-name { flex: 0 1 auto; }
+  button.team-points, .team-points-input { min-width: 0; }
+}
+/* Narrow screens: the score is edited by clicking it, the − + buttons would squeeze the names. */
+@media (max-width: 700px) {
+  .team-adjust { display: none; }
+  .team-score { padding-left: 6px; padding-right: 6px; }
+}
+.team-score { overflow: hidden; }
+.team-score .team-points { flex-shrink: 0; }
+.team-score.active { overflow: visible; }

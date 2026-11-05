@@ -21,7 +21,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
    Esc annulla. I pulsanti **− / +** sotto i punteggi tolgono o aggiungono 50 punti.
 5. **↶ Annulla** (o **Ctrl+Z**) torna indietro di un'azione: un ✓/✗, una casella chiusa, una correzione.
 6. Il pulsante **⏱** c'è anche sul tabellone (tasto T), per cronometrare quello che vuoi durante la partita.
-7. **⛶** (o **F**) mette lo schermo intero; **🔊/🔇** accende o spegne i suoni.
+7. Nel menu **⋯** ci sono schermo intero (o tasto **F**), suoni, squadre e Ricomincia.
 
 **✨ Caselle speciali:** alcune caselle nascoste si rivelano
 quando la squadra di turno le apre:
