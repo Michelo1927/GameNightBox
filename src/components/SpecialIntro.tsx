@@ -24,8 +24,15 @@ export default function SpecialIntro({ special, team, category, points, onContin
   const info = SPECIAL_INFO[special.kind];
   const gift = special.kind === 'gift' ? special.gift : undefined;
 
+  // Each special has its own sound; for the Imprevisto, each card has one too.
   useEffect(() => {
-    sounds.double();
+    if (special.kind === 'gift') sounds.gift(special.gift?.icon ?? '');
+    else sounds[special.kind]();
+    // Only when the screen opens, not at every re-render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const on = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
       else if (e.key === 'Enter' || e.code === 'Space') {
