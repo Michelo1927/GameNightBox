@@ -28,6 +28,22 @@ export default function Timer({ seconds, hotkey = true }: Props) {
   };
   const startRef = useRef(start);
   startRef.current = start;
+  const wrap = useRef<HTMLSpanElement>(null);
+
+  // The duration menu closes when clicking anywhere else (e.g. opening a question) or pressing Esc.
+  useEffect(() => {
+    if (!menu) return;
+    const onDown = (e: PointerEvent) => {
+      if (!wrap.current?.contains(e.target as Node)) setMenu(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(false);
+    addEventListener('pointerdown', onDown, true);
+    addEventListener('keydown', onKey);
+    return () => {
+      removeEventListener('pointerdown', onDown, true);
+      removeEventListener('keydown', onKey);
+    };
+  }, [menu]);
 
   useEffect(() => {
     if (!running) return;
@@ -52,7 +68,7 @@ export default function Timer({ seconds, hotkey = true }: Props) {
   }, [hotkey]);
 
   return (
-    <span className="timer-wrap">
+    <span className="timer-wrap" ref={wrap}>
       {left === null ? (
         <span className="timer-idle">
           <button className="btn ghost timer-btn" onClick={() => start()} title="Avvia il timer (T)">
