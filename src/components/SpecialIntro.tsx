@@ -37,12 +37,12 @@ export default function SpecialIntro({ special, team, category, points, onContin
       if (e.key === 'Escape') onClose();
       else if (e.key === 'Enter' || e.code === 'Space') {
         e.preventDefault();
-        (gift ? onClose : onContinue)();
+        onContinue();
       }
     };
     addEventListener('keydown', on);
     return () => removeEventListener('keydown', on);
-  }, [onClose, onContinue, gift]);
+  }, [onClose, onContinue]);
 
   const style = { ['--team' as string]: team.color, ...(origin ? { transformOrigin: `${origin.x}px ${origin.y}px` } : {}) } as CSSProperties;
   return (
@@ -72,21 +72,18 @@ export default function SpecialIntro({ special, team, category, points, onContin
             <p className="gift-text">{gift.text}</p>
           </div>
         )}
+        {gift && (
+          <p className="double-team">
+            E adesso <b>{team.name}</b> risponde comunque alla domanda da {points} punti.
+          </p>
+        )}
         <div className="double-actions">
-          {gift ? (
-            <button className="btn primary big" onClick={onClose}>
-              Torna al tabellone
-            </button>
-          ) : (
-            <>
-              <button className="btn primary big" onClick={onContinue}>
-                Mostra la domanda
-              </button>
-              <button className="btn ghost" onClick={onClose}>
-                Tabellone <kbd>Esc</kbd>
-              </button>
-            </>
-          )}
+          <button className="btn primary big" onClick={onContinue}>
+            Mostra la domanda
+          </button>
+          <button className="btn ghost" onClick={onClose}>
+            Tabellone <kbd>Esc</kbd>
+          </button>
         </div>
       </div>
     </div>

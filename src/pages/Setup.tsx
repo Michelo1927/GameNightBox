@@ -19,7 +19,7 @@ import { useState } from 'react';
 const SPECIAL_HELP: Record<SpecialKind, string> = {
   steal: 'con la risposta giusta rubi i punti a una squadra a scelta',
   pass: "puoi passare la domanda: se l'altra squadra sbaglia, i punti sono tuoi",
-  gift: 'niente domanda, una carta a sorpresa cambia i punteggi',
+  gift: 'una carta a sorpresa cambia i punteggi, poi si risponde alla domanda',
 };
 import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';

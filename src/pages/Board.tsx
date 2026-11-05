@@ -101,8 +101,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
       setOpen({ c, q, origin, intro: true });
       return;
     }
-    // An Imprevisto already drawn shows its card again (it has no question).
-    setOpen({ c, q, origin, intro: sp?.kind === 'gift' && !!sp.by });
+    setOpen({ c, q, origin });
   };
 
   const setTarget = (key: string, teamId?: string) =>
@@ -268,11 +267,10 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           points={quiz.categories[open.c].questions[open.q].points}
           origin={open.origin}
           onContinue={() => setOpen({ ...open, intro: false })}
-          // The Imprevisto card is the whole cell: closing it plays the cell.
-          onClose={special.kind === 'gift' ? close : () => setOpen(null)}
+          onClose={() => setOpen(null)}
         />
       )}
-      {open && !showIntro && special?.kind !== 'gift' && (
+      {open && !showIntro && (
         <QuestionModal
           resolveUrl={(src) => mediaUrl(slug, src)}
           category={quiz.categories[open.c].name}
@@ -284,7 +282,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           answering={game.played[openKey] ? undefined : turn.shared ? 'all' : turn.team}
           timer={settings.timer}
           special={
-            special && finder
+            special && finder && special.kind !== 'gift'
               ? {
                   kind: special.kind,
                   by: finder,
@@ -296,6 +294,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
                 }
               : undefined
           }
+          gift={special?.kind === 'gift' ? special.gift : undefined}
           origin={special ? undefined : open.origin}
         />
       )}

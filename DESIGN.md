@@ -135,8 +135,10 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
    - **Caselle speciali** (scelte a caso a inizio partita, salvate nello stato in `specials`): valgono
      solo se le apre la squadra di turno, che viene salvata in `by`. 🥷 Furto: con risposta giusta la
      squadra sceglie a chi rubare i punti. 🎯 Passa la mano: la squadra può passare la domanda; chi la
-     riceve non perde punti, se sbaglia i punti vanno a chi l'ha passata. 🎁 Imprevisto: niente domanda,
-     una carta pescata all'apertura (con i punti già calcolati) cambia i punteggi.
+     riceve non perde punti, se sbaglia i punti vanno a chi l'ha passata. 🎁 Imprevisto: una carta
+     pescata all'apertura (con i punti già calcolati) cambia i punteggi, poi la domanda si gioca come
+     sempre e i suoi punti si sommano a quelli della carta (all'inizio la carta sostituiva la domanda,
+     ma così si perdeva una domanda del quiz).
      Il vecchio Raddoppio è stato tolto perché troppo forte (si poteva puntare tutto su una domanda
      facile); le sue puntate restano lette solo per le partite salvate prima.
 5. **Domanda finale**, quando tutte le squadre hanno avuto lo stesso numero di turni: è l'ultima

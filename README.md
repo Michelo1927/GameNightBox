@@ -33,8 +33,9 @@ quando la squadra di turno le apre:
   i punti arrivano dal banco.
 - **🎯 Passa la mano**: letta la domanda, la squadra può passarla a un'altra. Se quella indovina prende
   i punti; se sbaglia non perde niente e i punti vanno a chi l'ha passata.
-- **🎁 Imprevisto**: niente domanda, si gira una carta a sorpresa (colpo di fortuna, tasse, festa per
-  tutti, Robin Hood, scambio di punteggio con la squadra davanti, regalo all'ultima).
+- **🎁 Imprevisto**: prima si gira una carta a sorpresa (colpo di fortuna, tasse, festa per
+  tutti, Robin Hood, scambio di punteggio con la squadra davanti, regalo all'ultima), poi la squadra
+  risponde comunque alla domanda della casella: i punti della carta e quelli della risposta si sommano.
 
 **🏆 Domanda finale:** si gioca quando tutte le squadre hanno avuto lo stesso numero di turni.
 - Se avanzano caselle (es. 2 squadre: 12 a testa, ne avanza 1), **l'ultima casella rimasta è la

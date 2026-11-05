@@ -25,7 +25,7 @@ export type SpecialCounts = Record<SpecialKind, number>;
  * - steal (Furto): a right answer takes the points from a team of its choice instead of the bank;
  * - pass (Passa la mano): the team can pass the question to another team; if that team gets it wrong,
  *   the points go to the team that passed it (the other team loses nothing);
- * - gift (Imprevisto): no question, a random card changes the scores.
+ * - gift (Imprevisto): a random card changes the scores, then the question is played as usual.
  */
 export type SpecialKind = 'steal' | 'pass' | 'gift';
 
@@ -148,9 +148,9 @@ export function cellPoints(game: GameState, quiz: Quiz, key: string, teamId: str
 /** Points won (+) or lost (-) by each team on one cell, special rules included. */
 export function cellDeltas(game: GameState, quiz: Quiz, key: string): Record<string, number> {
   const sp = game.specials?.[key];
-  if (sp?.kind === 'gift' && sp.by) return sp.gift?.deltas ?? {};
   const results = game.results[key] ?? {};
-  const deltas: Record<string, number> = {};
+  // Imprevisto: the card's points, plus the answer to the question under it.
+  const deltas: Record<string, number> = sp?.kind === 'gift' && sp.by ? { ...(sp.gift?.deltas ?? {}) } : {};
   const add = (id: string, n: number) => (deltas[id] = (deltas[id] ?? 0) + n);
   const passed = sp?.kind === 'pass' && sp.by && sp.target ? sp : undefined;
   for (const [id, r] of Object.entries(results)) {

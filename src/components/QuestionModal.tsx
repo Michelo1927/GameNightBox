@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { sounds } from '../game/sounds';
 import Timer from './Timer';
-import type { Result, Team } from '../game/state';
+import type { Gift, Result, Team } from '../game/state';
 import { SPECIAL_INFO } from './SpecialIntro';
 import { findCorrectChoice, type Question } from '../quiz/schema';
 import MediaView, { MaybeSplit } from './Media';
@@ -29,6 +29,8 @@ interface Props {
     /** Each team's score before this cell: a team can't be robbed of more points than it has. */
     scores: Record<string, number>;
   };
+  /** Imprevisto: the card drawn before this question, shown as a reminder. */
+  gift?: Gift;
   /** Screen point the question grows from (the clicked cell). */
   origin?: { x: number; y: number };
 }
@@ -41,7 +43,7 @@ function textSize(text: string) {
   return 'md';
 }
 
-export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl, answering, timer = 0, special, origin }: Props) {
+export default function QuestionModal({ category, question, teams, results, onResult, onClose, resolveUrl, answering, timer = 0, special, gift, origin }: Props) {
   const [revealed, setRevealed] = useState(false);
   const reveal = () =>
     setRevealed((r) => {
@@ -100,7 +102,9 @@ export default function QuestionModal({ category, question, teams, results, onRe
             </span>
           )}
           {answering === 'all' && !special && <span className="q-turn shared">🔥 Per tutte le squadre</span>}
-          <span className="q-points">{special ? `${SPECIAL_INFO[special.kind].icon} ${points}` : points}</span>
+          <span className="q-points">
+            {special ? `${SPECIAL_INFO[special.kind].icon} ${points}` : gift ? `${SPECIAL_INFO.gift.icon} ${points}` : points}
+          </span>
         </header>
 
         <div className="q-body">
@@ -126,6 +130,11 @@ export default function QuestionModal({ category, question, teams, results, onRe
 
         <footer className="q-footer">
           <div className="q-teams">
+            {gift && (
+              <span className="special-pick" title={gift.text}>
+                🎁 Imprevisto già applicato: {gift.icon} {gift.title}
+              </span>
+            )}
             {passedTo && special && (
               <span className="special-pick">
                 🎯 Passata da <b>{special.by.name}</b>
