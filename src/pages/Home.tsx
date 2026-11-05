@@ -1,15 +1,33 @@
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type MouseEvent } from 'react';
 import { hasSavedGame } from '../game/state';
+import { archivedSlugs, setArchived } from '../quiz/archive';
 import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
 
 export default function Home() {
   const [imported, setImported] = useState(importedQuizzes);
+  const [archived, setArchivedList] = useState(archivedSlugs);
   const remove = (slug: string, title: string) => {
     if (!confirm(`Togliere "${title}" da questo dispositivo?`)) return;
     removeImported(slug);
+    setArchivedList(setArchived(slug, false));
     setImported(importedQuizzes());
   };
+  const archive = (slug: string, on: boolean) => setArchivedList(setArchived(slug, on));
+
+  const isArchived = (q: LoadedQuiz) => archived.includes(q.slug);
+  const shownImported = imported.filter((q) => !isArchived(q));
+  const shownSite = quizzes.filter((q) => !isArchived(q));
+  const inArchive = [...imported, ...quizzes].filter(isArchived);
+  const card = (q: LoadedQuiz, inArchive = false) => (
+    <QuizCard
+      key={q.slug}
+      loaded={q}
+      archived={inArchive}
+      onArchive={() => archive(q.slug, !inArchive)}
+      onRemove={q.imported ? () => remove(q.slug, q.quiz.title) : undefined}
+    />
+  );
 
   return (
     <div className="page home">
@@ -24,31 +42,50 @@ export default function Home() {
         </div>
       </header>
 
-      {imported.length > 0 && (
+      {shownImported.length > 0 && (
         <>
           <h3>Caricati su questo dispositivo</h3>
-          <div className="quiz-grid">
-            {imported.map((q) => (
-              <QuizCard key={q.slug} loaded={q} onRemove={() => remove(q.slug, q.quiz.title)} />
-            ))}
-          </div>
-          <h3>Quiz del sito</h3>
+          <div className="quiz-grid">{shownImported.map((q) => card(q))}</div>
+          {shownSite.length > 0 && <h3>Quiz del sito</h3>}
         </>
       )}
       <div className="quiz-grid">
-        {quizzes.map((q) => (
-          <QuizCard key={q.slug} loaded={q} />
-        ))}
+        {shownSite.map((q) => card(q))}
         {quizzes.length === 0 && <p className="muted">Nessun quiz trovato in quizzes/.</p>}
+        {quizzes.length > 0 && shownSite.length === 0 && shownImported.length === 0 && (
+          <p className="muted">Tutti i quiz sono in archivio: li trovi qui sotto.</p>
+        )}
       </div>
+
+      {inArchive.length > 0 && (
+        <details className="archive">
+          <summary>
+            📦 Archivio ({inArchive.length}) <span className="muted">· solo su questo dispositivo</span>
+          </summary>
+          <div className="quiz-grid">{inArchive.map((q) => card(q, true))}</div>
+        </details>
+      )}
     </div>
   );
 }
 
-function QuizCard({ loaded: { slug, quiz, errors }, onRemove }: { loaded: LoadedQuiz; onRemove?: () => void }) {
+interface CardProps {
+  loaded: LoadedQuiz;
+  archived?: boolean;
+  onArchive: () => void;
+  onRemove?: () => void;
+}
+
+function QuizCard({ loaded: { slug, quiz, errors }, archived, onArchive, onRemove }: CardProps) {
+  // Buttons inside the card link: they must not open the quiz.
+  const action = (fn: () => void) => (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    fn();
+  };
   return (
     <a
-      className={`quiz-card ${errors.length ? 'broken' : ''}`}
+      className={`quiz-card ${errors.length ? 'broken' : ''} ${archived ? 'archived' : ''}`}
       href={errors.length ? undefined : `#/q/${slug}/setup`}
       style={errors.length ? undefined : ({ ['--hue' as string]: hue(slug) } as CSSProperties)}
     >
@@ -69,18 +106,16 @@ function QuizCard({ loaded: { slug, quiz, errors }, onRemove }: { loaded: Loaded
         </div>
       )}
       {!errors.length && hasSavedGame(slug) && <span className="badge">Partita in corso</span>}
-      {onRemove && (
-        <button
-          className="remove"
-          title="Togli da questo dispositivo"
-          onClick={(e) => {
-            e.preventDefault();
-            onRemove();
-          }}
-        >
-          🗑
+      <span className="card-actions">
+        <button title={archived ? 'Rimetti nella prima schermata' : 'Sposta in archivio'} onClick={action(onArchive)}>
+          {archived ? '📤 Ripristina' : '📦 Archivia'}
         </button>
-      )}
+        {onRemove && (
+          <button title="Togli da questo dispositivo" onClick={action(onRemove)}>
+            🗑
+          </button>
+        )}
+      </span>
     </a>
   );
 }

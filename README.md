@@ -8,7 +8,9 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 ## Giocare
 
-1. Apri il sito e scegli un quiz.
+1. Apri il sito e scegli un quiz. Quelli che non ti servono più li togli dalla prima schermata con **📦 Archivia**:
+   finiscono nella sezione Archivio in fondo alla pagina, da cui li rimetti con **📤 Ripristina**
+   (l'archivio vale solo per il dispositivo su cui lo fai).
 2. Crea le squadre (nome e colore). Nelle **Opzioni** scegli la durata del timer e quante caselle speciali di ogni tipo usare (da 0 a 5, di default una per tipo).
    Con **Inizia la partita** compare la **🎡 ruota**: a ogni giro esce la squadra che gioca per prima, poi la seconda, e così via
    (oppure salti e tieni l'ordine della lista, che si cambia con ▲ ▼).
