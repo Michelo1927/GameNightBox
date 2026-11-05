@@ -1,0 +1,202 @@
+{
+  "title": "Guarda e indovina",
+  "description": "Personaggi da indovinare, luoghi e serie TV da riconoscere in foto, enigmi di logica e storia.",
+  "credits": [
+    "1000 Three domes of Oia in Santorini Photo by Giles Laurent.jpg - Giles Laurent, CC BY-SA 4.0 (Wikimedia Commons)",
+    "Manarola NW Cinque Terre Sep23 A7C 07233.jpg - Timothy A. Gonsalves, CC BY-SA 4.0 (Wikimedia Commons)",
+    "Colorful canal houses at golden hour in Damrak avenue Amsterdam the Netherlands.jpg - Basile Morin, CC BY-SA 4.0 (Wikimedia Commons)",
+    "Tram 28 in Alfama (Lissabon 2016) (26029557541).jpg - Paul Arps, CC BY 2.0 (Wikimedia Commons)",
+    "Chefchaouen Street B.jpg - Mark Fischer, CC BY-SA 2.0 (Wikimedia Commons)",
+    "Cosplay of Squid Game Guards at Sutera Cosplay Fest 2021.jpg - Chongkian, CC BY-SA 4.0 (Wikimedia Commons)",
+    "GoT at Design Exchange IMG 8708 (8564747501).jpg - Stacie DaPonte, CC BY-SA 2.0 (Wikimedia Commons)",
+    "Vele di Scampia Di Salvo.JPG - Federica Zappalà, CC BY-SA 3.0 it (Wikimedia Commons)",
+    "Punta secca e casa di Montalbano - panoramio.jpg - jean-michel gobet, CC BY-SA 3.0 (Wikimedia Commons)",
+    "Highclere Castle (April 2011).jpg - Richard Munckton, CC BY 2.0 (Wikimedia Commons)"
+  ],
+  "categories": [
+    {
+      "name": "Indovina il personaggio",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Vive in un ananas in fondo al mare, è giallo e quadrato e lavora come cuoco al Krusty Krab. Chi è?",
+          "answer": "SpongeBob"
+        },
+        {
+          "points": 200,
+          "question": "Genio del Rinascimento, mancino, scriveva da destra a sinistra e ha dipinto il ritratto più famoso del Louvre. Chi è?",
+          "answer": "Leonardo da Vinci"
+        },
+        {
+          "points": 300,
+          "question": "Detective belga dai baffi curatissimi, si affida alle sue «celluline grigie» ed è nato dalla penna di Agatha Christie. Chi è?",
+          "answer": "Hercule Poirot",
+          "hostNote": "Basta «Poirot»."
+        },
+        {
+          "points": 400,
+          "question": "Fisico italiano, premio Nobel nel 1938, emigrò negli Stati Uniti e a Chicago costruì il primo reattore nucleare della storia. Chi è?",
+          "answer": "Enrico Fermi",
+          "hostNote": "Basta il cognome."
+        },
+        {
+          "points": 500,
+          "question": "All'anagrafe si chiamava Farrokh Bulsara ed era nato a Zanzibar nel 1946. Con quale nome è diventato famoso in tutto il mondo?",
+          "answer": "Freddie Mercury",
+          "hostNote": "Il cantante dei Queen."
+        }
+      ]
+    },
+    {
+      "name": "Geoguessr",
+      "questions": [
+        {
+          "points": 100,
+          "question": "In quale paese è stata scattata questa foto?",
+          "answer": "Grecia",
+          "media": { "type": "image", "src": "luogo-1.jpg" },
+          "hostNote": "È Oia, sull'isola di Santorini."
+        },
+        {
+          "points": 200,
+          "question": "Dove siamo?",
+          "answer": "Cinque Terre (Manarola)",
+          "media": { "type": "image", "src": "luogo-2.jpg" },
+          "rules": "Non basta la regione: serve il nome del posto.",
+          "hostNote": "Accettare «Cinque Terre» o «Manarola»."
+        },
+        {
+          "points": 300,
+          "question": "In quale città ci troviamo?",
+          "answer": "Amsterdam",
+          "media": { "type": "image", "src": "luogo-3.jpg" },
+          "hostNote": "Le case sul canale del Damrak."
+        },
+        {
+          "points": 400,
+          "question": "In quale città passa questo tram?",
+          "answer": "Lisbona",
+          "media": { "type": "image", "src": "luogo-4.jpg" },
+          "hostNote": "È il famoso tram 28 nel quartiere dell'Alfama. La pubblicità in portoghese era un indizio."
+        },
+        {
+          "points": 500,
+          "question": "In quale paese si trova questa città dipinta di blu?",
+          "answer": "Marocco",
+          "media": { "type": "image", "src": "luogo-5.jpg" },
+          "rules": "Serve il paese.",
+          "hostNote": "È Chefchaouen. L'insegna «Barcelona Hotel» è un tranello: l'indizio giusto è la scritta in arabo."
+        }
+      ]
+    },
+    {
+      "name": "Indovina la serie",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Da quale serie TV arrivano questi costumi?",
+          "answer": "Squid Game",
+          "media": { "type": "image", "src": "serie-1.jpg" },
+          "hostNote": "Due fan vestiti da guardie, a una fiera del fumetto."
+        },
+        {
+          "points": 200,
+          "question": "Di quale serie TV è questo trono, visto da vicino?",
+          "answer": "Il Trono di Spade",
+          "media": { "type": "image", "src": "serie-2.jpg" },
+          "hostNote": "Accettare anche «Game of Thrones». La foto è della copia esposta a una mostra sulla serie."
+        },
+        {
+          "points": 300,
+          "question": "Questi palazzi alla periferia di Napoli sono diventati famosi in tutto il mondo grazie a quale serie TV?",
+          "answer": "Gomorra",
+          "media": { "type": "image", "src": "serie-4.jpg" },
+          "hostNote": "Sono le Vele di Scampia."
+        },
+        {
+          "points": 400,
+          "question": "La casa bianca con la terrazza su questa spiaggia siciliana è famosissima grazie a quale serie TV?",
+          "answer": "Il commissario Montalbano",
+          "media": { "type": "image", "src": "serie-3.jpg" },
+          "hostNote": "Siamo a Punta Secca, la «Marinella» della serie. Basta «Montalbano»."
+        },
+        {
+          "points": 500,
+          "question": "In questo castello inglese è stata girata quale serie TV?",
+          "answer": "Downton Abbey",
+          "media": { "type": "image", "src": "serie-5.jpg" },
+          "hostNote": "È Highclere Castle, nell'Hampshire."
+        }
+      ]
+    },
+    {
+      "name": "Logica",
+      "questions": [
+        {
+          "points": 100,
+          "question": "Il papà di Mario ha tre figli: Qui, Quo e…?",
+          "answer": "Mario",
+          "hostNote": "Il terzo figlio è Mario stesso. Chi dice «Qua» ha sbagliato."
+        },
+        {
+          "points": 200,
+          "question": "Che numero viene dopo? 1, 1, 2, 3, 5, 8, …",
+          "answer": "13",
+          "hostNote": "Ogni numero è la somma dei due precedenti (sequenza di Fibonacci)."
+        },
+        {
+          "points": 300,
+          "question": "Un mattone pesa 1 kg più mezzo mattone. Quanto pesa un mattone intero?",
+          "answer": "2 kg",
+          "hostNote": "Mezzo mattone pesa 1 kg, quindi il mattone intero ne pesa 2. Chi dice 1,5 kg ha sbagliato."
+        },
+        {
+          "points": 400,
+          "question": "In uno stagno le ninfee raddoppiano ogni giorno e lo coprono tutto in 48 giorni. In quanti giorni ne coprono metà?",
+          "answer": "47 giorni",
+          "hostNote": "Il giorno dopo raddoppiano e lo coprono tutto. Chi dice 24 ha sbagliato."
+        },
+        {
+          "points": 500,
+          "question": "Una mazza e una palla costano in tutto 1,10 €. La mazza costa 1 € più della palla. Quanto costa la palla?",
+          "answer": "5 centesimi",
+          "rules": "Avete 10 secondi.",
+          "hostNote": "Palla 0,05 € e mazza 1,05 €. Chi dice 10 centesimi ha sbagliato: la mazza costerebbe 1,10 € e il totale 1,20 €."
+        }
+      ]
+    },
+    {
+      "name": "Storia",
+      "questions": [
+        {
+          "points": 100,
+          "question": "In che anno Cristoforo Colombo arrivò in America?",
+          "answer": "1492"
+        },
+        {
+          "points": 200,
+          "question": "Chi fu il primo imperatore di Roma?",
+          "answer": "Augusto",
+          "hostNote": "Accettare anche «Ottaviano». Giulio Cesare non fu mai imperatore."
+        },
+        {
+          "points": 300,
+          "question": "In quale città americana fu assassinato il presidente John F. Kennedy, nel 1963?",
+          "answer": "Dallas"
+        },
+        {
+          "points": 400,
+          "question": "Come si chiamava la nave che nel 1620 portò i Padri Pellegrini dall'Inghilterra all'America?",
+          "answer": "Mayflower"
+        },
+        {
+          "points": 500,
+          "question": "Quanto durò, davvero, la Guerra dei cent'anni tra Francia e Inghilterra?",
+          "answer": "116 anni",
+          "choices": ["99 anni", "100 anni", "116 anni", "150 anni"],
+          "hostNote": "Dal 1337 al 1453."
+        }
+      ]
+    }
+  ]
+}
