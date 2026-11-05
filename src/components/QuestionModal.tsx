@@ -24,8 +24,6 @@ interface Props {
     kind: 'steal' | 'pass';
     by: Team;
     target?: Team;
-    /** Furto: the team chose to take the points from the bank instead of robbing someone. */
-    bank?: boolean;
     /** A team id, '' for the bank (Furto), or nothing to undo the choice. */
     setTarget: (teamId?: string) => void;
     /** Each team's score before this cell: a team can't be robbed of more points than it has. */
@@ -54,7 +52,7 @@ export default function QuestionModal({ category, question, teams, results, onRe
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
-        if ((e.target as HTMLElement).closest('input, textarea')) return;
+        if ((e.target as HTMLElement).closest('input, textarea, select')) return;
         e.preventDefault();
         reveal();
       } else if (e.key === 'Escape') onClose();
@@ -160,25 +158,19 @@ export default function QuestionModal({ category, question, teams, results, onRe
             {pickVictim && robbable.length > 0 && (
               <span className="special-pick">
                 🥷 Rubate a:
-                {others.map((t) => (
-                  <button
-                    key={t.id}
-                    className={`pick ${special!.target?.id === t.id ? 'on' : ''}`}
-                    style={{ ['--team' as string]: t.color }}
-                    disabled={!canRob(t)}
-                    title={canRob(t) ? undefined : `Ha meno di ${points} punti`}
-                    onClick={() => special!.setTarget(special!.target?.id === t.id ? undefined : t.id)}
-                  >
-                    {t.name} ({special!.scores[t.id] ?? 0})
-                  </button>
-                ))}
-                <button
-                  className={`pick ${special!.bank ? 'on' : ''}`}
-                  title="Non rubate: prendete i punti dal banco"
-                  onClick={() => special!.setTarget(special!.bank ? undefined : '')}
+                <select
+                  className="steal-select"
+                  value={special!.target?.id ?? ''}
+                  style={{ ['--team' as string]: special!.target?.color ?? 'var(--line)' }}
+                  onChange={(e) => special!.setTarget(e.target.value)}
                 >
-                  🏦 Dal banco
-                </button>
+                  <option value="">🏦 Nessuno, dal banco</option>
+                  {others.map((t) => (
+                    <option key={t.id} value={t.id} disabled={!canRob(t)}>
+                      {t.name} ({special!.scores[t.id] ?? 0} punti){canRob(t) ? '' : ': troppo pochi'}
+                    </option>
+                  ))}
+                </select>
               </span>
             )}
             {pickVictim && robbable.length === 0 && (

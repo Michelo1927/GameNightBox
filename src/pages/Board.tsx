@@ -276,7 +276,6 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
                   kind: special.kind,
                   by: finder,
                   target: teamById(special.target),
-                  bank: special.target === '',
                   setTarget: (id) => setTarget(openKey, id),
                   scores: Object.fromEntries(
                     game.teams.map((t) => [t.id, boardScore(t, game, quiz) - (cellDeltas(game, quiz, openKey)[t.id] ?? 0)]),
