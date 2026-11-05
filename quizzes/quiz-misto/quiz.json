@@ -64,8 +64,8 @@
         },
         {
           "points": 400,
-          "question": "Chi ha vinto il Festival di Sanremo 2009 con \"La forza mia\"?",
-          "answer": "Marco Carta"
+          "question": "Quale duo hip hop americano canta \"Hey Ya!\" (2003)?",
+          "answer": "OutKast"
         },
         {
           "points": 500,
@@ -94,6 +94,11 @@
         },
         {
           "points": 400,
+          "question": "Come si chiama il bar dove si ritrovano i protagonisti di \"Friends\"?",
+          "answer": "Central Perk"
+        },
+        {
+          "points": 500,
           "question": "Qual è il vero nome del Professore ne \"La casa di carta\"?",
           "choices": [
             "Andrés de Fonollosa",
@@ -103,12 +108,6 @@
           ],
           "answer": "Sergio Marquina",
           "hostNote": "Gli altri sono Berlino, Rio e Palermo"
-        },
-        {
-          "points": 500,
-          "question": "Come si chiama il pub dove si ritrovano i protagonisti di \"How I Met Your Mother\"?",
-          "answer": "MacLaren's",
-          "hostNote": "Accettare anche \"McLaren's\""
         }
       ]
     },
@@ -137,14 +136,14 @@
         },
         {
           "points": 400,
-          "question": "Come si chiamava la mascotte dei Mondiali di Italia '90, un omino stilizzato con il pallone come testa?",
-          "answer": "Ciao"
+          "question": "Chi ha segnato il rigore decisivo nella finale dei Mondiali 2006 contro la Francia?",
+          "answer": "Fabio Grosso"
         },
         {
           "points": 500,
-          "question": "Quale squadra ha vinto la prima edizione della UEFA Champions League, nel 1992-93?",
-          "answer": "Olympique Marsiglia",
-          "hostNote": "In finale batté il Milan 1-0"
+          "question": "Quale nazionale ha vinto a sorpresa gli Europei del 2004?",
+          "answer": "Grecia",
+          "hostNote": "In finale batté il Portogallo padrone di casa 1-0"
         }
       ]
     },
@@ -220,8 +219,9 @@
         },
         {
           "points": 500,
-          "question": "Quale azienda giapponese ha creato Pac-Man nel 1980?",
-          "answer": "Namco"
+          "question": "Come si chiama il protagonista della saga \"The Legend of Zelda\"?",
+          "answer": "Link",
+          "hostNote": "Zelda è la principessa: \"Zelda\" è sbagliato"
         }
       ]
     }
