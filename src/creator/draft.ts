@@ -1,3 +1,4 @@
+import { cleanQuiz } from '../quiz/clean';
 import { POINTS, type Quiz } from '../quiz/schema';
 
 // The quiz being written on this device. Saved on every change: closing the tab loses nothing.
@@ -27,6 +28,68 @@ export function saveDraft(quiz: Quiz): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+// A draft is "finished" once its code has been generated (and the quiz saved on the device):
+// "Crea un quiz" from the home page then starts a new one instead of reopening it.
+const DONE_KEY = 'jeopardy-quiz:draft-done';
+
+function fingerprint(quiz: Quiz) {
+  const text = JSON.stringify(cleanQuiz(quiz));
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193);
+  return `${text.length}-${(h >>> 0).toString(36)}`;
+}
+
+/** Remembers that this quiz is saved on the device as `slug`. */
+export function markDraftDone(quiz: Quiz, slug: string) {
+  try {
+    localStorage.setItem(DONE_KEY, JSON.stringify({ slug, print: fingerprint(quiz) }));
+  } catch {
+    /* not persisted */
+  }
+}
+
+/** The slug of the saved copy of this draft, if the draft is still the same as when it was saved. */
+export function savedSlugOf(quiz: Quiz): string | undefined {
+  try {
+    const done = JSON.parse(localStorage.getItem(DONE_KEY) ?? 'null') as { slug: string; print: string } | null;
+    return done && done.print === fingerprint(quiz) ? done.slug : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** The previous saved copy of this draft (even if edited since), to replace it instead of keeping both. */
+export function lastSavedSlug(): string | undefined {
+  try {
+    return (JSON.parse(localStorage.getItem(DONE_KEY) ?? 'null') as { slug: string } | null)?.slug;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Puts another quiz in the creator. Asks first if that would throw away a quiz still being written
+ * (a finished one is safe: it is saved on the device). Returns false if the user says no.
+ */
+export function replaceDraft(quiz: Quiz, savedAs?: string): boolean {
+  const current = loadDraft();
+  if (hasDraftContent(current) && !savedSlugOf(current!) && !confirm('Stai già scrivendo un quiz su questo dispositivo: sostituirlo con questo?'))
+    return false;
+  clearDraft();
+  saveDraft(quiz);
+  if (savedAs) markDraftDone(quiz, savedAs);
+  return true;
+}
+
+export function clearDraft() {
+  try {
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(DONE_KEY);
+  } catch {
+    /* ignore */
   }
 }
 

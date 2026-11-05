@@ -3,7 +3,7 @@ import { go } from '../nav';
 import { saveImported } from '../quiz/imported';
 import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
-import { hasDraftContent, loadDraft, saveDraft } from './draft';
+import { replaceDraft } from './draft';
 
 // #/carica          paste a code / open a file
 // #/carica/<code>   opened from a shared link: load and go straight to the game
@@ -51,9 +51,7 @@ export default function ImportPage({ code }: { code?: string }) {
     }
   };
   const edit = () => {
-    if (hasDraftContent(loadDraft()) && !confirm('Stai già scrivendo un quiz su questo dispositivo: sostituirlo con questo?')) return;
-    saveDraft(quiz!);
-    go('/crea');
+    if (replaceDraft(quiz!)) go('/crea');
   };
 
   if (code)

@@ -1,5 +1,7 @@
 import { useState, type CSSProperties, type MouseEvent } from 'react';
 import { hasSavedGame } from '../game/state';
+import { replaceDraft } from '../creator/draft';
+import { go } from '../nav';
 import { archivedSlugs, setArchived } from '../quiz/archive';
 import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
@@ -26,6 +28,7 @@ export default function Home() {
       archived={inArchive}
       onArchive={() => archive(q.slug, !inArchive)}
       onRemove={q.imported ? () => remove(q.slug, q.quiz.title) : undefined}
+      onEdit={q.imported && !q.errors.length ? () => replaceDraft(q.quiz, q.slug) && go('/crea') : undefined}
     />
   );
 
@@ -35,7 +38,7 @@ export default function Home() {
         <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>
         <p className="muted">Scegli un quiz per iniziare</p>
         <div className="home-actions">
-          <a className="btn primary" href="#/crea">✏️ Crea un quiz</a>
+          <a className="btn primary" href="#/crea/nuovo">✏️ Crea un quiz</a>
           <a className="btn ghost" href="#/claude">🤖 Crea con Claude</a>
           <a className="btn ghost" href="#/carica">📥 Carica un quiz</a>
           {import.meta.env.DEV && <a className="btn ghost" href="/editor.html">🛠 Editor (locale)</a>}
@@ -74,9 +77,10 @@ interface CardProps {
   archived?: boolean;
   onArchive: () => void;
   onRemove?: () => void;
+  onEdit?: () => void;
 }
 
-function QuizCard({ loaded: { slug, quiz, errors }, archived, onArchive, onRemove }: CardProps) {
+function QuizCard({ loaded: { slug, quiz, errors }, archived, onArchive, onRemove, onEdit }: CardProps) {
   // Buttons inside the card link: they must not open the quiz.
   const action = (fn: () => void) => (e: MouseEvent) => {
     e.preventDefault();
@@ -107,6 +111,11 @@ function QuizCard({ loaded: { slug, quiz, errors }, archived, onArchive, onRemov
       )}
       {!errors.length && hasSavedGame(slug) && <span className="badge">Partita in corso</span>}
       <span className="card-actions">
+        {onEdit && (
+          <button title="Apri nel creatore di quiz" onClick={action(onEdit)}>
+            ✏️ Modifica
+          </button>
+        )}
         <button title={archived ? 'Rimetti nella prima schermata' : 'Sposta in archivio'} onClick={action(onArchive)}>
           {archived ? '📤 Ripristina' : '📦 Archivia'}
         </button>

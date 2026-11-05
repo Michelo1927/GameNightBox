@@ -58,7 +58,9 @@ La partita è salvata nel browser: ricaricando la pagina non si perde nulla.
 
 Sul sito tocca **✏️ Crea un quiz**: si compila una domanda alla volta, con foto dalla galleria,
 link a immagini, video YouTube (anche "solo audio" per le canzoni) e risposte multiple.
-La bozza si salva da sola sul telefono.
+La bozza si salva da sola sul telefono. Quando generi il codice, il quiz finito resta anche tra
+"Caricati su questo dispositivo" (con **✏️ Modifica** per riaprirlo), e il prossimo **✏️ Crea un quiz**
+parte da un quiz vuoto. Un quiz lasciato a metà invece lo ritrovi com'era.
 
 Alla fine **✨ Genera il codice** produce un testo (`JQ1.…`) e un link da mandare a chi fa da host:
 - aprendo il **link** il quiz si carica e si gioca subito;

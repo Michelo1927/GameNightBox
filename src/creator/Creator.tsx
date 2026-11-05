@@ -1,19 +1,31 @@
 import { useEffect, useMemo, useState } from 'react';
 import QuestionModal from '../components/QuestionModal';
 import { cleanFinal, cleanQuestion, cleanQuiz, isQuestionComplete } from '../quiz/clean';
-import { saveImported } from '../quiz/imported';
+import { removeImported, saveImported } from '../quiz/imported';
 import { findCorrectChoice, validateQuiz, type FinalQuestion, type Question, type Quiz } from '../quiz/schema';
 import { encodeQuiz } from '../quiz/share';
 import { go } from '../nav';
-import { blankQuiz, copyText, loadDraft, saveDraft } from './draft';
+import { blankQuiz, clearDraft, copyText, lastSavedSlug, loadDraft, markDraftDone, saveDraft, savedSlugOf } from './draft';
 import MediaPicker from './MediaPicker';
 
 const DIFFICULTY: Record<number, string> = { 100: 'facilissima', 200: 'facile', 300: 'media', 400: 'difficile', 500: 'da esperti' };
 
 // Routes: #/crea (board)  #/crea/<c>-<q> (one question)  #/crea/codice (share)
 export default function Creator({ sub }: { sub: string }) {
-  const [quiz, setQuiz] = useState<Quiz>(() => loadDraft() ?? blankQuiz());
+  const [quiz, setQuiz] = useState<Quiz>(() => {
+    const draft = loadDraft();
+    // "Crea un quiz" from the home page: a finished quiz is already saved on the device, so start a new one.
+    if (sub === 'nuovo' && draft && savedSlugOf(draft)) {
+      clearDraft();
+      return blankQuiz();
+    }
+    return draft ?? blankQuiz();
+  });
   const [storageFull, setStorageFull] = useState(false);
+
+  useEffect(() => {
+    if (sub === 'nuovo') location.replace('#/crea');
+  }, [sub]);
 
   useEffect(() => {
     setStorageFull(!saveDraft(quiz));
@@ -65,7 +77,9 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   const setCat = (ci: number, name: string) =>
     setQuiz((z) => ({ ...z, categories: z.categories.map((c, i) => (i === ci ? { ...c, name } : c)) }));
   const reset = () => {
-    if (confirm('Cancellare tutto il quiz e ricominciare da zero?')) setQuiz(blankQuiz());
+    if (!confirm('Cancellare tutto il quiz e ricominciare da zero?')) return;
+    clearDraft();
+    setQuiz(blankQuiz());
   };
 
   return (
@@ -300,7 +314,17 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
   const todo = missing(quiz);
 
   useEffect(() => {
-    if (todo.length === 0 && errors.length === 0) encodeQuiz(cleaned).then(setCode);
+    if (todo.length !== 0 || errors.length !== 0) return;
+    encodeQuiz(cleaned).then(setCode);
+    // Keep the finished quiz on the device (replacing its older version), so a new quiz can start from scratch.
+    try {
+      const old = lastSavedSlug();
+      const slug = saveImported(cleaned);
+      if (old && old !== slug) removeImported(old);
+      markDraftDone(quiz, slug);
+    } catch {
+      /* no room left: the draft stays as it is */
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cleaned]);
 

@@ -167,6 +167,10 @@ La pagina `#/claude` costruisce un prompt per claude.ai e carica il JSON che Cla
   in `localStorage`, foto ridimensionate (480px JPEG) e incorporate come `data:` URL.
 - "Genera il codice": `JQ1.` + base64url del JSON compresso (deflate). Condivisibile come testo, link
   (`#/carica/<codice>`) o file `.txt` (quando le foto lo rendono troppo lungo per un messaggio).
+- Generare il codice salva anche il quiz tra quelli del dispositivo (sostituendo la sua versione
+  precedente) e segna la bozza come finita: "Crea un quiz" dalla home (`#/crea/nuovo`) riparte da zero
+  solo se la bozza è finita e non è stata più modificata. "✏️ Modifica" su un quiz caricato lo riporta
+  nel creatore.
 - `#/carica`: incolla codice/link o apri file → il quiz viene salvato nel browser (`localStorage`) e
   compare in home tra "Caricati su questo dispositivo".
 - `npm run import -- <file|codice|link>` salva un quiz condiviso in `quizzes/` estraendo le foto.
