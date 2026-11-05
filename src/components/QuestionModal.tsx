@@ -148,11 +148,19 @@ export default function QuestionModal({ category, question, teams, results, onRe
             {canPass && (
               <span className="special-pick">
                 🎯 Passa a:
-                {others.map((t) => (
-                  <button key={t.id} className="pick" style={{ ['--team' as string]: t.color }} onClick={() => special!.setTarget(t.id)}>
-                    {t.name}
-                  </button>
-                ))}
+                <select
+                  className="steal-select"
+                  value=""
+                  style={{ ['--team' as string]: 'var(--line)' }}
+                  onChange={(e) => e.target.value && special!.setTarget(e.target.value)}
+                >
+                  <option value="">🙋 Nessuno, rispondete voi</option>
+                  {others.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
               </span>
             )}
             {pickVictim && robbable.length > 0 && (

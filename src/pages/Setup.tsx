@@ -123,17 +123,18 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
             <span>
               {SPECIAL_INFO[kind].icon} <b>{SPECIAL_INFO[kind].name}</b>: {SPECIAL_HELP[kind]}
             </span>
-            <div className="seg">
+            <select
+              className="count-select"
+              aria-label={`Quante caselle ${SPECIAL_INFO[kind].name}`}
+              value={settings.specialCounts[kind]}
+              onChange={(e) => setSetting({ specialCounts: { ...settings.specialCounts, [kind]: Number(e.target.value) } })}
+            >
               {Array.from({ length: MAX_PER_KIND + 1 }, (_, n) => (
-                <button
-                  key={n}
-                  className={settings.specialCounts[kind] === n ? 'on' : ''}
-                  onClick={() => setSetting({ specialCounts: { ...settings.specialCounts, [kind]: n } })}
-                >
-                  {n || 'No'}
-                </button>
+                <option key={n} value={n}>
+                  {n === 0 ? 'Nessuna' : n === 1 ? '1 casella' : `${n} caselle`}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
         ))}
         <p className="muted">🏆 {finalInfo(quiz, game.teams.length)}</p>

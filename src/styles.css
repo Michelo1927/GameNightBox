@@ -367,3 +367,4 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .special-pick .pick:disabled { opacity: 0.35; cursor: not-allowed; background: rgba(0, 0, 0, 0.35); color: var(--text); text-decoration: line-through; }
 .steal-select { padding: 6px 10px; border-radius: 8px; border: 2px solid var(--team); background: var(--bg-2); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; max-width: 100%; }
 .steal-select option:disabled { color: #888; }
+.count-select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
