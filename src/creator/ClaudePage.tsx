@@ -3,7 +3,7 @@ import { go } from '../nav';
 import { saveImported } from '../quiz/imported';
 import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
-import { copyText } from './draft';
+import { copyText, replaceDraft } from './draft';
 
 // #/claude: builds a ready prompt for claude.ai; the JSON it answers with is pasted back here and played.
 
@@ -100,8 +100,8 @@ export default function ClaudePage() {
         <h1>🤖 Crea con Claude</h1>
       </header>
       <p className="cr-tip">
-        Descrivi il quiz, copia il prompt e incollalo su <b>claude.ai</b>. Poi copia la risposta di Claude e incollala qui sotto: il quiz
-        si carica e si gioca.
+        Descrivi il quiz, copia il prompt e incollalo su <b>claude.ai</b>. Poi copia la risposta di Claude e incollala qui sotto: puoi
+        giocare subito oppure aprire il quiz nel creatore per sistemare domande e categorie e aggiungere foto o video.
       </p>
 
       <section className="cr-cat">
@@ -149,7 +149,12 @@ export default function ClaudePage() {
               ))}
             </div>
             {quiz.final && <p className="muted" style={{ margin: 0 }}>🏆 Con domanda finale</p>}
-            <button className="btn primary big" onClick={() => go(`/q/${saveImported(quiz)}/setup`)}>▶ Gioca</button>
+            <div className="cr-share">
+              <button className="btn primary big" onClick={() => replaceDraft(quiz) && go('/crea')}>
+                ✏️ Modifica e aggiungi foto
+              </button>
+              <button className="btn ghost" onClick={() => go(`/q/${saveImported(quiz)}/setup`)}>▶ Gioca subito</button>
+            </div>
           </>
         )}
       </section>

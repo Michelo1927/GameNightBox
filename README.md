@@ -79,7 +79,8 @@ Lo script crea `quizzes/<nome>/` estraendo le foto in file; poi commit e push.
 ## Creare un quiz con Claude (dal sito)
 
 Sul sito tocca **🤖 Crea con Claude**: scrivi il tema (o le 5 categorie), copia il prompt e incollalo
-su [claude.ai](https://claude.ai). Poi incolla qui la risposta di Claude: il quiz si carica e si gioca.
+su [claude.ai](https://claude.ai). Poi incolla qui la risposta di Claude: puoi giocare subito, oppure
+premere **✏️ Modifica e aggiungi foto** per aprirlo nel creatore e sistemare domande, categorie e media.
 Funziona anche dal telefono e non serve installare niente (le domande sono solo testo).
 
 ## Creare un quiz con Claude Code
