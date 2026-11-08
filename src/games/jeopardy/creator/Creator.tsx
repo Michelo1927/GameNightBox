@@ -7,6 +7,7 @@ import { encodeQuiz } from '../quiz/share';
 import { go } from '../../../hub/nav';
 import { blankQuiz, clearDraft, copyText, lastSavedSlug, loadDraft, markDraftDone, saveDraft, savedSlugOf } from './draft';
 import MediaPicker from './MediaPicker';
+import { ask } from '../../../hub/ask';
 
 const DIFFICULTY: Record<number, string> = { 100: 'facilissima', 200: 'facile', 300: 'media', 400: 'difficile', 500: 'da esperti' };
 
@@ -37,7 +38,7 @@ export default function Creator({ sub }: { sub: string }) {
 
   const cell = /^(\d+)-(\d+)$/.exec(sub);
   return (
-    <div className="creator">
+    <div className="creator theme-jeopardy">
       {storageFull && <div className="cr-warning">⚠ Memoria del browser piena: le ultime modifiche non sono salvate. Usa foto più piccole o link alle immagini.</div>}
       {cell ? (
         <QuestionStep quiz={quiz} setQuiz={setQuiz} c={Number(cell[1])} q={Number(cell[2])} />
@@ -76,8 +77,8 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
 
   const setCat = (ci: number, name: string) =>
     setQuiz((z) => ({ ...z, categories: z.categories.map((c, i) => (i === ci ? { ...c, name } : c)) }));
-  const reset = () => {
-    if (!confirm('Cancellare tutto il quiz e ricominciare da zero?')) return;
+  const reset = async () => {
+    if (!(await ask('Cancellare tutto il quiz e ricominciare da zero?', 'Cancella tutto'))) return;
     clearDraft();
     setQuiz(blankQuiz());
   };
@@ -255,8 +256,8 @@ const EMPTY_FINAL: FinalQuestion = { category: '', question: '', answer: '' };
 function FinalStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   const f = quiz.final ?? EMPTY_FINAL;
   const set = (patch: Partial<FinalQuestion>) => setQuiz((z) => ({ ...z, final: { ...(z.final ?? EMPTY_FINAL), ...patch } }));
-  const remove = () => {
-    if (confirm('Togliere la domanda finale?')) {
+  const remove = async () => {
+    if (await ask('Togliere la domanda finale?', 'Togli')) {
       setQuiz((z) => ({ ...z, final: undefined }));
       go('/crea');
     }

@@ -23,6 +23,7 @@ import FinalModal from '../components/FinalModal';
 import Ranking from '../../../hub/components/Ranking';
 import AnimatedNumber from '../../../hub/components/AnimatedNumber';
 import Timer from '../../../hub/components/Timer';
+import { ask } from '../../../hub/ask';
 
 const SCORE_STEP = 50;
 const NEW_FINAL: FinalState = { stage: 'bets', bets: {}, results: {} };
@@ -129,8 +130,8 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   const adjust = (teamId: string, delta: number) =>
     setGame((g) => ({ ...g, teams: g.teams.map((t) => (t.id === teamId ? { ...t, adjust: t.adjust + delta } : t)) }));
 
-  const restart = () => {
-    if (confirm('Azzerare punteggi e caselle giocate? Le squadre restano.')) setGame((g) => resetGame(g, quiz));
+  const restart = async () => {
+    if (await ask('Azzerare punteggi e caselle giocate? Le squadre restano.', 'Azzera')) setGame((g) => resetGame(g, quiz));
   };
 
   // The open cell's special rule, active only if it was found by a team on its turn.

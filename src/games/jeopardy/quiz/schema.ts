@@ -1,7 +1,8 @@
 // Quiz file format (quizzes/<slug>/quiz.json). Shared by the app and scripts/validate.ts.
 import { isRemote, MEDIA_TYPES, youtubeId, type Media, type MediaType } from '../../../hub/media';
+import { slugify } from '../../../hub/text';
 
-export { isRemote, MEDIA_TYPES, youtubeId, type Media, type MediaType };
+export { isRemote, MEDIA_TYPES, slugify, youtubeId, type Media, type MediaType };
 
 export interface Question {
   points: number;
@@ -124,16 +125,6 @@ export function localMediaFiles(quiz: Quiz): string[] {
     if (m && m.type !== 'youtube' && !isRemote(m.src)) files.push(m.src);
   }
   return files;
-}
-
-export function slugify(text: string) {
-  return text
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 50);
 }
 
 const norm = (s: string) => s.trim().toLowerCase();

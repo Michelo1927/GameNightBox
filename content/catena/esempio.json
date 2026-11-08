@@ -1,0 +1,92 @@
+{
+  "title": "Catene di prova",
+  "description": "Tre catene facili e un finale per provare il gioco.",
+  "author": "Game Night Box",
+  "catene": [
+    {
+      "words": [
+        "CASA",
+        "DOLCE",
+        "VITA",
+        "PRIVATA",
+        "SCUOLA",
+        "GUIDA",
+        "ALPINA",
+        "STELLA"
+      ],
+      "links": [
+        "casa dolce casa",
+        "la dolce vita",
+        "vita privata",
+        "scuola privata",
+        "scuola guida",
+        "guida alpina",
+        "stella alpina"
+      ]
+    },
+    {
+      "words": [
+        "COLPO",
+        "TESTA",
+        "CODA",
+        "PAGLIA",
+        "FUOCO",
+        "AMICO",
+        "PENNA",
+        "SFERA"
+      ],
+      "links": [
+        "colpo di testa",
+        "testa e coda",
+        "coda di paglia",
+        "fuoco di paglia",
+        "fuoco amico",
+        "amico di penna",
+        "penna a sfera"
+      ]
+    },
+    {
+      "words": [
+        "PALLA",
+        "NEVE",
+        "PUPAZZO",
+        "PEZZA",
+        "BAMBOLA",
+        "CASA",
+        "BIANCA",
+        "NOTTE"
+      ],
+      "links": [
+        "palla di neve",
+        "pupazzo di neve",
+        "pupazzo di pezza",
+        "bambola di pezza",
+        "casa delle bambole",
+        "Casa Bianca",
+        "notte bianca"
+      ]
+    }
+  ],
+  "finali": [
+    {
+      "answer": "GATTO",
+      "clues": [
+        "NERO",
+        "STIVALI",
+        "RANDAGIO",
+        "TOPO",
+        "MIAO"
+      ]
+    },
+    {
+      "answer": "LUNA",
+      "clues": [
+        "STORTA",
+        "MIELE",
+        "PARK",
+        "PIENA",
+        "SATELLITE"
+      ]
+    }
+  ]
+}

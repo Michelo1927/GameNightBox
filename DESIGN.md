@@ -28,7 +28,7 @@ e creazione dei quiz tramite Claude.
 ## Architettura
 
 Il sito è un **hub di giochi**: la home (`#/`) elenca i giochi, ognuno ha le sue pagine.
-Per ora c'è solo il Jeopardy.
+Giochi: Jeopardy, Passaparola, Catena, Musichiere (vedi "Gli altri giochi" più sotto).
 
 ```
 GameNightBox/
@@ -37,6 +37,10 @@ GameNightBox/
 │     ├─ quiz.json
 │     ├─ zucca.jpg
 │     └─ thriller.mp3
+├─ content/                    ← contenuti degli altri giochi: un file JSON ciascuno
+│  ├─ passaparola/esempio.json
+│  ├─ catena/esempio.json
+│  └─ musichiere/esempio.json
 ├─ src/
 │  ├─ App.tsx                  smista gli indirizzi: home dell'hub o pagine di un gioco
 │  ├─ hub/                     ← motore comune a tutti i giochi
@@ -44,8 +48,13 @@ GameNightBox/
 │  │  ├─ games.ts              cosa deve dichiarare un gioco (nome, icona, indirizzi)
 │  │  ├─ teams.ts              squadre e colori
 │  │  ├─ useSaved.ts           stato salvato nel browser + Annulla
-│  │  ├─ sounds.ts  media.ts  nav.ts
-│  │  └─ components/           Timer, OrderWheel, Ranking, AnimatedNumber, Media, TeamList
+│  │  ├─ content.ts            contenuti del sito + quelli creati sul dispositivo
+│  │  ├─ creation.tsx          indirizzi per creare e condividere: crea, crea/codice, carica
+│  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1.)
+│  │  ├─ buzzer.ts             prenotazione: un tasto per squadra, o decide l'host
+│  │  ├─ keys.ts  text.ts  youtube.ts  sounds.ts  media.ts  nav.ts
+│  │  └─ components/           Timer, OrderWheel, Ranking, Media, TeamList, SetupPage,
+│  │                           PlayHeader, ContentHome, ClaudeCreate, CreatorPage, SharePage, ImportCode
 │  └─ games/
 │     ├─ index.ts              elenco dei giochi dell'hub
 │     └─ jeopardy/
@@ -56,9 +65,16 @@ GameNightBox/
 │        ├─ quiz/schema.ts     tipi + validazione del formato
 │        ├─ creator/           "Crea un quiz" dal telefono, Claude, caricamento da codice
 │        └─ editor/            editor visuale (attivo solo in locale)
-├─ scripts/validate.ts         controlla tutti i quiz.json (usato da Claude e in CI)
+│     ├─ passaparola/  catena/  musichiere/
+│     │  ├─ index.tsx          scheda, indirizzi, pagina elenco, setup, "Crea con Claude"
+│     │  ├─ schema.ts          formato + validazione (usata anche da scripts/validate.ts)
+│     │  ├─ prompt.ts          prompt per Claude
+│     │  ├─ Editor.tsx         creatore a mano (dal telefono)
+│     │  ├─ state.ts           stato della partita
+│     │  └─ Play.tsx           schermata di gioco
+├─ scripts/validate.ts         controlla quiz e contenuti (usato da Claude e in CI)
 ├─ vite-plugin-editor.ts       API locali per salvare file dall'editor (solo dev)
-├─ .claude/skills/crea-quiz/SKILL.md
+├─ .claude/skills/             crea-quiz, crea-passaparola, crea-catena, crea-musichiere
 └─ .github/workflows/deploy.yml
 ```
 
@@ -70,6 +86,52 @@ Regole dell'hub:
 - Gli indirizzi del Jeopardy sono rimasti quelli di prima (`#/q/<slug>/…`, `#/crea`, `#/carica/<codice>`,
   `#/claude`), così link e codici già condivisi funzionano ancora; l'elenco dei quiz è ora in `#/jeopardy`.
 - Le chiavi del `localStorage` non sono cambiate (`jeopardy-quiz:…`): partite, bozze e quiz caricati restano.
+  I giochi nuovi usano `gnb:<gioco>:game:<slug>` (partita), `gnb:<gioco>:local` (creati sul dispositivo)
+  e `gnb:<gioco>:draft` (bozza del creatore).
+
+## Gli altri giochi
+
+Tutti si giocano su **un solo schermo** (portatile collegato alla TV, anche duplicato): l'host non deve
+conoscere le risposte, le conosce l'app. Tutti hanno: squadre e ruota dell'ordine, Annulla (Ctrl+Z),
+schermo intero (F), classifica finale, partita salvata nel browser, pagina "Crea con Claude"
+(prompt da copiare su claude.ai, risposta incollata e controllata dall'app, salvata sul dispositivo).
+
+Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub/`:
+- `#/<gioco>/crea`: creatore a mano (`Editor.tsx` del gioco dentro `CreatorPage`), bozza salvata a ogni modifica.
+  `#/<gioco>/crea/nuovo` riparte da zero solo se la bozza è già stata condivisa e non più modificata.
+- `#/<gioco>/crea/codice`: salva sul dispositivo (sostituendo la versione precedente) e mostra codice, link
+  (`#/<gioco>/carica/<codice>`), condividi, copia, scarica file.
+- `#/<gioco>/carica`: incolla codice/link o apri il file → Gioca o ✏️ Modifica. Un codice di un altro gioco
+  viene riconosciuto e indirizzato alla pagina giusta.
+- ✏️ su ogni contenuto (del sito o del dispositivo) lo apre nel creatore; "Crea con Claude" può aprire la
+  risposta nel creatore anche se ha errori, per correggerli a mano.
+- `npm run import` riconosce il prefisso e scrive `content/<gioco>/<slug>.json`.
+
+**Passaparola** (`#/passaparola`)
+- Ogni squadra gioca la sua ruota intera, una dopo l'altra, con un suo tempo (90 s - 5 min).
+- 21 lettere italiane (niente J K W X Y). Per ogni lettera la risposta "inizia" o "contiene" la lettera:
+  l'app controlla da sola che sia vero, l'errore tipico di Claude.
+- "Svela e giudica": la squadra risponde, l'host preme Svela (il tempo si ferma), poi ✓/✗.
+  Passaparola salta la lettera senza svelarla; l'errore la chiude.
+- Una ruota per squadra, con risposte diverse: il contenuto ha tante ruote quante squadre al massimo.
+
+**Catena** (`#/catena`)
+- 8 parole legate a due a due; si vedono la prima e l'ultima, le altre solo con l'iniziale.
+- Qui la risposta non si può svelare (resterebbe in gioco), quindi l'host **scrive** la risposta della
+  squadra e l'app la confronta (senza accenti, un errore di battitura ammesso dalle 6 lettere in su).
+  ✓/✗ restano per chi preferisce giudicare a voce.
+- Giusta: 10 punti per lettera ancora nascosta e la squadra continua. Sbagliata: una lettera in più, turno alla successiva.
+- Finale facoltativo: parola misteriosa con 5 indizi, prenotazione, 250 → 50 punti; chi sbaglia è fuori per quella parola.
+
+**Musichiere** (`#/musichiere`)
+- Colonne di caselle per squadra (5/7/10) che si riempiono solo con le risposte giuste: vince la prima squadra
+  che riempie la colonna (se finiscono le canzoni, chi ne ha di più). Sbagliata = nessuna casella, la squadra
+  salta il turno per quella canzone e la musica riparte per le altre.
+- Lettore YouTube nascosto (solo audio), clip di 10-30 s che si ferma da sola.
+- Prenotazione (`hub/buzzer.ts`): un tasto per squadra (A, L, G, P, Z…) oppure decide l'host
+  (numero della squadra o clic sulla colonna). Si sceglie nel setup.
+- I link YouTube sono il punto debole dei contenuti generati da Claude: la pagina "Crea con Claude" li
+  controlla uno per uno (oEmbed di YouTube) e mostra il titolo vero del video, con il link modificabile.
 
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.

@@ -1,5 +1,6 @@
 import { cleanQuiz } from '../quiz/clean';
 import { POINTS, type Quiz } from '../quiz/schema';
+import { ask } from '../../../hub/ask';
 
 // The quiz being written on this device. Saved on every change: closing the tab loses nothing.
 const KEY = 'jeopardy-quiz:draft';
@@ -74,9 +75,9 @@ export function lastSavedSlug(): string | undefined {
  * Puts another quiz in the creator. Asks first if that would throw away a quiz still being written
  * (a finished one is safe: it is saved on the device). Returns false if the user says no.
  */
-export function replaceDraft(quiz: Quiz, savedAs?: string): boolean {
+export async function replaceDraft(quiz: Quiz, savedAs?: string): Promise<boolean> {
   const current = loadDraft();
-  if (hasDraftContent(current) && !savedSlugOf(current!) && !confirm('Stai già scrivendo un quiz su questo dispositivo: sostituirlo con questo?'))
+  if (hasDraftContent(current) && !savedSlugOf(current!) && !(await ask('Stai già scrivendo un quiz su questo dispositivo: sostituirlo con questo?', 'Sostituisci')))
     return false;
   clearDraft();
   saveDraft(quiz);
@@ -136,20 +137,4 @@ export function compressImage(file: File, max = 480, quality = 0.5): Promise<str
   });
 }
 
-export async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Fallback for browsers without clipboard API permission.
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand('copy');
-    ta.remove();
-    return ok;
-  }
-}
+export { copyText } from '../../../hub/text';

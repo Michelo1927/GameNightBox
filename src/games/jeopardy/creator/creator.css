@@ -24,13 +24,13 @@
 
 .cr-cat { padding: 12px; border-radius: 14px; background: var(--bg-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
 .cr-cat-name { font-family: 'Anton', sans-serif !important; font-size: 1.2rem !important; letter-spacing: 0.5px; text-transform: uppercase; background: linear-gradient(170deg, var(--cell), var(--cell-2)) !important; border-color: transparent !important; }
-.cr-cat-name::placeholder { text-transform: none; font-family: 'Inter', sans-serif; font-size: 1rem; color: rgba(255, 255, 255, 0.5); }
+.cr-cat-name::placeholder { text-transform: none; font-family: var(--font-body); font-size: 1rem; color: rgba(255, 255, 255, 0.5); }
 .cr-chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .cr-chips a {
   display: flex; flex-direction: column; align-items: center; padding: 8px 0 6px; border-radius: 10px;
   background: rgba(0, 0, 0, 0.3); border: 1px dashed var(--line); font-family: 'Anton', sans-serif; font-size: 1.15rem; color: var(--muted);
 }
-.cr-chips a small { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 800; }
+.cr-chips a small { font-family: var(--font-body); font-size: 0.8rem; font-weight: 800; }
 .cr-chips a.done { background: linear-gradient(170deg, var(--cell), var(--cell-2)); border: 1px solid transparent; color: var(--gold); }
 .cr-chips a.done small { color: var(--ok); }
 .cr-secondary { display: flex; flex-wrap: wrap; gap: 8px; }

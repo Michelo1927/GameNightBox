@@ -50,8 +50,8 @@ export default function ImportPage({ code }: { code?: string }) {
       setError((e as Error).message);
     }
   };
-  const edit = () => {
-    if (replaceDraft(quiz!)) go('/crea');
+  const edit = async () => {
+    if (await replaceDraft(quiz!)) go('/crea');
   };
 
   if (code)

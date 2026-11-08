@@ -21,5 +21,5 @@ export default function App() {
     const page = game.route(parts);
     if (page) return page;
   }
-  return <HubHome />;
+  return <HubHome games={games} />;
 }

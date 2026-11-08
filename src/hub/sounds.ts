@@ -1,5 +1,6 @@
 // Game sounds, synthesized with the Web Audio API: no audio files to download.
 import { useEffect, useState } from 'react';
+import { lights } from './fx';
 
 const MUTE_KEY = 'jeopardy-quiz:mute';
 let muted = (() => {
@@ -162,8 +163,15 @@ function gift(icon: string) {
 }
 
 export const sounds = {
-  right: () => melody([[523, 0, 0.15], [659, 0.1, 0.15], [784, 0.2, 0.35]]),
-  wrong: () => melody([[155, 0, 0.5], [147, 0, 0.5]], 'sawtooth', 0.12),
+  // Right and wrong also flash the stage lights (even with the sound off).
+  right: () => {
+    lights('ok');
+    melody([[523, 0, 0.15], [659, 0.1, 0.15], [784, 0.2, 0.35]]);
+  },
+  wrong: () => {
+    lights('ko');
+    melody([[155, 0, 0.5], [147, 0, 0.5]], 'sawtooth', 0.12);
+  },
   tick: () => melody([[1200, 0, 0.05]], 'square', 0.05),
   timeUp: () => melody([[330, 0, 0.25], [330, 0.3, 0.25], [262, 0.6, 0.6]], 'square', 0.1),
   steal,

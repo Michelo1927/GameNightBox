@@ -1,13 +1,18 @@
 # Game Night Box
 
 Hub di giochi a squadre da serata (React + Vite + TypeScript), pubblicato su GitHub Pages
-(https://michelo1927.github.io/GameNightBox/) a ogni push su `main`. Per ora c'è un gioco: il Jeopardy.
+(https://michelo1927.github.io/GameNightBox/) a ogni push su `main`. Giochi: Jeopardy, Passaparola, Catena, Musichiere.
 
 - Motore comune in `src/hub/` (non importa mai da `src/games/`); ogni gioco in `src/games/<id>/`, elencato in `src/games/index.ts`.
 
 - Quiz: `quizzes/<slug>/quiz.json` + file media nella stessa cartella. Formato in `src/games/jeopardy/quiz/schema.ts`.
 - Per creare un quiz usa la skill `/crea-quiz` (`.claude/skills/crea-quiz/SKILL.md`).
 - Dopo ogni modifica a un quiz: `npm run validate -- <slug> --online`.
-- Un quiz condiviso come codice (pagina "Crea un quiz" del sito) si salva nel repo con `npm run import -- <file|codice|link>`.
-- Build completa: `npm run build` (valida i quiz, controlla i tipi, compila).
+- Qualsiasi contenuto condiviso come codice (creatore del sito, codici `JQ1.` `PP1.` `CT1.` `MU1.`) si salva nel repo con
+  `npm run import -- <file|codice|link>`.
+- Passaparola, Catena, Musichiere: un file `content/<gioco>/<slug>.json`. Formato in `src/games/<gioco>/schema.ts`;
+  per crearne uno segui le regole del prompt in `src/games/<gioco>/prompt.ts` (lo stesso che usa la pagina "Crea con Claude").
+  Musichiere: cerca i link YouTube veri e controllali con `npm run validate -- musichiere/<slug> --online`.
+  Skill: `/crea-passaparola`, `/crea-catena`, `/crea-musichiere` (`.claude/skills/`).
+- Build completa: `npm run build` (valida tutti i contenuti, controlla i tipi, compila).
 - Progetto e decisioni: `DESIGN.md`. L'utente scrive in italiano: rispondi in italiano.

@@ -23,6 +23,7 @@ const SPECIAL_HELP: Record<SpecialKind, string> = {
 import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';
 import { TIMER_CHOICES } from '../../../hub/components/Timer';
+import { ask } from '../../../hub/ask';
 
 export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
@@ -30,8 +31,8 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const settings = settingsOf(game);
   const inProgress = Object.keys(game.played).length > 0 || Object.keys(game.results).length > 0;
 
-  const restart = () => {
-    if (confirm('Azzerare punteggi e caselle giocate?')) setGame((g) => resetGame(g, quiz));
+  const restart = async () => {
+    if (await ask('Azzerare punteggi e caselle giocate?', 'Azzera')) setGame((g) => resetGame(g, quiz));
   };
   const [wheel, setWheel] = useState(false);
   const play = () => go(`/q/${slug}/play`);
@@ -50,7 +51,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
     });
 
   return (
-    <div className="page setup">
+    <div className="page setup theme-jeopardy">
       <a className="back" href="#/jeopardy">← Tutti i quiz</a>
       <h1 className="title">{quiz.title}</h1>
       {quiz.description && <p className="muted">{quiz.description}</p>}

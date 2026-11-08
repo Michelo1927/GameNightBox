@@ -1,0 +1,267 @@
+{
+  "title": "Passaparola di prova",
+  "description": "Due ruote facili per provare il gioco.",
+  "author": "Game Night Box",
+  "ruote": [
+    {
+      "items": [
+        {
+          "letter": "A",
+          "type": "inizia",
+          "question": "Il mobile dove si appendono i vestiti",
+          "answer": "Armadio"
+        },
+        {
+          "letter": "B",
+          "type": "inizia",
+          "question": "La città italiana delle Due Torri",
+          "answer": "Bologna"
+        },
+        {
+          "letter": "C",
+          "type": "inizia",
+          "question": "Lo strumento a sei corde tipico del flamenco",
+          "answer": "Chitarra"
+        },
+        {
+          "letter": "D",
+          "type": "inizia",
+          "question": "Il giorno della settimana dedicato al riposo",
+          "answer": "Domenica"
+        },
+        {
+          "letter": "E",
+          "type": "inizia",
+          "question": "Il grande animale grigio con la proboscide",
+          "answer": "Elefante"
+        },
+        {
+          "letter": "F",
+          "type": "inizia",
+          "question": "Il frutto rosso con i semini sulla buccia",
+          "answer": "Fragola"
+        },
+        {
+          "letter": "G",
+          "type": "inizia",
+          "question": "Il pianeta più grande del sistema solare",
+          "answer": "Giove"
+        },
+        {
+          "letter": "H",
+          "type": "contiene",
+          "question": "Strumento per guardare lontano, famoso quello di Galileo",
+          "answer": "Cannocchiale"
+        },
+        {
+          "letter": "I",
+          "type": "inizia",
+          "question": "La stagione più fredda dell'anno",
+          "answer": "Inverno"
+        },
+        {
+          "letter": "L",
+          "type": "inizia",
+          "question": "Il re della savana, con la criniera",
+          "answer": "Leone"
+        },
+        {
+          "letter": "M",
+          "type": "inizia",
+          "question": "Il fiore giallo che si regala l'8 marzo",
+          "answer": "Mimosa"
+        },
+        {
+          "letter": "N",
+          "type": "inizia",
+          "question": "Il grande fiume dell'Egitto",
+          "answer": "Nilo"
+        },
+        {
+          "letter": "O",
+          "type": "inizia",
+          "question": "L'organo che ci permette di sentire",
+          "answer": "Orecchio"
+        },
+        {
+          "letter": "P",
+          "type": "inizia",
+          "question": "La capitale della Francia",
+          "answer": "Parigi"
+        },
+        {
+          "letter": "Q",
+          "type": "inizia",
+          "question": "Il numero che viene dopo il tre",
+          "answer": "Quattro"
+        },
+        {
+          "letter": "R",
+          "type": "inizia",
+          "question": "Il colore del sangue",
+          "answer": "Rosso"
+        },
+        {
+          "letter": "S",
+          "type": "inizia",
+          "question": "La stella al centro del nostro sistema",
+          "answer": "Sole"
+        },
+        {
+          "letter": "T",
+          "type": "inizia",
+          "question": "Il gioco di Natale con 90 numeri e le cartelle",
+          "answer": "Tombola"
+        },
+        {
+          "letter": "U",
+          "type": "inizia",
+          "question": "Lo si rompe per fare la frittata",
+          "answer": "Uovo"
+        },
+        {
+          "letter": "V",
+          "type": "inizia",
+          "question": "La città dei canali e delle gondole",
+          "answer": "Venezia"
+        },
+        {
+          "letter": "Z",
+          "type": "inizia",
+          "question": "Animale africano a strisce bianche e nere",
+          "answer": "Zebra"
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "letter": "A",
+          "type": "inizia",
+          "question": "La capitale della Grecia",
+          "answer": "Atene"
+        },
+        {
+          "letter": "B",
+          "type": "inizia",
+          "question": "Il frutto giallo amato dalle scimmie",
+          "answer": "Banana"
+        },
+        {
+          "letter": "C",
+          "type": "inizia",
+          "question": "Si beve al bar nella tazzina, spesso dopo pranzo",
+          "answer": "Caffè"
+        },
+        {
+          "letter": "D",
+          "type": "inizia",
+          "question": "Il poeta che scrisse la Divina Commedia",
+          "answer": "Dante"
+        },
+        {
+          "letter": "E",
+          "type": "inizia",
+          "question": "Il vulcano attivo più alto d'Europa, in Sicilia",
+          "answer": "Etna"
+        },
+        {
+          "letter": "F",
+          "type": "inizia",
+          "question": "La città del David di Michelangelo",
+          "answer": "Firenze"
+        },
+        {
+          "letter": "G",
+          "type": "inizia",
+          "question": "Il felino domestico che fa le fusa",
+          "answer": "Gatto"
+        },
+        {
+          "letter": "H",
+          "type": "contiene",
+          "question": "La pasta lunga e sottile della carbonara",
+          "answer": "Spaghetti"
+        },
+        {
+          "letter": "I",
+          "type": "inizia",
+          "question": "La lingua che si parla a Londra e a New York",
+          "answer": "Inglese"
+        },
+        {
+          "letter": "L",
+          "type": "inizia",
+          "question": "Il satellite naturale della Terra",
+          "answer": "Luna"
+        },
+        {
+          "letter": "M",
+          "type": "inizia",
+          "question": "La città della Madonnina e del Duomo",
+          "answer": "Milano"
+        },
+        {
+          "letter": "N",
+          "type": "inizia",
+          "question": "La parte della giornata in cui si dorme",
+          "answer": "Notte"
+        },
+        {
+          "letter": "O",
+          "type": "inizia",
+          "question": "Il metallo della medaglia per il primo classificato",
+          "answer": "Oro"
+        },
+        {
+          "letter": "P",
+          "type": "inizia",
+          "question": "Il piatto napoletano con pomodoro e mozzarella",
+          "answer": "Pizza"
+        },
+        {
+          "letter": "Q",
+          "type": "contiene",
+          "question": "Si beve per togliersi la sete",
+          "answer": "Acqua"
+        },
+        {
+          "letter": "R",
+          "type": "inizia",
+          "question": "La capitale d'Italia",
+          "answer": "Roma"
+        },
+        {
+          "letter": "S",
+          "type": "inizia",
+          "question": "Il pianeta famoso per i suoi anelli",
+          "answer": "Saturno"
+        },
+        {
+          "letter": "T",
+          "type": "inizia",
+          "question": "Il dolce con savoiardi, caffè e mascarpone",
+          "answer": "Tiramisù"
+        },
+        {
+          "letter": "U",
+          "type": "inizia",
+          "question": "Il numero che viene prima del due",
+          "answer": "Uno"
+        },
+        {
+          "letter": "V",
+          "type": "inizia",
+          "question": "Il pianeta più luminoso del cielo dopo la Luna",
+          "answer": "Venere"
+        },
+        {
+          "letter": "Z",
+          "type": "inizia",
+          "question": "Si mette nel caffè per addolcirlo",
+          "answer": "Zucchero"
+        }
+      ]
+    }
+  ]
+}

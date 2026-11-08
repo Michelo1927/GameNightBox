@@ -1,0 +1,81 @@
+.mu-board { display: flex; align-items: stretch; justify-content: center; gap: clamp(10px, 3vw, 48px); width: 100%; }
+.mu-side { display: flex; gap: clamp(8px, 1.5vw, 22px); }
+.mu-center { flex: 0 1 480px; min-width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+
+/* A team's column: a lit tower of boxes, filled from the bottom by right answers. */
+.mu-col {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 12px 12px 14px; border-radius: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.08); color: inherit; font: inherit;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team) 18%, var(--bg-3)), var(--bg-2) 60%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 16px 40px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.mu-col::before {
+  /* The team's light on top of the tower. */
+  content: ''; position: absolute; top: -2px; left: 18%; right: 18%; height: 4px; border-radius: 99px;
+  background: var(--team); box-shadow: 0 0 18px 3px var(--team);
+}
+.mu-col:disabled { opacity: 1; cursor: default; }
+.mu-col.on { border-color: var(--gold); transform: translateY(-6px); box-shadow: 0 0 0 3px rgba(255, 201, 40, 0.3), 0 0 50px rgba(255, 201, 40, 0.55); }
+.mu-col.off { opacity: 0.35 !important; filter: saturate(0.4); }
+.mu-slots {
+  display: flex; flex-direction: column; gap: clamp(4px, 0.8vh, 8px); padding: 8px; border-radius: 12px;
+  background: linear-gradient(180deg, #160b3a, #0b0626); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.mu-slot {
+  width: clamp(48px, 5.4vw, 78px); height: clamp(24px, 4.2vh, 42px); border-radius: 6px;
+  background: linear-gradient(180deg, #8a1830, #4d0b1c); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.mu-slot.right {
+  background: linear-gradient(180deg, #ffffff, #fff3c4);
+  box-shadow: 0 0 14px rgba(255, 240, 190, 0.9), 0 0 28px color-mix(in srgb, var(--team) 60%, transparent);
+  animation: mu-light 0.5s ease-out;
+}
+@keyframes mu-light { from { background: var(--gold); transform: scale(1.15); } }
+.mu-name {
+  min-width: 100%; padding: 5px 10px; border-radius: 8px; text-align: center;
+  background: var(--team); color: #fff; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+  font-family: var(--font-display); letter-spacing: 1px; text-transform: uppercase; font-size: clamp(0.95rem, 1.8vw, 1.35rem);
+}
+.mu-score {
+  min-width: 60px; padding: 2px 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.5);
+  color: var(--gold-hi); text-shadow: 0 0 14px rgba(255, 201, 40, 0.6); font-family: var(--font-display); font-size: clamp(1.8rem, 4vh, 2.6rem);
+}
+
+/* The record: spins while the song plays. */
+.mu-disc {
+  width: clamp(150px, 30vh, 280px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background:
+    radial-gradient(circle, transparent 30%, rgba(255, 255, 255, 0.05) 31%, transparent 32%, transparent 40%, rgba(255, 255, 255, 0.05) 41%, transparent 42%, transparent 52%, rgba(255, 255, 255, 0.05) 53%, transparent 54%, transparent 64%, rgba(255, 255, 255, 0.05) 65%, transparent 66%),
+    conic-gradient(from 30deg, #120a2c, #2a1b5c 12%, #120a2c 25%, #2a1b5c 50%, #120a2c 62%, #2a1b5c 85%, #120a2c);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06), 0 0 50px color-mix(in srgb, var(--accent) 35%, transparent), 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.mu-disc.on { animation: mu-spin 2.2s linear infinite; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08), 0 0 70px color-mix(in srgb, var(--accent) 70%, transparent), 0 20px 50px rgba(0, 0, 0, 0.5); }
+@keyframes mu-spin { to { transform: rotate(360deg); } }
+.mu-label {
+  width: 34%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle, #fff 7%, var(--accent) 8%, #c01f66);
+  font-family: var(--font-display); font-size: clamp(1.2rem, 3.4vh, 2.2rem); color: #fff; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+.mu-bar { width: 100%; height: 10px; border-radius: 99px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.mu-bar div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); box-shadow: 0 0 12px var(--accent); transition: width 0.2s linear; }
+
+.mu-reveal { animation: buzz-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1); display: flex; flex-direction: column; align-items: center; }
+.mu-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4.4vw, 3.4rem); color: var(--gold-hi); line-height: 1.1; text-shadow: 0 0 26px rgba(255, 201, 40, 0.55); }
+.mu-artist { font-size: clamp(1.1rem, 2.4vw, 1.7rem); font-weight: 700; margin-top: 8px; }
+.mu-help { margin: 0; }
+
+.mu-preview ol { margin: 8px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+.mu-link { display: flex; gap: 6px; margin-top: 4px; }
+.mu-link input { flex: 1; min-width: 0; }
+
+@media (max-width: 700px) {
+  .mu-board { flex-wrap: wrap; }
+  .mu-center { order: -1; flex-basis: 100%; }
+}
+
+/* Creator */
+.mu-edit-tools { display: flex; gap: 4px; }
+.mu-edit-tools .btn { padding: 6px 10px; }
+.mu-link .btn { padding: 8px 12px; }

@@ -150,7 +150,7 @@ export default function ClaudePage() {
             </div>
             {quiz.final && <p className="muted" style={{ margin: 0 }}>🏆 Con domanda finale</p>}
             <div className="cr-share">
-              <button className="btn primary big" onClick={() => replaceDraft(quiz) && go('/crea')}>
+              <button className="btn primary big" onClick={async () => (await replaceDraft(quiz)) && go('/crea')}>
                 ✏️ Modifica e aggiungi foto
               </button>
               <button className="btn ghost" onClick={() => go(`/q/${saveImported(quiz)}/setup`)}>▶ Gioca subito</button>

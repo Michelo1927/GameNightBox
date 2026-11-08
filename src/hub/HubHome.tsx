@@ -1,32 +1,30 @@
-import type { CSSProperties } from 'react';
-import { games } from '../games';
-import { HUB_NAME } from './games';
+import { HUB_NAME, type Game } from './games';
 
-const HUES = [225, 290, 185, 330, 250, 200];
-
-/** First page of the site: the list of games. */
-export default function HubHome() {
+/** First page of the site: the marquee sign and one card per game. */
+export default function HubHome({ games }: { games: Game[] }) {
   return (
-    <div className="page home">
-      <header className="home-header">
-        <h1 className="logo">
-          {HUB_NAME.main}
-          <span>{HUB_NAME.accent}</span>
+    <div className="page home hub-home">
+      <header className="hub-hero">
+        <h1 className="marquee">
+          <span>{HUB_NAME.main}</span>
+          <span className="marquee-accent">{HUB_NAME.accent}</span>
         </h1>
-        <p className="muted">Giochi per stare tutti nella stessa stanza, davanti allo stesso schermo. Scegli a cosa giocare</p>
+        <p>Giochi a squadre per la serata: tutti nella stessa stanza, davanti allo stesso schermo.</p>
       </header>
 
-      <div className="quiz-grid">
-        {games.map((g, i) => (
-          <a key={g.id} className="quiz-card" href={g.href} style={{ ['--hue' as string]: HUES[i % HUES.length] } as CSSProperties}>
-            <span className="quiz-icon">{g.icon}</span>
-            <h2>{g.name}</h2>
-            <p className="muted">{g.tagline}</p>
-            <div className="tags">
-              {g.tags.map((t) => (
-                <span key={t}>{t}</span>
-              ))}
-            </div>
+      <div className="game-grid">
+        {games.map((g) => (
+          <a key={g.id} className={`game-card theme-${g.id}`} href={g.href}>
+            <span className="game-icon" aria-hidden>{g.icon}</span>
+            <span className="game-text">
+              <h2>{g.name}</h2>
+              <p>{g.tagline}</p>
+              <span className="tags">
+                {g.tags.map((t) => (
+                  <span key={t}>{t}</span>
+                ))}
+              </span>
+            </span>
           </a>
         ))}
       </div>

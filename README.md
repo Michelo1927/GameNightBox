@@ -3,6 +3,23 @@
 Hub di giochi da serata per stare tutti nella stessa stanza, davanti allo stesso schermo.
 Sito: https://michelo1927.github.io/GameNightBox/
 
+| Gioco | In breve |
+|---|---|
+| 🏆 **Jeopardy** | Tabellone 5×5 di domande da 100 a 500 punti, caselle a sorpresa, domanda finale |
+| 🔤 **Passaparola** | Una ruota di 21 lettere per squadra, una definizione per lettera, contro il tempo |
+| 🔗 **Catena** | Parole legate a due a due da scoprire lettera per lettera, con finale a prenotazione |
+| 🎵 **Musichiere** | Canzoni da YouTube a raffica: vince la prima squadra che riempie la sua colonna |
+
+Ogni gioco si può creare in tre modi:
+- **✏️ Crea**: a mano dal telefono, si salva da solo; alla fine **✨ Genera il codice** dà un codice e un link
+  da mandare a chi fa da host, che lo apre o lo incolla in **📥 Carica**. Con ✏️ su un contenuto lo si modifica.
+- **🤖 Crea con Claude**: scegli il tema, copia il prompt su claude.ai, incolla la risposta e si gioca
+  (o la si apre nel creatore per sistemarla).
+- Con Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`.
+
+Un codice ricevuto si salva nel sito con `npm run import -- <file|codice|link>` (poi commit e push). Regole complete nel riquadro "Come si gioca" di ogni gioco.
+I contenuti del sito stanno in `quizzes/` (Jeopardy) e `content/<gioco>/` (gli altri).
+
 ## Jeopardy
 
 Quiz in stile Jeopardy per giocare a squadre con gli amici: 5 categorie × 5 domande (100 → 500).

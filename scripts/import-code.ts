@@ -1,35 +1,68 @@
-// Saves a quiz shared as a code (from the "Crea un quiz" page) into quizzes/<slug>/.
-// Embedded photos become separate files, so the quiz behaves like the others in the repo.
+// Saves something shared as a code (from a game's creator) into the repo:
+//   Jeopardy → quizzes/<slug>/ (embedded photos become separate files, so the quiz behaves like the others)
+//   Passaparola, Catena, Musichiere → content/<game>/<slug>.json
 // Usage: npm run import -- <file-with-code.txt | code | link> [slug]
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { inflateRawSync } from 'node:zlib';
+import { validateCatena } from '../src/games/catena/schema';
 import { slugify, validateQuiz, type Media, type Quiz } from '../src/games/jeopardy/quiz/schema';
+import { validatePlaylist } from '../src/games/musichiere/schema';
+import { validatePassaparola } from '../src/games/passaparola/schema';
+import type { Validation } from '../src/hub/content';
+
+const GAMES: { prefix: string; game: string; key: string; validate: (d: unknown) => Validation }[] = [
+  { prefix: 'JQ1.', game: 'jeopardy', key: 'categories', validate: validateQuiz },
+  { prefix: 'PP1.', game: 'passaparola', key: 'ruote', validate: validatePassaparola },
+  { prefix: 'CT1.', game: 'catena', key: 'catene', validate: validateCatena },
+  { prefix: 'MU1.', game: 'musichiere', key: 'songs', validate: validatePlaylist },
+];
 
 const [input, slugArg] = process.argv.slice(2);
 if (!input) {
-  console.error('Uso: npm run import -- <file.txt | codice | link> [nome-cartella]');
+  console.error('Uso: npm run import -- <file.txt | codice | link> [nome]');
   process.exit(1);
 }
 
 let text = existsSync(input) ? readFileSync(input, 'utf8') : input;
-const link = text.indexOf('#/carica/');
-if (link >= 0) text = decodeURIComponent(text.slice(link + '#/carica/'.length));
+const link = text.search(/#\/(\w+\/)?carica\//);
+if (link >= 0) text = decodeURIComponent(text.slice(text.indexOf('carica/', link) + 'carica/'.length));
 text = text.replace(/\s+/g, '');
 
-let quiz: Quiz;
-if (text.startsWith('{')) quiz = JSON.parse(text);
-else {
-  const start = text.indexOf('JQ1.');
-  if (start < 0) throw new Error('Codice non valido: deve contenere "JQ1."');
-  quiz = JSON.parse(inflateRawSync(Buffer.from(text.slice(start + 4), 'base64url')).toString('utf8'));
+let data: Record<string, unknown>;
+let kind: (typeof GAMES)[number] | undefined;
+if (text.startsWith('{')) {
+  data = JSON.parse(text);
+  kind = GAMES.find((g) => g.key in data);
+} else {
+  const found = GAMES.map((g) => ({ g, at: text.indexOf(g.prefix) })).filter((x) => x.at >= 0).sort((a, b) => a.at - b.at)[0];
+  if (!found) throw new Error(`Codice non valido: deve contenere ${GAMES.map((g) => `"${g.prefix}"`).join(', ')}`);
+  kind = found.g;
+  data = JSON.parse(inflateRawSync(Buffer.from(text.slice(found.at + found.g.prefix.length), 'base64url')).toString('utf8'));
 }
+if (!kind) throw new Error('Non capisco di che gioco è questo JSON');
 
-const { errors } = validateQuiz(quiz);
+const { errors } = kind.validate(data);
 if (errors.length) {
-  console.error('Il quiz contiene errori:\n- ' + errors.join('\n- '));
+  console.error('Ci sono errori:\n- ' + errors.join('\n- '));
   process.exit(1);
 }
+
+if (kind.game !== 'jeopardy') {
+  const slug = slugArg ?? (slugify(String(data.title)) || kind.game);
+  const dir = join(import.meta.dirname, '..', 'content', kind.game);
+  const file = join(dir, `${slug}.json`);
+  if (existsSync(file)) {
+    console.error(`Esiste già content/${kind.game}/${slug}.json: scegli un altro nome, es. npm run import -- <codice> ${slug}-2`);
+    process.exit(1);
+  }
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(file, JSON.stringify(data, null, 2) + '\n', 'utf8');
+  console.log(`✓ Salvato in content/${kind.game}/${slug}.json`);
+  console.log(`  Controlla con: npm run validate -- ${kind.game}/${slug}${kind.game === 'musichiere' ? ' --online' : ''}`);
+  process.exit(0);
+}
+const quiz = data as unknown as Quiz;
 
 const slug = slugArg ?? (slugify(quiz.title) || 'quiz');
 const dir = join(import.meta.dirname, '..', 'quizzes', slug);

@@ -1,0 +1,72 @@
+.ct-page .game-stage { gap: 8px; justify-content: flex-start; padding-top: 8px; }
+
+.ct-chain { display: flex; flex-direction: column; align-items: center; }
+.ct-row { position: relative; display: flex; flex-direction: column; align-items: center; }
+/* The link between two words: a short lit wire. */
+.ct-row + .ct-row::before {
+  content: ''; width: 4px; height: clamp(4px, 1.1vh, 10px); border-radius: 99px;
+  background: var(--accent); box-shadow: 0 0 10px var(--accent); opacity: 0.8;
+}
+.ct-word {
+  position: relative; display: flex; align-items: center; gap: 14px; padding: 5px 14px;
+  border-radius: 14px; border: 2px solid transparent; background: transparent; transition: background 0.2s, box-shadow 0.2s;
+}
+.ct-word:disabled { opacity: 1; }
+.ct-word .tiles { gap: 5px; flex-wrap: nowrap; }
+.ct-word .tile { width: clamp(22px, 4.4vh, 50px); height: clamp(26px, 5vh, 58px); font-size: clamp(1rem, 3.4vh, 2.3rem); }
+.ct-word .tile.hidden { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent); }
+.ct-word.solved .tile {
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold) 60%, #e0a000); color: #3a2400;
+  box-shadow: 0 3px 0 #9a6a00, 0 0 16px rgba(255, 201, 40, 0.35);
+}
+.ct-word.can { border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: rgba(255, 138, 31, 0.05); }
+.ct-word.can:hover { background: rgba(255, 138, 31, 0.12); }
+.ct-word.on {
+  border-color: var(--accent); background: rgba(255, 138, 31, 0.14);
+  box-shadow: 0 0 0 4px rgba(255, 138, 31, 0.18), 0 0 34px rgba(255, 138, 31, 0.5);
+}
+.ct-value {
+  position: absolute; left: calc(100% + 8px); min-width: 52px; padding: 3px 10px; border-radius: 99px;
+  background: rgba(0, 0, 0, 0.45); font-weight: 800; color: var(--gold-hi); font-size: clamp(0.9rem, 2.2vh, 1.3rem);
+}
+.ct-word.on .ct-value { background: var(--accent); color: #2a1200; }
+.ct-value.big { position: static; font-size: 1.3rem; }
+.ct-link { font-size: clamp(0.8rem, 1.8vh, 1.05rem); color: var(--accent); font-weight: 600; }
+
+/* Final word */
+.ct-final, .ct-intro { display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 2.4vh, 24px); width: min(1100px, 100%); }
+.ct-final-tag { padding: 6px 16px; border-radius: 99px; background: rgba(255, 204, 0, 0.15); color: var(--gold); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; }
+.ct-clues { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; width: 100%; }
+.ct-clue {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; border-radius: 14px; min-width: 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 30%, var(--bg-3)), var(--bg-2)); border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); animation: buzz-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.ct-clue small { font-size: 0.75rem; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 1px; }
+.ct-clue b { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(1.1rem, 2.6vw, 2.1rem); letter-spacing: 0.5px; overflow-wrap: anywhere; text-align: center; }
+.ct-clue-pts { font-size: 0.8rem; font-weight: 700; color: rgba(255, 255, 255, 0.45); }
+.ct-clue.now { border-color: var(--gold); box-shadow: 0 0 22px rgba(255, 204, 0, 0.35); }
+.ct-clue.now .ct-clue-pts { color: var(--gold); font-size: 0.95rem; }
+.ct-clue.hidden { background: rgba(255, 255, 255, 0.05); border: 2px dashed rgba(255, 255, 255, 0.12); animation: none; }
+.ct-clue.hidden b { color: rgba(255, 255, 255, 0.25); }
+.ct-answer { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ct-answer .tile { width: clamp(40px, 5vw, 64px); height: clamp(48px, 7vh, 72px); font-size: clamp(1.6rem, 4.4vh, 2.6rem); }
+.ct-answer .tiles.solved .tile { background: linear-gradient(170deg, #ffe066, var(--gold)); color: #1a1400; }
+.ct-guide { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding: 14px 24px; border-radius: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); max-width: 760px; }
+.ct-guide b { font-size: clamp(1.3rem, 3vh, 1.9rem); }
+.ct-guide span { font-size: 1rem; }
+.ct-intro { max-width: 760px; padding: 28px; border-radius: 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); }
+.ct-intro h2 { margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(1.6rem, 3.6vw, 2.6rem); text-align: center; }
+.ct-intro ol { align-self: stretch; text-align: left; margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 1.1rem; line-height: 1.4; }
+.ct-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.ct-keys span { padding: 6px 12px; border-radius: 10px; border-left: 4px solid; background: rgba(255, 255, 255, 0.06); font-weight: 700; }
+@media (max-width: 700px) { .ct-clues { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Creator */
+.ct-edit { display: flex; flex-direction: column; gap: 4px; }
+.ct-ed-word { display: flex; align-items: center; gap: 8px; }
+.ct-ed-word span { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, 0.08); font-weight: 800; font-size: 0.85rem; color: var(--muted); }
+.ct-ed-word.shown span { background: var(--gold); color: #1a1400; }
+.ct-ed-word input { text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+.ct-ed-word input::placeholder { text-transform: none; font-weight: 400; letter-spacing: 0; }
+.creator .ct-link-input { margin-left: 36px; width: calc(100% - 36px); padding: 6px 10px; font-size: 14px; background: transparent; border-style: dashed; color: var(--muted); }

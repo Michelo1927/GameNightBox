@@ -1,0 +1,266 @@
+/* "Prima serata" look shared by every page: a TV studio at night.
+   Loaded last, so it sets the tokens and the shared pieces; each game only adds its own accent. */
+
+:root {
+  --font-body: 'Rubik', system-ui, sans-serif;
+  --font-display: 'Anton', sans-serif;
+
+  /* Studio */
+  --bg: #0b0732;
+  --bg-2: #1a1152;
+  --bg-3: #261a6e;
+  --line: rgba(190, 170, 255, 0.18);
+  --muted: #a9a2dc;
+  --text: #f6f3ff;
+
+  /* Lights */
+  --gold: #ffc928;
+  --gold-hi: #ffe27a;
+  --magenta: #ff3d8b;
+  --cyan: #36d6ff;
+  --orange: #ff8a1f;
+  --ok: #2ee68a;
+  --ko: #ff4d5e;
+
+  /* The game's own color (set per game below). */
+  --accent: var(--gold);
+}
+
+.pp-page, .theme-passaparola { --accent: var(--cyan); }
+.ct-page, .theme-catena { --accent: var(--orange); }
+.mu-page, .theme-musichiere { --accent: var(--magenta); }
+
+/* ---------- The studio: backdrop, two spotlights, a glossy floor ---------- */
+html { background: var(--bg); }
+body {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% -8%, rgba(120, 90, 255, 0.45), transparent 70%) top center / 100% 100vh no-repeat,
+    radial-gradient(ellipse 80% 50% at 50% 115%, rgba(255, 61, 139, 0.16), transparent 70%) bottom center / 100% 100vh no-repeat,
+    var(--bg);
+}
+
+/* Game screens fill the TV: the light rig sits behind them. */
+.board-page { position: relative; isolation: isolate; }
+.board-page::before,
+.board-page::after {
+  content: ''; position: fixed; z-index: -1; pointer-events: none; top: -10vh; width: 55vw; height: 120vh;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, transparent), transparent 75%);
+  filter: blur(18px); opacity: 0.55;
+}
+.board-page::before { left: -12vw; clip-path: polygon(30% 0, 48% 0, 100% 100%, 40% 100%); }
+.board-page::after { right: -12vw; clip-path: polygon(52% 0, 70% 0, 60% 100%, 0 100%); }
+.game-stage { position: relative; }
+.game-stage::after {
+  /* Floor: a soft reflective ellipse under the action. */
+  content: ''; position: absolute; z-index: -1; left: 10%; right: 10%; bottom: 2%; height: 18%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 28%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- Header of a game screen ---------- */
+.board-header .title, .play-header .title {
+  color: var(--gold); text-shadow: 0 0 18px rgba(255, 201, 40, 0.45);
+}
+.play-info .pill {
+  background: color-mix(in srgb, var(--accent) 16%, rgba(0, 0, 0, 0.4));
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* ---------- Buttons: lit panels ---------- */
+.btn {
+  border-radius: 12px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.07);
+  font-weight: 700; transition: transform 0.08s, background 0.15s, box-shadow 0.15s;
+}
+.btn:active:not(:disabled) { transform: translateY(1px) scale(0.98); }
+.btn:focus-visible, .team-chip:focus-visible, .cell:focus-visible, .quiz-card:focus-visible, .game-card:focus-visible {
+  outline: 3px solid var(--gold-hi); outline-offset: 3px;
+}
+.btn.primary {
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold) 55%, #e9a800);
+  border-color: #fff1b0; color: #2a1c00;
+  box-shadow: 0 4px 0 #a87400, 0 8px 22px rgba(255, 201, 40, 0.35);
+}
+.btn.primary:hover:not(:disabled) { background: linear-gradient(180deg, #fff0b0, var(--gold-hi) 55%, var(--gold)); }
+.btn.primary:active:not(:disabled) { box-shadow: 0 2px 0 #a87400, 0 4px 12px rgba(255, 201, 40, 0.3); transform: translateY(2px); }
+.btn.ok {
+  background: linear-gradient(180deg, #7dffbe, var(--ok) 55%, #17b866); border-color: #b5ffd8; color: #02281a;
+  box-shadow: 0 4px 0 #0e7f45, 0 8px 22px rgba(46, 230, 138, 0.3);
+}
+.btn.ko {
+  background: linear-gradient(180deg, #ff8f99, var(--ko) 55%, #d42639); border-color: #ffc2c8; color: #fff;
+  box-shadow: 0 4px 0 #8f1424, 0 8px 22px rgba(255, 77, 94, 0.3);
+}
+.btn.ok:hover:not(:disabled) { filter: brightness(1.08); background: linear-gradient(180deg, #7dffbe, var(--ok) 55%, #17b866); }
+.btn.ko:hover:not(:disabled) { filter: brightness(1.08); background: linear-gradient(180deg, #ff8f99, var(--ko) 55%, #d42639); }
+.btn.big { border-radius: 16px; }
+kbd { border-radius: 5px; }
+
+/* ---------- Teams: podium plates ---------- */
+.team-chip {
+  border-radius: 14px; padding: 8px 16px; gap: 12px;
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  border: 2px solid rgba(255, 255, 255, 0.08); border-bottom: 5px solid; border-left-width: 2px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+}
+.team-chip .score {
+  min-width: 2.2em; padding: 0 8px; border-radius: 8px; background: rgba(0, 0, 0, 0.45);
+  color: var(--gold-hi); text-shadow: 0 0 10px rgba(255, 201, 40, 0.6); font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+.team-chip.on { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255, 201, 40, 0.25), 0 0 30px rgba(255, 201, 40, 0.45); transform: translateY(-3px); }
+.team-chip { transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s; }
+
+/* Booked team: a lit banner. */
+.buzzed {
+  position: relative; padding: 14px 34px; border-radius: 18px;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7), 0 0 40px currentColor, 0 14px 40px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  animation: buzz-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+@keyframes buzz-in { from { transform: scale(0.4); opacity: 0; } }
+
+/* Letter tiles: lit panels. */
+.tile {
+  border-radius: 8px; background: linear-gradient(180deg, #ffffff, #dcd6ff); color: #22127a;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35), inset 0 -3px 0 rgba(34, 18, 122, 0.15);
+}
+.tile.hidden { background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+
+.guess input { border-radius: 12px; background: rgba(0, 0, 0, 0.4); font-weight: 700; }
+.guess input:focus { outline: 3px solid var(--gold); outline-offset: 0; }
+
+/* Panels */
+.rules-box, .ranking, .ask { background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); }
+.ranking { border-radius: 22px; box-shadow: 0 0 60px rgba(120, 90, 255, 0.35); }
+.ranking h2 { text-shadow: 0 0 24px rgba(255, 201, 40, 0.5); }
+
+/* ---------- Stage lights on right / wrong (hub/fx.ts) ---------- */
+.stage-flash { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
+.stage-flash.ok {
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 236, 160, 0.55), rgba(46, 230, 138, 0.18) 50%, transparent 75%);
+  animation: lights-ok 0.9s ease-out forwards;
+}
+.stage-flash.ko {
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(255, 77, 94, 0.5) 100%);
+  animation: lights-ko 0.7s ease-out forwards;
+}
+@keyframes lights-ok { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lights-ko { 0% { opacity: 0; } 20% { opacity: 1; } 40% { opacity: 0.5; } 60% { opacity: 1; } 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Jeopardy in the studio: lit board, podium scores ---------- */
+.board { gap: 7px; padding: 7px; border-radius: 14px; background: #04031a; box-shadow: 0 0 0 2px rgba(120, 140, 255, 0.25), 0 0 50px rgba(60, 80, 255, 0.35); }
+.cat-cell, .cell {
+  border-radius: 8px;
+  background: linear-gradient(180deg, #2d3cff 0%, var(--cell) 22%, var(--cell-2) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 3px 0 #000;
+}
+.cat-cell { border-bottom: 3px solid var(--gold); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 4px 14px rgba(255, 201, 40, 0.2); }
+.cell .points { color: var(--gold); text-shadow: 0 0 18px rgba(255, 201, 40, 0.45), 3px 3px 0 #000; }
+.cell:hover { filter: brightness(1.3); }
+.cell.played { background: #090824; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05); }
+.team-score {
+  border-radius: 16px; border-top: 0; position: relative;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team) 22%, var(--bg-3)), var(--bg-2) 70%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 10px 26px rgba(0, 0, 0, 0.4);
+}
+.team-score::before {
+  content: ''; position: absolute; top: 0; left: 14%; right: 14%; height: 4px; border-radius: 0 0 99px 99px;
+  background: var(--team); box-shadow: 0 0 16px 3px var(--team);
+}
+.team-points { color: var(--gold-hi); text-shadow: 0 0 20px rgba(255, 201, 40, 0.45); }
+.question { background: radial-gradient(ellipse at 50% 0%, #2d3cff, var(--cell) 40%, var(--cell-2) 100%); }
+.answer { border-radius: 18px; box-shadow: 0 0 40px rgba(255, 201, 40, 0.35); }
+
+.theme-jeopardy { --accent: var(--gold); }
+
+/* ---------- Hub home: the marquee sign ---------- */
+.hub-home {
+  /* Full screen is the usual case: the sign and the cards sit in the middle of it; a smaller window shrinks them (vh sizes below). */
+  min-height: 100vh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
+  padding-top: clamp(16px, 4vh, 56px); padding-bottom: clamp(16px, 4vh, 56px);
+}
+.hub-hero { text-align: center; margin-bottom: clamp(18px, 4vh, 48px); }
+.hub-hero p { margin: clamp(10px, 2vh, 18px) auto 0; max-width: 46ch; color: var(--muted); font-size: 1.1rem; }
+.marquee {
+  position: relative; display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0 0.3em; margin: 0;
+  padding: 0.28em 0.55em; border-radius: 22px;
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, min(9vw, 9vh), 6rem); line-height: 1.05; letter-spacing: 1px;
+  color: var(--gold-hi); text-shadow: 0 0 12px rgba(255, 201, 40, 0.8), 0 0 40px rgba(255, 201, 40, 0.45), 3px 4px 0 #3a1d00;
+  background: linear-gradient(180deg, #2a1660, #150b3e);
+  box-shadow: 0 0 0 3px #5a3a00, 0 0 60px rgba(255, 201, 40, 0.25), 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+.marquee::before {
+  /* A frame of light bulbs. */
+  content: ''; position: absolute; inset: 2px; border-radius: 20px; padding: 16px; pointer-events: none;
+  /* "round" fits a whole number of bulbs on each side, so the frame closes evenly. */
+  background: radial-gradient(circle, #fff6cf 0 2.5px, rgba(255, 201, 40, 0.7) 3.5px, transparent 5.5px) 0 0 / 16px 16px round;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: bulbs 1.4s ease-in-out infinite alternate;
+}
+@keyframes bulbs { from { opacity: 0.65; } to { opacity: 1; filter: drop-shadow(0 0 4px rgba(255, 220, 120, 0.9)); } }
+.marquee-accent { color: #fff; text-shadow: 0 0 12px var(--magenta), 0 0 36px var(--magenta), 3px 4px 0 #4a0024; }
+
+.game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: clamp(12px, 2vh, 18px); }
+.game-card {
+  position: relative; display: flex; align-items: center; gap: 20px; padding: clamp(14px, 2.4vh, 22px) 22px; border-radius: 22px; overflow: hidden;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 26%, var(--bg-3)), var(--bg-2) 65%);
+  border: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.game-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 40%, transparent), 0 16px 40px rgba(0, 0, 0, 0.4); }
+.game-icon {
+  flex: none; width: clamp(64px, min(9vw, 11vh), 104px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  font-size: clamp(2rem, min(4vw, 5vh), 3.2rem);
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 55%, #fff), var(--accent) 45%, color-mix(in srgb, var(--accent) 50%, #000));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -6px 12px rgba(0, 0, 0, 0.25);
+}
+.game-text { display: flex; flex-direction: column; gap: clamp(2px, 0.8vh, 6px); min-width: 0; }
+.game-card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem, min(3vw, 4.4vh), 2.4rem); letter-spacing: 0.5px; color: var(--text); }
+.game-card p { margin: 0; color: var(--muted); line-height: 1.4; }
+.game-card .tags { margin-top: clamp(2px, 0.8vh, 6px); }
+.game-card .tags span { background: color-mix(in srgb, var(--accent) 20%, rgba(0, 0, 0, 0.35)); color: var(--text); }
+
+@media (max-width: 520px) {
+  .game-card { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- A game's page: list of content ---------- */
+.home .logo {
+  color: var(--gold-hi); text-shadow: 0 0 14px rgba(255, 201, 40, 0.7), 0 0 44px rgba(255, 201, 40, 0.35), 3px 4px 0 #3a1d00;
+}
+.home[class*='theme-'] .logo { color: #fff; text-shadow: 0 0 14px var(--accent), 0 0 44px var(--accent), 3px 4px 0 rgba(0, 0, 0, 0.6); }
+.home .logo span { color: var(--gold-hi); text-shadow: 0 0 14px rgba(255, 201, 40, 0.7), 3px 4px 0 #3a1d00; }
+.home .quiz-card, .home .quiz-card[style*='--hue'] {
+  border-radius: 20px;
+  background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 24%, var(--bg-3)), var(--bg-2) 70%);
+  border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+.home .quiz-card:not(.broken):hover { border-color: var(--accent); box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 35%, transparent), 0 14px 34px rgba(0, 0, 0, 0.35); }
+.home .quiz-card.broken { background: #3b0d22; border-color: rgba(255, 77, 94, 0.4); }
+.home .quiz-card h2 { font-family: var(--font-display); }
+.home .quiz-card .tags span { background: color-mix(in srgb, var(--accent) 18%, rgba(0, 0, 0, 0.35)); }
+.home .badge { background: var(--accent); color: #1a1000; box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
+.home h3 { color: var(--accent); }
+.rules-box { border-radius: 16px; border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* ---------- Setup ---------- */
+.setup .title { color: var(--accent, var(--gold-hi)); text-shadow: 0 0 18px color-mix(in srgb, var(--accent, var(--gold)) 55%, transparent); }
+.team-row { border-radius: 14px; background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); }
+.team-row input { border-radius: 10px; }
+
+/* Creators on the phone: the game's colour on the header and section titles. */
+.creator .cr-header { border-bottom: 2px solid color-mix(in srgb, var(--accent, var(--gold)) 60%, transparent); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); }
+.creator .cr-header h1 { color: var(--accent, var(--gold-hi)); text-shadow: 0 0 14px color-mix(in srgb, var(--accent, var(--gold)) 50%, transparent); }
+.creator .cr-section { color: var(--accent, var(--gold)); }
+.creator input:focus, .creator textarea:focus { outline-color: var(--accent, var(--gold)); }
+
+/* No scrollbars on the TV: pages still scroll with the wheel, touch and keys. */
+html, body, * { scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }

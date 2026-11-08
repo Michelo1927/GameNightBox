@@ -5,12 +5,13 @@ import { go } from '../../../hub/nav';
 import { archivedSlugs, setArchived } from '../quiz/archive';
 import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
+import { ask } from '../../../hub/ask';
 
 export default function Home() {
   const [imported, setImported] = useState(importedQuizzes);
   const [archived, setArchivedList] = useState(archivedSlugs);
-  const remove = (slug: string, title: string) => {
-    if (!confirm(`Togliere "${title}" da questo dispositivo?`)) return;
+  const remove = async (slug: string, title: string) => {
+    if (!(await ask(`Togliere "${title}" da questo dispositivo?`, 'Togli'))) return;
     removeImported(slug);
     setArchivedList(setArchived(slug, false));
     setImported(importedQuizzes());
@@ -28,12 +29,12 @@ export default function Home() {
       archived={inArchive}
       onArchive={() => archive(q.slug, !inArchive)}
       onRemove={q.imported ? () => remove(q.slug, q.quiz.title) : undefined}
-      onEdit={q.imported && !q.errors.length ? () => replaceDraft(q.quiz, q.slug) && go('/crea') : undefined}
+      onEdit={q.imported && !q.errors.length ? async () => (await replaceDraft(q.quiz, q.slug)) && go('/crea') : undefined}
     />
   );
 
   return (
-    <div className="page home">
+    <div className="page home theme-jeopardy">
       <a className="back" href="#/">← Tutti i giochi</a>
       <header className="home-header">
         <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>

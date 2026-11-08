@@ -4,6 +4,7 @@ import { POINTS, validateQuiz, type FinalQuestion, type Media, type Question, ty
 import { cleanQuestion, cleanQuiz, isQuestionComplete } from '../quiz/clean';
 import { devFileUrl, loadQuiz, saveQuiz } from './api';
 import QuestionForm from './QuestionForm';
+import { ask } from '../../../hub/ask';
 
 const MAX_CATEGORIES = 8;
 
@@ -103,8 +104,8 @@ export default function QuizEditor({ slug }: { slug: string }) {
       ...z,
       categories: [...z.categories, { name: `Categoria ${z.categories.length + 1}`, questions: POINTS.map((points) => ({ points, question: '', answer: '' })) }],
     }));
-  const removeCategory = (ci: number) => {
-    if (!confirm(`Eliminare la categoria "${quiz.categories[ci].name}" con tutte le sue domande?`)) return;
+  const removeCategory = async (ci: number) => {
+    if (!(await ask(`Eliminare la categoria "${quiz.categories[ci].name}" con tutte le sue domande?`, 'Elimina'))) return;
     update((z) => ({ ...z, categories: z.categories.filter((_, i) => i !== ci) }));
     setSel({ c: Math.max(0, Math.min(sel.c, quiz.categories.length - 2)), q: sel.q });
   };
@@ -122,7 +123,11 @@ export default function QuizEditor({ slug }: { slug: string }) {
   return (
     <div className="editor">
       <header className="editor-header">
-        <a className="back" href="#/" onClick={(e) => dirty && !confirm('Ci sono modifiche non salvate. Uscire lo stesso?') && e.preventDefault()}>
+        <a className="back" href="#/" onClick={async (e) => {
+            if (!dirty) return;
+            e.preventDefault();
+            if (await ask('Ci sono modifiche non salvate. Uscire lo stesso?', 'Esci')) location.hash = '#/';
+          }}>
           ← Editor
         </a>
         <input className="title-input" value={quiz.title} onChange={(e) => update((z) => ({ ...z, title: e.target.value }))} aria-label="Titolo" placeholder="Titolo del quiz" />

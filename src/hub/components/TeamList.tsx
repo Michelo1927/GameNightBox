@@ -4,10 +4,12 @@ interface Props {
   teams: Team[];
   /** Receives a function from the current teams to the new ones (like a React state updater). */
   onChange: (update: (teams: Team[]) => Team[]) => void;
+  /** Most teams allowed (default MAX_TEAMS). */
+  max?: number;
 }
 
 /** Team editor shared by the games: name, color, order, add and remove. */
-export default function TeamList({ teams, onChange }: Props) {
+export default function TeamList({ teams, onChange, max = MAX_TEAMS }: Props) {
   const update = (id: string, patch: Partial<Team>) => onChange((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   const remove = (id: string) => onChange((ts) => ts.filter((t) => t.id !== id));
   const add = () => onChange((ts) => [...ts, newTeam(ts.length)]);
@@ -46,7 +48,7 @@ export default function TeamList({ teams, onChange }: Props) {
         ))}
       </div>
       <div className="setup-row">
-        {teams.length < MAX_TEAMS && (
+        {teams.length < max && (
           <button className="btn ghost" onClick={add}>
             + Aggiungi squadra
           </button>

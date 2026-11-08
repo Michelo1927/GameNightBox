@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { youtubeId, type Media } from '../media';
+import { loadYouTubeApi, type YTPlayer } from '../youtube';
 
 /** Image + multiple choice: picture on the left, options on the right (stacked on narrow screens). */
 export function MaybeSplit({ split, media, children }: { split: boolean; media: ReactNode; children: ReactNode }) {
@@ -124,32 +125,6 @@ function YouTubeVideo({ media }: { media: Media }) {
 }
 
 // --- YouTube audio-only: hidden player driven by the IFrame API ---
-
-interface YTPlayer {
-  playVideo(): void;
-  pauseVideo(): void;
-  seekTo(s: number, allowSeekAhead: boolean): void;
-  getCurrentTime(): number;
-  destroy(): void;
-}
-declare global {
-  interface Window {
-    YT?: { Player: new (el: HTMLElement, opts: object) => YTPlayer; PlayerState: Record<string, number> };
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
-
-let ytApi: Promise<void> | null = null;
-function loadYouTubeApi() {
-  if (window.YT?.Player) return Promise.resolve();
-  ytApi ??= new Promise<void>((resolve) => {
-    window.onYouTubeIframeAPIReady = () => resolve();
-    const s = document.createElement('script');
-    s.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(s);
-  });
-  return ytApi;
-}
 
 function YouTubeAudio({ media }: { media: Media }) {
   const host = useRef<HTMLDivElement>(null);

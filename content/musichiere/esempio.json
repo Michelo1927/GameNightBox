@@ -1,0 +1,79 @@
+{
+  "title": "Hit internazionali",
+  "description": "Dodici successi famosissimi per provare il gioco.",
+  "author": "Game Night Box",
+  "songs": [
+    {
+      "title": "Never Gonna Give You Up",
+      "artist": "Rick Astley",
+      "year": 1987,
+      "youtube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "year": 2017,
+      "youtube": "https://www.youtube.com/watch?v=JGwWNGJdvx8"
+    },
+    {
+      "title": "Bohemian Rhapsody",
+      "artist": "Queen",
+      "year": 1975,
+      "youtube": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ"
+    },
+    {
+      "title": "Gangnam Style",
+      "artist": "PSY",
+      "year": 2012,
+      "youtube": "https://www.youtube.com/watch?v=9bZkp7q19f0"
+    },
+    {
+      "title": "Uptown Funk",
+      "artist": "Mark Ronson ft. Bruno Mars",
+      "year": 2014,
+      "youtube": "https://www.youtube.com/watch?v=OPf0YbXqDm0"
+    },
+    {
+      "title": "Counting Stars",
+      "artist": "OneRepublic",
+      "year": 2013,
+      "youtube": "https://www.youtube.com/watch?v=hT_nvWreIhg"
+    },
+    {
+      "title": "Faded",
+      "artist": "Alan Walker",
+      "year": 2015,
+      "youtube": "https://www.youtube.com/watch?v=60ItHLz5WEA"
+    },
+    {
+      "title": "Shake It Off",
+      "artist": "Taylor Swift",
+      "year": 2014,
+      "youtube": "https://www.youtube.com/watch?v=nfWlot6h_JM"
+    },
+    {
+      "title": "Roar",
+      "artist": "Katy Perry",
+      "year": 2013,
+      "youtube": "https://www.youtube.com/watch?v=CevxZvSJLk8"
+    },
+    {
+      "title": "See You Again",
+      "artist": "Wiz Khalifa ft. Charlie Puth",
+      "year": 2015,
+      "youtube": "https://www.youtube.com/watch?v=RgKAFK5djSk"
+    },
+    {
+      "title": "Despacito",
+      "artist": "Luis Fonsi ft. Daddy Yankee",
+      "year": 2017,
+      "youtube": "https://www.youtube.com/watch?v=kJQP7kiw5Fk"
+    },
+    {
+      "title": "Waka Waka (This Time for Africa)",
+      "artist": "Shakira",
+      "year": 2010,
+      "youtube": "https://www.youtube.com/watch?v=pRpeEdMmmQ0"
+    }
+  ]
+}

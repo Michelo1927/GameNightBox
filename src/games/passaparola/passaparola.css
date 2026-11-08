@@ -1,0 +1,94 @@
+.pp-page .game-stage { gap: 14px; }
+
+/* Wheel and scoreboard side by side, like the TV set. */
+.pp-arena { display: flex; align-items: center; justify-content: center; gap: clamp(16px, 4vw, 64px); width: 100%; }
+.pp-wheel {
+  --size: min(68vh, 70vw);
+  position: relative; width: var(--size); height: var(--size); flex: none; border-radius: 50%;
+}
+.pp-wheel::before {
+  /* Neon ring the letters sit on, and a dark lit disc in the middle. */
+  content: ''; position: absolute; inset: 5%; border-radius: 50%;
+  border: 3px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 55%, transparent), inset 0 0 40px color-mix(in srgb, var(--accent) 35%, transparent);
+  background: radial-gradient(circle, rgba(54, 214, 255, 0.12), rgba(11, 7, 50, 0.6) 70%);
+}
+.pp-letter {
+  position: absolute; transform: translate(-50%, -50%);
+  width: calc(var(--size) * 0.098); height: calc(var(--size) * 0.098); border-radius: 50%;
+  display: grid; place-items: center; padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: radial-gradient(circle at 35% 28%, #9ff0ff, #1aa6e0 45%, #0b5aa8);
+  color: #fff; font-family: var(--font-display); font-size: calc(var(--size) * 0.05); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 14px rgba(54, 214, 255, 0.4); transition: transform 0.25s, background 0.3s, box-shadow 0.3s;
+}
+.pp-letter.right { background: radial-gradient(circle at 35% 28%, #b9ffd9, #2ee68a 45%, #0f8a4c); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 18px rgba(46, 230, 138, 0.7); }
+.pp-letter.wrong { background: radial-gradient(circle at 35% 28%, #ffc0c6, #ff4d5e 45%, #a3182a); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 18px rgba(255, 77, 94, 0.7); }
+.pp-letter.on {
+  transform: translate(-50%, -50%) scale(1.35); border-color: #fff; z-index: 1;
+  background: radial-gradient(circle at 35% 28%, #fff4c2, var(--gold) 45%, #c98a00); color: #3a2400; text-shadow: none;
+  box-shadow: 0 0 0 5px rgba(255, 201, 40, 0.35), 0 0 34px rgba(255, 201, 40, 0.9);
+  animation: pp-on 1.2s ease-in-out infinite alternate;
+}
+@keyframes pp-on { to { box-shadow: 0 0 0 8px rgba(255, 201, 40, 0.2), 0 0 48px rgba(255, 201, 40, 1); } }
+
+.pp-center {
+  position: absolute; inset: 17%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; text-align: center;
+}
+.pp-team { font-family: var(--font-display); font-size: calc(var(--size) * 0.09); line-height: 1.05; overflow-wrap: anywhere; text-shadow: 0 0 24px currentColor; }
+.pp-kind { font-weight: 700; color: var(--muted); font-size: calc(var(--size) * 0.032); display: flex; align-items: center; gap: 8px; }
+.pp-kind b {
+  display: inline-grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 50%;
+  background: var(--gold); color: #3a2400; font-family: var(--font-display); font-weight: 400; font-size: 1.3em;
+  box-shadow: 0 0 16px rgba(255, 201, 40, 0.7);
+}
+.pp-question { margin: 0; font-weight: 600; font-size: clamp(1rem, calc(var(--size) * 0.048), 2.3rem); line-height: 1.25; }
+.pp-answer {
+  font-family: var(--font-display); font-size: calc(var(--size) * 0.075); color: var(--gold-hi); text-transform: uppercase;
+  text-shadow: 0 0 22px rgba(255, 201, 40, 0.7); animation: buzz-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.pp-answer.ko { color: #ff9aa4; text-shadow: 0 0 22px rgba(255, 77, 94, 0.7); }
+.pp-answer small { display: block; font-family: var(--font-body); font-size: 0.9rem; color: var(--muted); text-transform: none; text-shadow: none; }
+.pp-paused { color: var(--muted); font-weight: 700; }
+.pp-summary { margin: 0; font-size: 1.4rem; }
+
+/* Scoreboard next to the wheel: right answers and time of the team playing. */
+.pp-dial { display: flex; flex-direction: column; align-items: stretch; gap: 14px; min-width: clamp(140px, 16vw, 220px); }
+.pp-dial-team {
+  padding: 8px 12px; border-radius: 12px; text-align: center; font-family: var(--font-display); font-size: clamp(1.2rem, 2.4vw, 2rem);
+  background: var(--team); color: #fff; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3); box-shadow: 0 0 24px color-mix(in srgb, var(--team) 60%, transparent);
+  overflow-wrap: anywhere;
+}
+.pp-count, .pp-time {
+  display: flex; flex-direction: column; align-items: center; padding: 10px 12px 12px; border-radius: 16px;
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); border: 2px solid var(--line);
+}
+.pp-count b, .pp-time b { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 7vh, 5rem); line-height: 1.05; }
+.pp-count b { color: var(--ok); text-shadow: 0 0 22px rgba(46, 230, 138, 0.6); }
+.pp-time b { color: var(--text); font-variant-numeric: tabular-nums; }
+.pp-count small, .pp-time small { color: var(--muted); font-weight: 600; }
+.pp-time.hurry { border-color: var(--ko); animation: pp-hurry 0.5s ease-in-out infinite alternate; }
+.pp-time.hurry b { color: #ff9aa4; }
+@keyframes pp-hurry { to { box-shadow: 0 0 30px rgba(255, 77, 94, 0.7); } }
+
+@media (max-width: 760px) {
+  .pp-arena { flex-direction: column; }
+  .pp-wheel { --size: min(92vw, 60vh); }
+  .pp-dial { flex-direction: row; min-width: 0; }
+  .pp-dial-team { display: none; }
+}
+
+/* Creator */
+.pp-letters { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.pp-letters button {
+  aspect-ratio: 1; border-radius: 50%; border: 1px dashed var(--line); background: rgba(0, 0, 0, 0.3);
+  font-family: 'Anton', sans-serif; font-size: 1.15rem; color: var(--muted); cursor: pointer;
+}
+.pp-letters button.done { background: #1f7a3d; border: 1px solid transparent; color: #fff; }
+.pp-letters button.bad { background: #8a2230; border: 1px solid transparent; color: #fff; }
+.pp-letters button.on { outline: 3px solid var(--gold); outline-offset: 1px; }
+.pp-edit-head { display: flex; align-items: center; gap: 12px; }
+.pp-edit-head .cr-seg { flex: 1; }
+.pp-big { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: #1a1400; font-family: 'Anton', sans-serif; font-size: 1.8rem; }
+.cr-seg button small { opacity: 0.7; font-weight: 500; }

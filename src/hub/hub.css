@@ -1,0 +1,68 @@
+/* Shared by the hub's games (Jeopardy has its own styles in styles.css). */
+
+.rules-box { margin: 0 0 24px; padding: 12px 16px; border-radius: var(--radius); background: var(--bg-2); border: 1px solid var(--line); line-height: 1.5; }
+.rules-box summary { cursor: pointer; font-weight: 700; }
+.rules-box ul { margin: 10px 0 0; padding-left: 20px; }
+.rules-box li + li { margin-top: 4px; }
+
+.play-header .play-info { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
+.play-info .pill { white-space: nowrap; padding: 4px 12px; border-radius: 99px; background: rgba(0, 0, 0, 0.35); font-weight: 700; font-size: 0.9rem; }
+
+.game-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
+
+/* Team strip at the bottom of a game screen. */
+.team-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.team-chip {
+  display: flex; align-items: center; gap: 10px; padding: 6px 14px; border-radius: 10px;
+  background: var(--bg-2); border: 2px solid transparent; border-left: 6px solid; font-weight: 700;
+}
+.team-chip.on { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.25); }
+.team-chip.off { opacity: 0.45; }
+.team-chip .score { font-family: 'Anton', sans-serif; font-size: 1.4rem; font-weight: 400; }
+.team-chip button { border: 0; background: rgba(255, 255, 255, 0.08); border-radius: 6px; width: 26px; height: 26px; }
+
+/* Host controls under the stage. */
+.host-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.btn.ok { background: var(--ok); border-color: var(--ok); color: #04210f; }
+.btn.ko { background: var(--ko); border-color: var(--ko); color: #fff; }
+.btn.ok:hover:not(:disabled) { background: #43d985; }
+.btn.ko:hover:not(:disabled) { background: #f0604f; }
+
+/* Letter tiles for hidden words (Catena). */
+.tiles { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.tile {
+  width: clamp(26px, 4vw, 48px); height: clamp(32px, 5vw, 58px); display: grid; place-items: center;
+  border-radius: 6px; background: rgba(255, 255, 255, 0.92); color: #0a1bb5;
+  font-family: 'Anton', sans-serif; font-size: clamp(1.1rem, 2.6vw, 2.2rem);
+}
+.tile.hidden { background: rgba(255, 255, 255, 0.12); color: transparent; }
+
+/* Booking (buzzer) banner. */
+.buzzed { padding: 12px 28px; border-radius: 14px; font-family: 'Anton', sans-serif; font-size: clamp(1.6rem, 4vw, 3rem); color: #fff; animation: pop 0.3s ease-out; }
+.key-hint { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 5px; background: rgba(255, 255, 255, 0.9); color: #000; font-size: 0.8rem; font-weight: 800; }
+
+.guess { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.guess input {
+  width: min(360px, 80vw); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.3); color: var(--text); font: inherit; font-size: 1.2rem; text-transform: uppercase;
+}
+.guess input:focus { outline: 2px solid var(--gold); }
+
+.flash-ok { color: var(--ok); font-weight: 800; }
+.flash-ko { color: #ff8a8a; font-weight: 800; }
+.team-chip:disabled { opacity: 1; cursor: default; }
+button.team-chip { color: inherit; font: inherit; font-weight: 700; }
+.guess input::placeholder { text-transform: none; }
+
+/* Creators */
+button.link { background: none; border: 0; padding: 0; color: var(--gold); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+.cr-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cr-head h2 { margin: 0; font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.cr-add { padding: 14px; border-radius: 12px; border: 2px dashed var(--line); background: none; color: var(--gold); font: inherit; font-weight: 800; cursor: pointer; }
+.cr-section { margin: 18px 0 0; color: var(--muted); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Yes/no question (hub/ask.tsx) */
+.ask-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); }
+.ask { width: min(420px, 100%); padding: 22px; border-radius: 16px; background: var(--bg-2, #141a4a); border: 1px solid var(--line); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+.ask p { margin: 0 0 18px; font-size: 1.1rem; font-weight: 600; line-height: 1.4; }
+.ask-buttons { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
