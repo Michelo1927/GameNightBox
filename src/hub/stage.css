@@ -264,3 +264,8 @@ kbd { border-radius: 5px; }
 /* No scrollbars on the TV: pages still scroll with the wheel, touch and keys. */
 html, body, * { scrollbar-width: none; }
 ::-webkit-scrollbar { display: none; }
+
+/* Phones: no blue box when tapping buttons and links (the keyboard outline above stays). */
+html { -webkit-tap-highlight-color: transparent; }
+:focus:not(:focus-visible) { outline: none; }
+button, a, .btn, .cell, .team-chip, .game-card, .quiz-card { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
