@@ -1,7 +1,7 @@
 import { useState, type CSSProperties, type MouseEvent } from 'react';
-import { hasSavedGame } from '../game/state';
+import { hasSavedGame } from '../state';
 import { replaceDraft } from '../creator/draft';
-import { go } from '../nav';
+import { go } from '../../../hub/nav';
 import { archivedSlugs, setArchived } from '../quiz/archive';
 import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
@@ -34,6 +34,7 @@ export default function Home() {
 
   return (
     <div className="page home">
+      <a className="back" href="#/">← Tutti i giochi</a>
       <header className="home-header">
         <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>
         <p className="muted">Scegli un quiz per iniziare</p>

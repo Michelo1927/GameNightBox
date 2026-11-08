@@ -1,18 +1,7 @@
 // Quiz file format (quizzes/<slug>/quiz.json). Shared by the app and scripts/validate.ts.
+import { isRemote, MEDIA_TYPES, youtubeId, type Media, type MediaType } from '../../../hub/media';
 
-export type MediaType = 'image' | 'audio' | 'video' | 'youtube';
-
-export interface Media {
-  type: MediaType;
-  /** File name inside the quiz folder, a full URL, or a data: URL (quizzes shared as a code). */
-  src: string;
-  /** Clip start/end in seconds (audio, video, youtube). */
-  start?: number;
-  end?: number;
-  /** Play only the sound, hiding the picture (video, youtube). Good for "indovina la canzone". */
-  audioOnly?: boolean;
-  caption?: string;
-}
+export { isRemote, MEDIA_TYPES, youtubeId, type Media, type MediaType };
 
 export interface Question {
   points: number;
@@ -54,7 +43,6 @@ export interface Quiz {
 }
 
 export const POINTS = [100, 200, 300, 400, 500];
-export const MEDIA_TYPES: MediaType[] = ['image', 'audio', 'video', 'youtube'];
 
 export interface ValidationResult {
   errors: string[];
@@ -138,9 +126,6 @@ export function localMediaFiles(quiz: Quiz): string[] {
   return files;
 }
 
-/** True for full URLs and embedded data: URLs, false for files in the quiz folder. */
-export const isRemote = (src: string) => /^(https?:|data:)/i.test(src);
-
 export function slugify(text: string) {
   return text
     .normalize('NFD')
@@ -159,13 +144,4 @@ export function findCorrectChoice(choices: string[], answer: string): number {
   const exact = choices.findIndex((c) => norm(c) === a);
   if (exact >= 0) return exact;
   return choices.findIndex((c) => a.includes(norm(c)) || norm(c).includes(a));
-}
-
-export function youtubeId(url: string): string | null {
-  const m =
-    url.match(/youtu\.be\/([\w-]{11})/) ??
-    url.match(/[?&]v=([\w-]{11})/) ??
-    url.match(/youtube(?:-nocookie)?\.com\/(?:embed|shorts|live)\/([\w-]{11})/);
-  if (m) return m[1];
-  return /^[\w-]{11}$/.test(url) ? url : null;
 }

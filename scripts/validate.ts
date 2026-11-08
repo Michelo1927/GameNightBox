@@ -4,7 +4,7 @@
 //        npm run validate -- <slug> --online  (also checks YouTube links and prints the video titles)
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { localMediaFiles, validateQuiz, youtubeId, type Media, type Quiz } from '../src/quiz/schema';
+import { localMediaFiles, validateQuiz, youtubeId, type Media, type Quiz } from '../src/games/jeopardy/quiz/schema';
 
 const root = join(import.meta.dirname, '..', 'quizzes');
 const args = process.argv.slice(2);

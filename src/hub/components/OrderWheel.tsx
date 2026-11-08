@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { sounds } from '../game/sounds';
-import type { Team } from '../game/state';
+import { sounds } from '../sounds';
+import type { Team } from '../teams';
 
 interface Props {
   teams: Team[];

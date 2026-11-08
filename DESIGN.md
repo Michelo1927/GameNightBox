@@ -1,6 +1,7 @@
-# JeopardyQuiz: progetto
+# Game Night Box: progetto
 
-Ricostruzione di JeopardyLabs per le serate quiz con gli amici: gioco a squadre, un host,
+Hub di giochi da serata, tutti nella stessa stanza davanti allo stesso schermo.
+Il primo gioco è il Jeopardy: ricostruzione di JeopardyLabs per le serate quiz con gli amici: gioco a squadre, un host,
 5 categorie × 5 domande (100 → 500), con supporto a immagini, audio e video,
 e creazione dei quiz tramite Claude.
 
@@ -26,26 +27,49 @@ e creazione dei quiz tramite Claude.
 
 ## Architettura
 
+Il sito è un **hub di giochi**: la home (`#/`) elenca i giochi, ognuno ha le sue pagine.
+Per ora c'è solo il Jeopardy.
+
 ```
-JeopardyQuiz/
-├─ quizzes/                    ← un quiz = una cartella
+GameNightBox/
+├─ quizzes/                    ← contenuti del Jeopardy: un quiz = una cartella
 │  └─ halloween/
 │     ├─ quiz.json
 │     ├─ zucca.jpg
 │     └─ thriller.mp3
-├─ src/                        ← app React + TypeScript (Vite)
-│  ├─ pages/Home.tsx           elenco quiz
-│  ├─ pages/Setup.tsx          creazione squadre
-│  ├─ pages/Board.tsx          tabellone 5×5 + punteggi
-│  ├─ components/QuestionModal.tsx  domanda → risposta → assegna punti
-│  ├─ components/Media.tsx     immagine / audio / video / YouTube
-│  ├─ editor/                  editor visuale (attivo solo in locale)
-│  └─ quiz/schema.ts           tipi + validazione del formato
+├─ src/
+│  ├─ App.tsx                  smista gli indirizzi: home dell'hub o pagine di un gioco
+│  ├─ hub/                     ← motore comune a tutti i giochi
+│  │  ├─ HubHome.tsx           home con l'elenco dei giochi
+│  │  ├─ games.ts              cosa deve dichiarare un gioco (nome, icona, indirizzi)
+│  │  ├─ teams.ts              squadre e colori
+│  │  ├─ useSaved.ts           stato salvato nel browser + Annulla
+│  │  ├─ sounds.ts  media.ts  nav.ts
+│  │  └─ components/           Timer, OrderWheel, Ranking, AnimatedNumber, Media, TeamList
+│  └─ games/
+│     ├─ index.ts              elenco dei giochi dell'hub
+│     └─ jeopardy/
+│        ├─ index.tsx          scheda del gioco + i suoi indirizzi
+│        ├─ state.ts           regole: turni, caselle speciali, punteggi
+│        ├─ pages/             Home (elenco quiz), Setup, Board
+│        ├─ components/        QuestionModal, FinalModal, SpecialIntro
+│        ├─ quiz/schema.ts     tipi + validazione del formato
+│        ├─ creator/           "Crea un quiz" dal telefono, Claude, caricamento da codice
+│        └─ editor/            editor visuale (attivo solo in locale)
 ├─ scripts/validate.ts         controlla tutti i quiz.json (usato da Claude e in CI)
 ├─ vite-plugin-editor.ts       API locali per salvare file dall'editor (solo dev)
 ├─ .claude/skills/crea-quiz/SKILL.md
 └─ .github/workflows/deploy.yml
 ```
+
+Regole dell'hub:
+
+- `src/hub/` non importa mai da `src/games/`: così il motore resta riusabile da ogni gioco.
+- Un gioco nuovo = una cartella `src/games/<id>/` con un `index.tsx` che esporta un `Game`
+  (vedi `src/hub/games.ts`), aggiunto all'elenco in `src/games/index.ts`.
+- Gli indirizzi del Jeopardy sono rimasti quelli di prima (`#/q/<slug>/…`, `#/crea`, `#/carica/<codice>`,
+  `#/claude`), così link e codici già condivisi funzionano ancora; l'elenco dei quiz è ora in `#/jeopardy`.
+- Le chiavi del `localStorage` non sono cambiate (`jeopardy-quiz:…`): partite, bozze e quiz caricati restano.
 
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.

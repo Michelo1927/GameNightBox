@@ -1,4 +1,9 @@
-# Jeopardy Quiz
+# Game Night Box
+
+Hub di giochi da serata per stare tutti nella stessa stanza, davanti allo stesso schermo.
+Sito: https://michelo1927.github.io/GameNightBox/
+
+## Jeopardy
 
 Quiz in stile Jeopardy per giocare a squadre con gli amici: 5 categorie × 5 domande (100 → 500).
 Risposta giusta = +punti, risposta sbagliata = −punti. Chi ha creato il quiz fa da host.
@@ -8,7 +13,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 ## Giocare
 
-1. Apri il sito e scegli un quiz. Quelli che non ti servono più li togli dalla prima schermata con **📦 Archivia**:
+1. Apri il sito, scegli **Jeopardy** e poi un quiz. Quelli che non ti servono più li togli dalla prima schermata con **📦 Archivia**:
    finiscono nella sezione Archivio in fondo alla pagina, da cui li rimetti con **📤 Ripristina**
    (l'archivio vale solo per il dispositivo su cui lo fai).
 2. Crea le squadre (nome e colore). Nelle **Opzioni** scegli la durata del timer e quante caselle speciali di ogni tipo usare (da 0 a 5, di default una per tipo).
@@ -147,5 +152,8 @@ npm install
 npm run dev      # http://localhost:5173
 npm run build    # valida i quiz + build in dist/
 ```
+
+Il sito è un hub di giochi: il motore comune (squadre, punteggi, timer, suoni, media) sta in `src/hub/`,
+ogni gioco in `src/games/<id>/` ed è elencato in `src/games/index.ts`. Il Jeopardy è in `src/games/jeopardy/`.
 
 Ogni push su `main` pubblica automaticamente il sito su GitHub Pages (`.github/workflows/deploy.yml`).

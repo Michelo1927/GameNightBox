@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import MediaView from '../components/Media';
+import MediaView from '../../../hub/components/Media';
 import type { Media, MediaType } from '../quiz/schema';
 import { devFileUrl, uploadMedia } from './api';
 

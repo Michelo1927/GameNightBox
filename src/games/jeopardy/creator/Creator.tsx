@@ -4,7 +4,7 @@ import { cleanFinal, cleanQuestion, cleanQuiz, isQuestionComplete } from '../qui
 import { removeImported, saveImported } from '../quiz/imported';
 import { findCorrectChoice, validateQuiz, type FinalQuestion, type Question, type Quiz } from '../quiz/schema';
 import { encodeQuiz } from '../quiz/share';
-import { go } from '../nav';
+import { go } from '../../../hub/nav';
 import { blankQuiz, clearDraft, copyText, lastSavedSlug, loadDraft, markDraftDone, saveDraft, savedSlugOf } from './draft';
 import MediaPicker from './MediaPicker';
 
@@ -85,7 +85,7 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   return (
     <>
       <header className="cr-header">
-        <a className="back" href="#/">←</a>
+        <a className="back" href="#/jeopardy">←</a>
         <h1>Crea un quiz</h1>
       </header>
 

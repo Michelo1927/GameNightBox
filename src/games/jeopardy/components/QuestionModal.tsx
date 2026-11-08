@@ -1,10 +1,10 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { sounds } from '../game/sounds';
-import Timer from './Timer';
-import type { Gift, Result, Team } from '../game/state';
+import { sounds } from '../../../hub/sounds';
+import Timer from '../../../hub/components/Timer';
+import type { Gift, Result, Team } from '../state';
 import { SPECIAL_INFO } from './SpecialIntro';
 import { findCorrectChoice, type Question } from '../quiz/schema';
-import MediaView, { MaybeSplit } from './Media';
+import MediaView, { MaybeSplit } from '../../../hub/components/Media';
 
 interface Props {
   category: string;

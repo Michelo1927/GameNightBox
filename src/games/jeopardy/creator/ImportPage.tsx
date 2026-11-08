@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { go } from '../nav';
+import { go } from '../../../hub/nav';
 import { saveImported } from '../quiz/imported';
 import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
@@ -71,7 +71,7 @@ export default function ImportPage({ code }: { code?: string }) {
   return (
     <div className="import-page">
       <header className="cr-header">
-        <a className="back" href="#/">←</a>
+        <a className="back" href="#/jeopardy">←</a>
         <h1>Carica un quiz</h1>
       </header>
       <p className="cr-tip">Incolla il codice (inizia con <b>JQ1.</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>

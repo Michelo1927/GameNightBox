@@ -2,7 +2,7 @@ import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import EditorHome from './EditorHome';
 import QuizEditor from './QuizEditor';
-import '../styles.css';
+import '../../../styles.css';
 import './editor.css';
 
 // Separate entry from the game on purpose: it never imports the bundled quiz list, so

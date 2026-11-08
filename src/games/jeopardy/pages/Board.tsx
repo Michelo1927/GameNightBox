@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { go } from '../nav';
+import { go } from '../../../hub/nav';
 import {
   boardScore,
   cellKey,
@@ -14,15 +14,15 @@ import {
   usesQuizFinal,
   type FinalState,
   type Result,
-} from '../game/state';
-import { sounds, useMuted } from '../game/sounds';
+} from '../state';
+import { sounds, useMuted } from '../../../hub/sounds';
 import { mediaUrl, type LoadedQuiz } from '../quiz/load';
 import QuestionModal from '../components/QuestionModal';
 import SpecialIntro, { SPECIAL_INFO } from '../components/SpecialIntro';
 import FinalModal from '../components/FinalModal';
-import Ranking from '../components/Ranking';
-import AnimatedNumber from '../components/AnimatedNumber';
-import Timer from '../components/Timer';
+import Ranking from '../../../hub/components/Ranking';
+import AnimatedNumber from '../../../hub/components/AnimatedNumber';
+import Timer from '../../../hub/components/Timer';
 
 const SCORE_STEP = 50;
 const NEW_FINAL: FinalState = { stage: 'bets', bets: {}, results: {} };
@@ -154,7 +154,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   return (
     <div className="board-page">
       <header className="board-header">
-        <a className="back" href="#/">←</a>
+        <a className="back" href="#/jeopardy">←</a>
         <h1 className="title">{quiz.title}</h1>
         <span className="muted progress">
           {turn.played}/{turn.total}

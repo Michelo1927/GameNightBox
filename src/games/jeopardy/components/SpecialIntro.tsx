@@ -1,6 +1,6 @@
 import { useEffect, type CSSProperties } from 'react';
-import { sounds } from '../game/sounds';
-import type { Special, SpecialKind, Team } from '../game/state';
+import { sounds } from '../../../hub/sounds';
+import type { Special, SpecialKind, Team } from '../state';
 
 export const SPECIAL_INFO: Record<SpecialKind, { icon: string; name: string }> = {
   steal: { icon: '🥷', name: 'Furto' },

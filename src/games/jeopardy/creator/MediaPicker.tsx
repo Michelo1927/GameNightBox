@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import MediaView from '../components/Media';
+import MediaView from '../../../hub/components/Media';
 import { youtubeId, type Media } from '../quiz/schema';
 import { compressImage, formatTime, parseTime } from './draft';
 

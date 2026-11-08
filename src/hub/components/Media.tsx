@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { youtubeId, type Media } from '../quiz/schema';
+import { youtubeId, type Media } from '../media';
 
 /** Image + multiple choice: picture on the left, options on the right (stacked on narrow screens). */
 export function MaybeSplit({ split, media, children }: { split: boolean; media: ReactNode; children: ReactNode }) {

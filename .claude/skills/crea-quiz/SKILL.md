@@ -29,7 +29,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 ## 2. Leggere il formato
 
 Prima di scrivere, leggi:
-- `src/quiz/schema.ts`: tipi e regole di validazione (fonte di verità del formato);
+- `src/games/jeopardy/quiz/schema.ts`: tipi e regole di validazione (fonte di verità del formato);
 - `quizzes/esempio/quiz.json`: esempio con tutti i tipi di domanda;
 - i titoli e le categorie degli altri quiz in `quizzes/*/quiz.json`, per **non ripetere** categorie
   o domande già usate.
@@ -163,7 +163,7 @@ Usa i media solo dove migliorano la domanda. Ogni media deve funzionare: niente 
 - Usa immagini con licenza libera da **Wikimedia Commons**. Scaricale nella cartella del quiz con un
   nome breve e senza spazi:
   ```bash
-  curl -sL -A "JeopardyQuiz/1.0 (https://github.com/Michelo1927/JeopardyQuiz)" \
+  curl -sL -A "GameNightBox/1.0 (https://github.com/Michelo1927/GameNightBox)" \
     "https://commons.wikimedia.org/wiki/Special:FilePath/<Nome_File.jpg>?width=1280" \
     -o quizzes/<slug>/<nome>.jpg
   ```
@@ -211,7 +211,7 @@ git add quizzes/<slug>
 git commit -m "Nuovo quiz: <titolo>"
 git push
 ```
-Il sito si aggiorna in circa 1 minuto: `https://michelo1927.github.io/JeopardyQuiz/#/q/<slug>/setup`.
+Il sito si aggiorna in circa 1 minuto: `https://michelo1927.github.io/GameNightBox/#/q/<slug>/setup`.
 Ricorda all'utente che, se vede la versione vecchia, basta premere **Ctrl + F5**.
 
 Attenzione: il repository è pubblico, quindi chi conosce il link può leggere le risposte. All'utente va

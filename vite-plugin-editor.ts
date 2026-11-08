@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join } from 'node:path';
 import type { Plugin } from 'vite';
-import { validateQuiz } from './src/quiz/schema';
+import { validateQuiz } from './src/games/jeopardy/quiz/schema';
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,60}$/;
 const MAX_UPLOAD = 60 * 1024 * 1024;

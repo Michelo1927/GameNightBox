@@ -1,19 +1,18 @@
-import { go } from '../nav';
+import { go } from '../../../hub/nav';
 import {
   MAX_PER_KIND,
-  newTeam,
   pickSpecials,
   resetGame,
   settingsOf,
   SPECIAL_KINDS,
-  TEAM_COLORS,
   useGame,
   type Settings,
   type SpecialKind,
   type Team,
-} from '../game/state';
+} from '../state';
 import { SPECIAL_INFO } from '../components/SpecialIntro';
-import OrderWheel from '../components/OrderWheel';
+import OrderWheel from '../../../hub/components/OrderWheel';
+import TeamList from '../../../hub/components/TeamList';
 import { useState } from 'react';
 
 const SPECIAL_HELP: Record<SpecialKind, string> = {
@@ -23,7 +22,7 @@ const SPECIAL_HELP: Record<SpecialKind, string> = {
 };
 import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';
-import { TIMER_CHOICES } from '../components/Timer';
+import { TIMER_CHOICES } from '../../../hub/components/Timer';
 
 export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
@@ -31,19 +30,9 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const settings = settingsOf(game);
   const inProgress = Object.keys(game.played).length > 0 || Object.keys(game.results).length > 0;
 
-  const update = (id: string, patch: Partial<Team>) =>
-    setGame((g) => ({ ...g, teams: g.teams.map((t) => (t.id === id ? { ...t, ...patch } : t)) }));
-  const remove = (id: string) => setGame((g) => ({ ...g, teams: g.teams.filter((t) => t.id !== id) }));
-  const add = () => setGame((g) => ({ ...g, teams: [...g.teams, newTeam(g.teams.length)] }));
   const restart = () => {
     if (confirm('Azzerare punteggi e caselle giocate?')) setGame((g) => resetGame(g, quiz));
   };
-  const move = (i: number, d: number) =>
-    setGame((g) => {
-      const teams = [...g.teams];
-      [teams[i], teams[i + d]] = [teams[i + d], teams[i]];
-      return { ...g, teams };
-    });
   const [wheel, setWheel] = useState(false);
   const play = () => go(`/q/${slug}/play`);
   // A new game with several teams starts with the wheel that draws the order.
@@ -62,44 +51,13 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
 
   return (
     <div className="page setup">
-      <a className="back" href="#/">← Tutti i quiz</a>
+      <a className="back" href="#/jeopardy">← Tutti i quiz</a>
       <h1 className="title">{quiz.title}</h1>
       {quiz.description && <p className="muted">{quiz.description}</p>}
 
       <h2>Squadre</h2>
       <p className="muted">Si gioca a turno: l'ordine lo decide la ruota quando inizi la partita.</p>
-      <div className="team-list">
-        {game.teams.map((t, i) => (
-          <div className="team-row" key={t.id} style={{ borderColor: t.color }}>
-            <span className="team-order">
-              <button onClick={() => move(i, -1)} disabled={i === 0} aria-label="Sposta su">▲</button>
-              <button onClick={() => move(i, 1)} disabled={i === game.teams.length - 1} aria-label="Sposta giù">▼</button>
-            </span>
-            <input value={t.name} onChange={(e) => update(t.id, { name: e.target.value })} aria-label="Nome squadra" />
-            <div className="swatches">
-              {TEAM_COLORS.map((c) => (
-                <button
-                  key={c}
-                  className={`swatch ${c === t.color ? 'on' : ''}`}
-                  style={{ background: c }}
-                  onClick={() => update(t.id, { color: c })}
-                  aria-label={`Colore ${c}`}
-                />
-              ))}
-            </div>
-            <button className="btn ghost" onClick={() => remove(t.id)} disabled={game.teams.length <= 1}>
-              Rimuovi
-            </button>
-          </div>
-        ))}
-      </div>
-      <div className="setup-row">
-        {game.teams.length < 10 && (
-          <button className="btn ghost" onClick={add}>
-            + Aggiungi squadra
-          </button>
-        )}
-      </div>
+      <TeamList teams={game.teams} onChange={(fn) => setGame((g) => ({ ...g, teams: fn(g.teams) }))} />
 
       <h2>Opzioni</h2>
       <div className="options">

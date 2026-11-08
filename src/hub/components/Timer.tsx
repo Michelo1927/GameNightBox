@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { sounds } from '../game/sounds';
+import { sounds } from '../sounds';
 
 export const TIMER_CHOICES = [10, 20, 30, 45, 60, 90];
 

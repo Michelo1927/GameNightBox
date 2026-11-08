@@ -4,7 +4,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { inflateRawSync } from 'node:zlib';
-import { slugify, validateQuiz, type Media, type Quiz } from '../src/quiz/schema';
+import { slugify, validateQuiz, type Media, type Quiz } from '../src/games/jeopardy/quiz/schema';
 
 const [input, slugArg] = process.argv.slice(2);
 if (!input) {

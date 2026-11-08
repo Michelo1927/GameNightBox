@@ -1,15 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Quiz } from '../quiz/schema';
+import type { Quiz } from './quiz/schema';
+import { newTeam, shuffled, type Result, type Team } from '../../hub/teams';
+import { loadSaved, useSaved } from '../../hub/useSaved';
 
-export type Result = 'right' | 'wrong';
-
-export interface Team {
-  id: string;
-  name: string;
-  color: string;
-  /** Manual score corrections made by the host. */
-  adjust: number;
-}
+export type { Result, Team };
 
 export interface Settings {
   /** Default seconds for the timer (older games may have 0: the timer then uses 30). */
@@ -80,29 +73,11 @@ export const settingsOf = (g: GameState): Settings => ({
   specialCounts: { ...DEFAULT_SETTINGS.specialCounts, ...g.settings?.specialCounts },
 });
 
-export const TEAM_COLORS = ['#e63946', '#2a9d8f', '#f4a261', '#8e44ad', '#3a86ff', '#ff70a6', '#70e000', '#adb5bd', '#ffbe0b', '#00bbf9'];
-
 export const cellKey = (c: number, q: number) => `${c}-${q}`;
-
-export const newTeam = (i: number): Team => ({
-  id: Math.random().toString(36).slice(2, 9),
-  name: `Squadra ${i + 1}`,
-  color: TEAM_COLORS[i % TEAM_COLORS.length],
-  adjust: 0,
-});
 
 export const emptyGame = (): GameState => ({ teams: [newTeam(0), newTeam(1)], results: {}, played: {} });
 
 export const SPECIAL_KINDS: SpecialKind[] = ['steal', 'pass', 'gift'];
-
-function shuffled<T>(a: T[]): T[] {
-  const b = [...a];
-  for (let i = b.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [b[i], b[j]] = [b[j], b[i]];
-  }
-  return b;
-}
 
 export const MAX_PER_KIND = 5;
 
@@ -278,14 +253,7 @@ export function gameOver(game: GameState, quiz: Quiz): boolean {
 
 const storageKey = (slug: string) => `jeopardy-quiz:game:${slug}`;
 
-function loadGame(slug: string): GameState | null {
-  try {
-    const raw = localStorage.getItem(storageKey(slug));
-    return raw ? (JSON.parse(raw) as GameState) : null;
-  } catch {
-    return null;
-  }
-}
+const loadGame = (slug: string) => loadSaved<GameState>(storageKey(slug));
 
 export function hasSavedGame(slug: string): boolean {
   const g = loadGame(slug);
@@ -298,43 +266,8 @@ function withDefaults(g: GameState, quiz: Quiz): GameState {
   return { ...g, specials: pickSpecials(quiz, settingsOf(g).specialCounts, g.played) };
 }
 
-const UNDO_LIMIT = 50;
-
-/**
- * Game state for one quiz, persisted in localStorage so a page reload loses nothing.
- * Also keeps the recent states in memory for "Annulla" (undo).
- */
+/** Game state for one quiz, saved in the browser, with undo. */
 export function useGame(slug: string, quiz: Quiz) {
-  const [game, setGame] = useState<GameState>(() => withDefaults(loadGame(slug) ?? emptyGame(), quiz));
-  const history = useRef<GameState[]>([]);
-  const prev = useRef(game);
-  const undoing = useRef(false);
-  const [canUndo, setCanUndo] = useState(false);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(storageKey(slug), JSON.stringify(game));
-    } catch {
-      /* storage unavailable: game still works, just not persisted */
-    }
-    // Record history here rather than in setGame: updaters may run twice in StrictMode.
-    if (prev.current !== game) {
-      if (!undoing.current) {
-        history.current.push(prev.current);
-        if (history.current.length > UNDO_LIMIT) history.current.shift();
-      }
-      undoing.current = false;
-      prev.current = game;
-      setCanUndo(history.current.length > 0);
-    }
-  }, [slug, game]);
-
-  const undo = useCallback(() => {
-    const last = history.current.pop();
-    if (!last) return;
-    undoing.current = true;
-    setGame(last);
-  }, []);
-
-  return { game, setGame, undo, canUndo };
+  const { state, setState, undo, canUndo } = useSaved(storageKey(slug), () => withDefaults(loadGame(slug) ?? emptyGame(), quiz));
+  return { game: state, setGame: setState, undo, canUndo };
 }

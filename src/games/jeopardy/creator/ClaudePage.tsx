@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { go } from '../nav';
+import { go } from '../../../hub/nav';
 import { saveImported } from '../quiz/imported';
 import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
@@ -96,7 +96,7 @@ export default function ClaudePage() {
   return (
     <div className="creator claude-page">
       <header className="cr-header">
-        <a className="back" href="#/">←</a>
+        <a className="back" href="#/jeopardy">←</a>
         <h1>🤖 Crea con Claude</h1>
       </header>
       <p className="cr-tip">

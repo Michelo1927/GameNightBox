@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { sounds } from '../game/sounds';
-import type { FinalState, Result, Team } from '../game/state';
+import { sounds } from '../../../hub/sounds';
+import type { FinalState, Result, Team } from '../state';
 import { findCorrectChoice, type FinalQuestion } from '../quiz/schema';
-import MediaView, { MaybeSplit } from './Media';
-import Timer from './Timer';
+import MediaView, { MaybeSplit } from '../../../hub/components/Media';
+import Timer from '../../../hub/components/Timer';
 
 interface Props {
   final: FinalQuestion;
