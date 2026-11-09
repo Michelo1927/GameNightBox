@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { buzzKeyOf, useBuzzer } from '../../hub/buzzer';
 import type { Loaded } from '../../hub/content';
 import { useKeys } from '../../hub/keys';
+import { useQuietMusic } from '../../hub/music';
 import { youtubeId } from '../../hub/media';
 import { go } from '../../hub/nav';
 import { sounds } from '../../hub/sounds';
@@ -17,6 +18,7 @@ export default function Play({ loaded }: { loaded: Loaded<Playlist> }) {
   const { game, setGame, undo, canUndo } = useMusichiere(slug);
   const [ranking, setRanking] = useState<null | 'normal' | 'celebrate'>(null);
   const p = usePlayer();
+  useQuietMusic(); // the songs to guess are the music here
   // The host revealed the song while a team is waiting to be judged.
   const [peek, setPeek] = useState(false);
   const song = data.songs[game.index];

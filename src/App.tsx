@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { games } from './games';
 import HubHome from './hub/HubHome';
+import { SoundDock } from './hub/components/SoundButtons';
 
 // Hash routes (they work on GitHub Pages without server config).
 // "#/" is the hub's home with the list of games; every other route belongs to a game (see src/games/*/index.tsx).
@@ -17,9 +18,15 @@ function useHash() {
 export default function App() {
   const hash = useHash();
   const parts = hash.replace(/^#\/?/, '').split('/');
+  let page = null;
   for (const game of games) {
-    const page = game.route(parts);
-    if (page) return page;
+    page = game.route(parts);
+    if (page) break;
   }
-  return <HubHome games={games} />;
+  return (
+    <>
+      {page ?? <HubHome games={games} />}
+      <SoundDock />
+    </>
+  );
 }

@@ -32,8 +32,8 @@ export function useMuted() {
 }
 
 let ctx: AudioContext | null = null;
-function audio(): AudioContext | null {
-  if (muted) return null;
+/** The page's one AudioContext (shared with the background music). */
+export function audioContext(): AudioContext | null {
   try {
     ctx ??= new AudioContext();
     if (ctx.state === 'suspended') void ctx.resume();
@@ -41,6 +41,10 @@ function audio(): AudioContext | null {
   } catch {
     return null;
   }
+}
+
+function audio(): AudioContext | null {
+  return muted ? null : audioContext();
 }
 
 /** One note: frequency (Hz), start offset and duration (s). */

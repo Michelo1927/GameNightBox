@@ -15,6 +15,7 @@ import {
   type FinalState,
   type Result,
 } from '../state';
+import { useMusicOn } from '../../../hub/music';
 import { sounds, useMuted } from '../../../hub/sounds';
 import { mediaUrl, type LoadedQuiz } from '../quiz/load';
 import QuestionModal from '../components/QuestionModal';
@@ -38,6 +39,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   const [ranking, setRanking] = useState<null | 'normal' | 'celebrate'>(null);
   const [showFinal, setShowFinal] = useState(false);
   const [muted, setMuted] = useMuted();
+  const [music, setMusic] = useMusicOn();
   const settings = settingsOf(game);
 
   const rows = Math.max(...quiz.categories.map((c) => c.questions.length));
@@ -179,7 +181,8 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
           <button className="btn primary" onClick={() => setRanking(over ? 'celebrate' : 'normal')}>Classifica</button>
           <MoreMenu
             items={[
-              { label: muted ? '🔊 Attiva i suoni' : '🔇 Disattiva i suoni', onClick: () => setMuted(!muted) },
+              { label: music ? '🎵 Spegni la musica' : '🎵 Accendi la musica', onClick: () => setMusic(!music) },
+              { label: muted ? '🔊 Attiva gli effetti sonori' : '🔇 Disattiva gli effetti sonori', onClick: () => setMuted(!muted) },
               { label: '⛶ Schermo intero', key: 'F', onClick: toggleFullscreen },
               { label: '👥 Squadre e opzioni', onClick: () => go(`/q/${slug}/setup`) },
               { label: '🔄 Ricomincia', onClick: restart },

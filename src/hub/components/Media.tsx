@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { youtubeId, type Media } from '../media';
+import { useQuietMusic } from '../music';
 import { loadYouTubeApi, type YTPlayer } from '../youtube';
 
 /** Image + multiple choice: picture on the left, options on the right (stacked on narrow screens). */
@@ -15,6 +16,8 @@ export function MaybeSplit({ split, media, children }: { split: boolean; media: 
 
 /** `url` is the resolved file URL (ignored for YouTube, which uses media.src). */
 export default function MediaView({ media, url }: { media: Media; url: string }) {
+  // Songs and videos are heard without the background music.
+  useQuietMusic(media.type !== 'image');
   if (!url && media.type !== 'youtube') return <div className="media-missing">File non trovato: {media.src}</div>;
 
   let content;

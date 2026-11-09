@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { toggleFullscreen } from '../keys';
-import { useMuted } from '../sounds';
+import SoundButtons from './SoundButtons';
 
 interface Props {
   back: string;
@@ -15,7 +15,6 @@ interface Props {
 
 /** Top bar of a game screen. Ctrl+Z undoes, F toggles full screen. */
 export default function PlayHeader({ back, title, children, undo, canUndo, onRanking, onSetup }: Props) {
-  const [muted, setMuted] = useMuted();
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).closest?.('input, textarea')) return;
@@ -37,9 +36,7 @@ export default function PlayHeader({ back, title, children, undo, canUndo, onRan
         <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title="Annulla l'ultima azione (Ctrl+Z)">
           ↶ Annulla
         </button>
-        <button className="btn ghost icon" onClick={() => setMuted(!muted)} title={muted ? 'Attiva i suoni' : 'Disattiva i suoni'}>
-          {muted ? '🔇' : '🔊'}
-        </button>
+        <SoundButtons />
         <button className="btn ghost icon" onClick={toggleFullscreen} title="Schermo intero (F)">⛶</button>
         <button className="btn ghost icon" onClick={onSetup} title="Squadre e opzioni">👥</button>
         <button className="btn primary" onClick={onRanking}>Classifica</button>
