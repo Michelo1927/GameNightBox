@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { games } from './games';
 import HubHome from './hub/HubHome';
+import Intro, { shouldPlayIntro } from './hub/components/Intro';
 import { SoundDock } from './hub/components/SoundButtons';
 
 // Hash routes (they work on GitHub Pages without server config).
@@ -23,10 +24,18 @@ export default function App() {
     page = game.route(parts);
     if (page) break;
   }
+  const [intro, setIntro] = useState(shouldPlayIntro);
+  const [opened, setOpened] = useState(false);
+  const openIntro = useCallback(() => setOpened(true), []);
+  const endIntro = useCallback(() => setIntro(false), []);
+  const shell = intro ? `app-shell app-intro${opened ? '' : ' app-waiting'}` : 'app-shell';
   return (
     <>
-      {page ?? <HubHome games={games} />}
-      <SoundDock />
+      <div className={shell}>
+        {page ?? <HubHome games={games} />}
+        <SoundDock />
+      </div>
+      {intro && <Intro onOpen={openIntro} onDone={endIntro} />}
     </>
   );
 }
