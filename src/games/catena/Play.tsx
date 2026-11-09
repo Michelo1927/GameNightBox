@@ -31,7 +31,6 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
   const [ranking, setRanking] = useState<null | 'normal' | 'celebrate'>(null);
   // Explanation shown before the first final word (until the host starts it).
   const [introSeen, setIntroSeen] = useState(false);
-  const [finder, setFinder] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const finali = data.finali ?? [];
   const n = game.teams.length;
@@ -106,7 +105,6 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
   const fresh = !!final && game.index === 0 && game.clues === 1 && !game.locked.length && !game.done && !game.buzzed;
   const intro = fresh && !introSeen;
   const buzzing = !!final && !game.done && !game.buzzed && !intro;
-  useEffect(() => setFinder(null), [game.index, game.stage]);
   useBuzzer(game.teams, game.buzz, buzzing, game.locked, (id) => {
     sounds.tick();
     save((g) => ({ ...g, buzzed: id }));
@@ -117,8 +115,7 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
       sounds.right();
       const value = finalValue(game.clues, CLUES);
       say({ ok: true, text: `+${value} a ${buzzedTeam.name}` });
-      setFinder(buzzedTeam.id);
-      save((g) => ({ ...g, done: true, buzzed: undefined, points: { ...g.points, [buzzedTeam.id]: (g.points[buzzedTeam.id] ?? 0) + value } }));
+      save((g) => ({ ...g, done: true, buzzed: undefined, foundBy: buzzedTeam.id, points: { ...g.points, [buzzedTeam.id]: (g.points[buzzedTeam.id] ?? 0) + value } }));
     } else {
       sounds.wrong();
       say({ ok: false, text: `${buzzedTeam.name} sbaglia ed è fuori da questa parola` });
@@ -131,7 +128,7 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
   const moreClue = () => save((g) => ({ ...g, clues: Math.min(CLUES, g.clues + 1) }));
   const revealFinal = () => {
     sounds.reveal();
-    save((g) => ({ ...g, done: true, buzzed: undefined }));
+    save((g) => ({ ...g, done: true, buzzed: undefined, foundBy: undefined }));
   };
 
   useKeys({
@@ -240,7 +237,7 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
             <div className="ct-guide">
               {game.done ? (
                 <>
-                  <b>{finder ? `🎉 ${game.teams.find((t) => t.id === finder)?.name} l'ha trovata!` : "Nessuno l'ha trovata"}</b>
+                  <b>{game.foundBy ? `🎉 ${game.teams.find((t) => t.id === game.foundBy)?.name} l'ha trovata!` : "Nessuno l'ha trovata"}</b>
                 </>
               ) : buzzedTeam ? (
                 <>

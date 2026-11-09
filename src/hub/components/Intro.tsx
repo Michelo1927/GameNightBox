@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 // (titolo, schede dei giochi, pulsanti) escono dalla scatola volando ognuno al suo posto.
 // Su pagine diverse dalla home esce la pagina intera. Un tocco la salta.
 // Chi ha chiesto al sistema meno animazioni non la vede.
+// Si vede una volta per sessione (sessionStorage), così un ricaricamento a metà partita non la rifà.
+
+const SEEN_KEY = 'gnb:intro-seen';
 
 /** Pezzi della home che escono dalla scatola, in quest'ordine. */
 const PIECES = '.hub-hero .marquee, .hub-hero p, .game-card, .sound-dock';
@@ -12,7 +15,12 @@ const STAGGER = 110;
 const FLY = 800;
 
 export function shouldPlayIntro() {
-  return !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  try {
+    return sessionStorage.getItem(SEEN_KEY) !== '1';
+  } catch {
+    return true;
+  }
 }
 
 const STARS = [
@@ -46,6 +54,11 @@ export default function Intro({ onOpen, onDone }: { onOpen: () => void; onDone: 
   const [sinkMs, setSinkMs] = useState(0);
 
   useEffect(() => {
+    try {
+      sessionStorage.setItem(SEEN_KEY, '1');
+    } catch {
+      /* storage unavailable: it just plays again */
+    }
     const timers: number[] = [];
     const anims: Animation[] = [];
     let finished = false;

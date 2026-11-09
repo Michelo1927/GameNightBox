@@ -24,6 +24,8 @@ export interface CGame {
   locked: string[];
   buzzed?: string;
   done: boolean;
+  /** Final word: the team that found it; unset if nobody did. */
+  foundBy?: string;
 }
 
 export const newGame = (teams: Team[] = [newTeam(0), newTeam(1)], buzz: BuzzMode = 'host'): CGame => ({
@@ -60,7 +62,7 @@ export function startChain(g: CGame, set: CatenaSet, index: number): CGame {
 }
 
 export function startFinal(g: CGame, index: number): CGame {
-  return { ...g, stage: 'finale', index, clues: 1, locked: [], buzzed: undefined, done: false };
+  return { ...g, stage: 'finale', index, clues: 1, locked: [], buzzed: undefined, done: false, foundBy: undefined };
 }
 
 /** Words that can be tried now: hidden, next to a word already found. */
