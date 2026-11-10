@@ -60,7 +60,14 @@
 .ct-intro ol { align-self: stretch; text-align: left; margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 1.1rem; line-height: 1.4; }
 .ct-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .ct-keys span { padding: 6px 12px; border-radius: 10px; border-left: 4px solid; background: rgba(255, 255, 255, 0.06); font-weight: 700; }
-@media (max-width: 700px) { .ct-clues { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .ct-clues { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Upright phone: tiles sized on the width, and the points inside the row (beside it they ran off the edge). */
+  .ct-word { gap: 8px; padding: 5px 8px; }
+  .ct-word .tiles { gap: 3px; }
+  .ct-word .tile { width: min(8vw, clamp(22px, 4.4vh, 50px)); }
+  .ct-value { position: static; min-width: 0; padding: 2px 8px; }
+}
 
 /* Creator */
 .ct-edit { display: flex; flex-direction: column; gap: 4px; }

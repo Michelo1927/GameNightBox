@@ -192,7 +192,8 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
       </header>
 
       <div
-        className={`board ${intro ? 'intro' : ''}`}
+        // Not "intro": that is the start-up animation's full-screen layer (hub/intro.css).
+        className={`board ${intro ? 'dealing' : ''}`}
         style={{ gridTemplateColumns: `repeat(${quiz.categories.length}, 1fr)`, gridTemplateRows: `auto repeat(${rows}, 1fr)` }}
       >
         {quiz.categories.map((cat, c) => (

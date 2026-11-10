@@ -72,7 +72,10 @@
 
 @media (max-width: 700px) {
   .mu-board { flex-wrap: wrap; }
-  .mu-center { order: -1; flex-basis: 100%; }
+  .mu-center { order: -1; flex-basis: 100%; gap: 10px; }
+  /* Upright phone: a smaller record and lower boxes, so Play stays on the first screen. */
+  .mu-disc { width: clamp(96px, 30vw, 140px); }
+  .mu-slot { height: 22px; }
 }
 
 /* Creator */

@@ -9,6 +9,10 @@
 .play-info .pill { white-space: nowrap; padding: 4px 12px; border-radius: 99px; background: rgba(0, 0, 0, 0.35); font-weight: 700; font-size: 0.9rem; }
 
 .game-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
+/* On the TV the game fills the screen. Where it doesn't fit (a phone held upright) the page grows and scrolls:
+   at a fixed height the centred content spilled over the header and off the bottom. */
+.board-page:has(> .game-stage) { height: auto; min-height: 100%; }
+.board-page > .game-stage { flex: 1 0 auto; }
 
 /* Team strip at the bottom of a game screen. */
 .team-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
