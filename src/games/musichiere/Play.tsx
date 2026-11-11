@@ -140,7 +140,6 @@ export default function Play({ loaded }: { loaded: Loaded<Playlist> }) {
   return (
     <div className="board-page mu-page">
       <PlayHeader
-        back="#/musichiere"
         title={data.title}
         undo={undo}
         canUndo={canUndo}

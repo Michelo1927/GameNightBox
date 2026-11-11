@@ -4,7 +4,6 @@ import SoundButtons from './SoundButtons';
 import { BackPill } from './BackButton';
 
 interface Props {
-  back: string;
   title: string;
   /** Middle of the bar: progress, whose turn it is... */
   children?: ReactNode;
@@ -15,7 +14,7 @@ interface Props {
 }
 
 /** Top bar of a game screen. Ctrl+Z undoes, F toggles full screen. */
-export default function PlayHeader({ back, title, children, undo, canUndo, onRanking, onSetup }: Props) {
+export default function PlayHeader({ title, children, undo, canUndo, onRanking, onSetup }: Props) {
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
       const field = (e.target as HTMLElement).closest?.('input, textarea') as HTMLInputElement | null;
@@ -32,7 +31,7 @@ export default function PlayHeader({ back, title, children, undo, canUndo, onRan
 
   return (
     <header className="board-header play-header">
-      <BackPill href={back} label="Esci" />
+      <BackPill label="Esci" />
       <h1 className="title">{title}</h1>
       <div className="play-info">{children}</div>
       <div className="header-actions">

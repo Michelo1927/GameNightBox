@@ -75,7 +75,7 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
   return (
     <div className="creator claude-page">
       <header className="cr-header">
-        <BackPill href={back} label="Esci" />
+        <BackPill label="Esci" />
         <h1>🤖 {title}</h1>
       </header>
       <p className="cr-tip">{intro}</p>

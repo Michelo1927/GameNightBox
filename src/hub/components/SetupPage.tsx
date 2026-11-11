@@ -30,7 +30,7 @@ export default function SetupPage({ back, backLabel, title, description, teams, 
 
   return (
     <div className={`page setup theme-${back.replace(/^#\//, '').split('/')[0]}`}>
-      <BackButton href={back} label={backLabel.replace(/^←\s*/, '')} />
+      <BackButton label={backLabel.replace(/^←\s*/, '')} />
       <h1 className="title">{title}</h1>
       {description && <p className="muted">{description}</p>}
 

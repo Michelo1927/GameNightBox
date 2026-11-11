@@ -1,8 +1,10 @@
 import { createPortal } from 'react-dom';
 import type { MouseEvent } from 'react';
+import { parentOf, useHash } from '../nav';
 
 interface Props {
-  href: string;
+  /** Where it goes: the folder above the page (hub/nav.ts), unless given. */
+  href?: string;
   /** Where it goes ("Tutti i giochi") or what it does ("Esci"): written next to the arrow. */
   label: string;
   onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
@@ -20,8 +22,9 @@ const Arrow = () => (
  * element inside a moving one would move with it (it showed up mid-page and then jumped to the corner).
  */
 export default function BackButton({ href, label }: Props) {
+  const up = parentOf(useHash()) ?? '#/';
   return createPortal(
-    <a className="back-fab" href={href} aria-label={label}>
+    <a className="back-fab" href={href ?? up} aria-label={label}>
       <Arrow />
       <span>{label}</span>
     </a>,
@@ -31,8 +34,9 @@ export default function BackButton({ href, label }: Props) {
 
 /** The same button at the start of a bar (game screens, creators). */
 export function BackPill({ href, label, onClick }: Props) {
+  const up = parentOf(useHash()) ?? '#/';
   return (
-    <a className="back-pill" href={href} aria-label={label} title={label} onClick={onClick}>
+    <a className="back-pill" href={href ?? up} aria-label={label} title={label} onClick={onClick}>
       <Arrow />
       <span>{label}</span>
     </a>

@@ -201,7 +201,7 @@ Mostra un riepilogo compatto: per ogni categoria una tabella `Punti | Domanda | 
 Segnala i dubbi (date incerte, tempi YouTube da controllare, file mp3 da aggiungere).
 Poi chiedi se vuole modifiche (cambiare domande, difficoltà, categorie).
 
-Aggiungi il link per provarlo in locale: `npm run dev` e poi `http://localhost:5173/#/q/<slug>/setup`.
+Aggiungi il link per provarlo in locale: `npm run dev` e poi `http://localhost:5173/#/jeopardy/<slug>/setup`.
 
 ## 8. Pubblicare (solo dopo l'ok dell'utente)
 
@@ -211,7 +211,7 @@ git add quizzes/<slug>
 git commit -m "Nuovo quiz: <titolo>"
 git push
 ```
-Il sito si aggiorna in circa 1 minuto: `https://michelo1927.github.io/GameNightBox/#/q/<slug>/setup`.
+Il sito si aggiorna in circa 1 minuto: `https://michelo1927.github.io/GameNightBox/#/jeopardy/<slug>/setup`.
 Ricorda all'utente che, se vede la versione vecchia, basta premere **Ctrl + F5**.
 
 Attenzione: il repository è pubblico, quindi chi conosce il link può leggere le risposte. All'utente va

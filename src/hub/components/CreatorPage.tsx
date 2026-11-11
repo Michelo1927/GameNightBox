@@ -21,7 +21,7 @@ export default function CreatorPage({ game, title, tip, validation, progress, fu
   return (
     <div className={`creator theme-${game}`}>
       <header className="cr-header">
-        <BackPill href={`#/${game}`} label="Esci" />
+        <BackPill label="Esci" />
         <h1>{title}</h1>
       </header>
       <p className="cr-tip">{tip}</p>

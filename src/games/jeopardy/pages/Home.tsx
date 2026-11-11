@@ -30,20 +30,20 @@ export default function Home() {
       archived={inArchive}
       onArchive={() => archive(q.slug, !inArchive)}
       onRemove={q.imported ? () => remove(q.slug, q.quiz.title) : undefined}
-      onEdit={q.imported && !q.errors.length ? async () => (await replaceDraft(q.quiz, q.slug)) && go('/crea') : undefined}
+      onEdit={q.imported && !q.errors.length ? async () => (await replaceDraft(q.quiz, q.slug)) && go('/jeopardy/crea') : undefined}
     />
   );
 
   return (
     <div className="page home theme-jeopardy">
-      <BackButton href="#/" label="Tutti i giochi" />
+      <BackButton label="Tutti i giochi" />
       <header className="home-header">
         <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>
         <p className="muted">Scegli un quiz per iniziare</p>
         <div className="home-actions">
-          <a className="btn primary" href="#/crea/nuovo">✏️ Crea un quiz</a>
-          <a className="btn ghost" href="#/claude">🤖 Crea con Claude</a>
-          <a className="btn ghost" href="#/carica">📥 Carica un quiz</a>
+          <a className="btn primary" href="#/jeopardy/crea/nuovo">✏️ Crea un quiz</a>
+          <a className="btn ghost" href="#/jeopardy/claude">🤖 Crea con Claude</a>
+          <a className="btn ghost" href="#/jeopardy/carica">📥 Carica un quiz</a>
           {import.meta.env.DEV && <a className="btn ghost" href="/editor.html">🛠 Editor (locale)</a>}
         </div>
       </header>
@@ -93,7 +93,7 @@ function QuizCard({ loaded: { slug, quiz, errors }, archived, onArchive, onRemov
   return (
     <a
       className={`quiz-card ${errors.length ? 'broken' : ''} ${archived ? 'archived' : ''}`}
-      href={errors.length ? undefined : `#/q/${slug}/setup`}
+      href={errors.length ? undefined : `#/jeopardy/${slug}/setup`}
       style={errors.length ? undefined : ({ ['--hue' as string]: hue(slug) } as CSSProperties)}
     >
       <span className="quiz-icon">{icon(quiz.title ?? slug)}</span>

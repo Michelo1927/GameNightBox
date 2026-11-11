@@ -85,8 +85,14 @@ Regole dell'hub:
 - `src/hub/` non importa mai da `src/games/`: così il motore resta riusabile da ogni gioco.
 - Un gioco nuovo = una cartella `src/games/<id>/` con un `index.tsx` che esporta un `Game`
   (vedi `src/hub/games.ts`), aggiunto all'elenco in `src/games/index.ts`.
-- Gli indirizzi del Jeopardy sono rimasti quelli di prima (`#/q/<slug>/…`, `#/crea`, `#/carica/<codice>`,
-  `#/claude`), così link e codici già condivisi funzionano ancora; l'elenco dei quiz è ora in `#/jeopardy`.
+- Le pagine sono un albero, come cartelle (`src/hub/nav.ts`): hub `#/` → gioco `#/<gioco>` → partita
+  `#/<gioco>/<slug>/setup` → `…/play`; accanto alle partite `#/<gioco>/crea[/…]`, `/claude`, `/carica[/<codice>]`.
+  "Indietro" (i pulsanti delle pagine e quello del browser/telefono) sale sempre di una cartella: la cronologia
+  del browser è tenuta uguale al percorso dall'hub alla pagina, e ogni cambio di pagina passa da `go()`.
+  I pulsanti indietro non hanno l'indirizzo scritto: lo calcolano dall'albero (`parentOf`).
+- Anche il Jeopardy sta nella sua cartella (`#/jeopardy/<slug>/…`, `#/jeopardy/crea`, `#/jeopardy/carica/<codice>`,
+  `#/jeopardy/claude`). I vecchi indirizzi (`#/q/<slug>/…`, `#/crea`, `#/carica/<codice>`, `#/claude`) funzionano
+  ancora e si spostano su quelli nuovi (`addAlias`), così link e codici già condivisi non si rompono.
 - Le chiavi del `localStorage` non sono cambiate (`jeopardy-quiz:…`): partite, bozze e quiz caricati restano.
   I giochi nuovi usano `gnb:<gioco>:game:<slug>` (partita), `gnb:<gioco>:local` (creati sul dispositivo)
   e `gnb:<gioco>:draft` (bozza del creatore).
@@ -261,7 +267,7 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 
 Sempre disponibili: **Annulla** (Ctrl+Z, ultime 50 azioni, solo in memoria), schermo intero (F),
 suoni sintetizzati con Web Audio (nessun file, 🔇 per spegnerli, scelta salvata nel browser).
-La pagina `#/claude` costruisce un prompt per claude.ai e carica il JSON che Claude risponde.
+La pagina `#/jeopardy/claude` costruisce un prompt per claude.ai e carica il JSON che Claude risponde.
 
 ## Editor locale
 
@@ -276,15 +282,15 @@ La pagina `#/claude` costruisce un prompt per claude.ai e carica il JSON che Cla
 
 ## Crea quiz da telefono e codice condivisibile
 
-- Pagina `#/crea` sul sito pubblicato, pensata per il telefono: una domanda per schermata, bozza salvata
+- Pagina `#/jeopardy/crea` sul sito pubblicato, pensata per il telefono: una domanda per schermata, bozza salvata
   in `localStorage`, foto ridimensionate (480px JPEG) e incorporate come `data:` URL.
 - "Genera il codice": `JQ1.` + base64url del JSON compresso (deflate). Condivisibile come testo, link
-  (`#/carica/<codice>`) o file `.txt` (quando le foto lo rendono troppo lungo per un messaggio).
+  (`#/jeopardy/carica/<codice>`) o file `.txt` (quando le foto lo rendono troppo lungo per un messaggio).
 - Generare il codice salva anche il quiz tra quelli del dispositivo (sostituendo la sua versione
-  precedente) e segna la bozza come finita: "Crea un quiz" dalla home (`#/crea/nuovo`) riparte da zero
+  precedente) e segna la bozza come finita: "Crea un quiz" dalla home (`#/jeopardy/crea/nuovo`) riparte da zero
   solo se la bozza è finita e non è stata più modificata. "✏️ Modifica" su un quiz caricato lo riporta
   nel creatore.
-- `#/carica`: incolla codice/link o apri file → il quiz viene salvato nel browser (`localStorage`) e
+- `#/jeopardy/carica`: incolla codice/link o apri file → il quiz viene salvato nel browser (`localStorage`) e
   compare in home tra "Caricati su questo dispositivo".
 - `npm run import -- <file|codice|link>` salva un quiz condiviso in `quizzes/` estraendo le foto.
 

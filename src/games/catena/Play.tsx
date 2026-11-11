@@ -150,7 +150,6 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
   return (
     <div className="board-page ct-page">
       <PlayHeader
-        back="#/catena"
         title={data.title}
         undo={undo}
         canUndo={canUndo}

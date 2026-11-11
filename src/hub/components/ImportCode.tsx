@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Library, Validation } from '../content';
 import { startDraft } from '../draft';
-import { go } from '../nav';
+import { go, redirect } from '../nav';
 import { decode } from '../share';
 import { BackPill } from './BackButton';
 
@@ -35,7 +35,7 @@ export default function ImportCode<T extends { title: string; author?: string }>
     if (!code) return;
     setBusy(true);
     read(code)
-      .then((d) => d && location.replace(`#/${game}/${lib.saveLocal(d)}/setup`))
+      .then((d) => d && redirect(`#/${game}/${lib.saveLocal(d)}/setup`))
       .catch((e) => setError((e as Error).message))
       .finally(() => setBusy(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,7 +78,7 @@ export default function ImportCode<T extends { title: string; author?: string }>
   return (
     <div className="import-page">
       <header className="cr-header">
-        <BackPill href={`#/${game}`} label="Esci" />
+        <BackPill label="Esci" />
         <h1>Carica {what}</h1>
       </header>
       <p className="cr-tip">Incolla il codice (inizia con <b>{prefix}</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>

@@ -1,20 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { games } from './games';
+import { norm, useHash } from './hub/nav';
 import HubHome from './hub/HubHome';
 import Intro, { shouldPlayIntro } from './hub/components/Intro';
 import { SoundDock } from './hub/components/SoundButtons';
 
-// Hash routes (they work on GitHub Pages without server config).
+// Hash routes (they work on GitHub Pages without server config), arranged as a tree of folders (hub/nav.ts).
 // "#/" is the hub's home with the list of games; every other route belongs to a game (see src/games/*/index.tsx).
-function useHash() {
-  const [hash, setHash] = useState(location.hash);
-  useEffect(() => {
-    const on = () => setHash(location.hash);
-    addEventListener('hashchange', on);
-    return () => removeEventListener('hashchange', on);
-  }, []);
-  return hash;
-}
 
 export default function App() {
   const hash = useHash();
@@ -30,7 +22,7 @@ export default function App() {
   const endIntro = useCallback(() => setIntro(false), []);
   // La pagina uscita dalla scatola è già entrata in scena: le animazioni d'ingresso (hub/motion.css)
   // valgono dalla pagina successiva in poi.
-  const [introHash, setIntroHash] = useState<string | null>(() => (intro ? location.hash : null));
+  const [introHash, setIntroHash] = useState<string | null>(() => (intro ? norm(location.hash) : null));
   useEffect(() => {
     if (introHash !== null && hash !== introHash) setIntroHash(null);
   }, [hash, introHash]);

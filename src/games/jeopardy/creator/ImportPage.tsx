@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { go } from '../../../hub/nav';
+import { go, redirect } from '../../../hub/nav';
 import { saveImported } from '../quiz/imported';
 import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
 import { replaceDraft } from './draft';
 import { BackPill } from '../../../hub/components/BackButton';
 
-// #/carica          paste a code / open a file
-// #/carica/<code>   opened from a shared link: load and go straight to the game
+// #/jeopardy/carica          paste a code / open a file
+// #/jeopardy/carica/<code>   opened from a shared link: load and go straight to the game
 export default function ImportPage({ code }: { code?: string }) {
   const [text, setText] = useState('');
   const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -18,7 +18,7 @@ export default function ImportPage({ code }: { code?: string }) {
     if (!code) return;
     setBusy(true);
     decodeQuiz(code)
-      .then((q) => location.replace(`#/q/${saveImported(q)}/setup`))
+      .then((q) => redirect(`#/jeopardy/${saveImported(q)}/setup`))
       .catch((e) => setError((e as Error).message))
       .finally(() => setBusy(false));
   }, [code]);
@@ -46,13 +46,13 @@ export default function ImportPage({ code }: { code?: string }) {
 
   const play = () => {
     try {
-      go(`/q/${saveImported(quiz!)}/setup`);
+      go(`/jeopardy/${saveImported(quiz!)}/setup`);
     } catch (e) {
       setError((e as Error).message);
     }
   };
   const edit = async () => {
-    if (await replaceDraft(quiz!)) go('/crea');
+    if (await replaceDraft(quiz!)) go('/jeopardy/crea');
   };
 
   if (code)
@@ -63,7 +63,7 @@ export default function ImportPage({ code }: { code?: string }) {
         {error && (
           <>
             <p className="cr-error">{error}</p>
-            <a className="btn ghost" href="#/carica">Prova a incollare il codice</a>
+            <a className="btn ghost" href="#/jeopardy/carica">Prova a incollare il codice</a>
           </>
         )}
       </div>
@@ -72,7 +72,7 @@ export default function ImportPage({ code }: { code?: string }) {
   return (
     <div className="import-page">
       <header className="cr-header">
-        <BackPill href="#/jeopardy" label="Esci" />
+        <BackPill label="Esci" />
         <h1>Carica un quiz</h1>
       </header>
       <p className="cr-tip">Incolla il codice (inizia con <b>JQ1.</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>

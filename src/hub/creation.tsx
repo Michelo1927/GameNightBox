@@ -6,6 +6,7 @@
 import type { ComponentType, ReactNode } from 'react';
 import type { Library, Validation } from './content';
 import { freshDraft } from './draft';
+import { redirect } from './nav';
 import ImportCode from './components/ImportCode';
 import SharePage from './components/SharePage';
 
@@ -26,7 +27,7 @@ export function creationRoute<T extends { title: string; author?: string }>(c: C
   if (page === 'crea') {
     if (arg === 'nuovo') {
       freshDraft(c.game);
-      location.replace(`#/${c.game}/crea`);
+      redirect(`#/${c.game}/crea`);
     }
     if (arg === 'codice') return <SharePage<T> game={c.game} prefix={c.prefix} lib={c.lib} validate={c.validate} clean={c.clean} />;
     return <c.Editor />;

@@ -164,7 +164,6 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
   return (
     <div className="board-page tt-page">
       <PlayHeader
-        back="#/topten"
         title={data.title}
         undo={undo}
         canUndo={canUndo}

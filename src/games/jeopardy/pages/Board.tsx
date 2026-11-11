@@ -158,7 +158,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   return (
     <div className="board-page">
       <header className="board-header">
-        <BackPill href="#/jeopardy" label="Esci" />
+        <BackPill label="Esci" />
         <h1 className="title">{quiz.title}</h1>
         <span className="muted progress">
           {turn.played}/{turn.total}
@@ -185,7 +185,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
               { label: music ? '🎵 Spegni la musica' : '🎵 Accendi la musica', onClick: () => setMusic(!music) },
               { label: muted ? '🔊 Attiva gli effetti sonori' : '🔇 Disattiva gli effetti sonori', onClick: () => setMuted(!muted) },
               { label: '⛶ Schermo intero', key: 'F', onClick: toggleFullscreen },
-              { label: '👥 Squadre e opzioni', onClick: () => go(`/q/${slug}/setup`) },
+              { label: '👥 Squadre e opzioni', onClick: () => go(`/jeopardy/${slug}/setup`) },
               { label: '🔄 Ricomincia', onClick: restart },
             ]}
           />

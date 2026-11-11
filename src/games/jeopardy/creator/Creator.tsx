@@ -4,7 +4,7 @@ import { cleanFinal, cleanQuestion, cleanQuiz, isQuestionComplete } from '../qui
 import { removeImported, saveImported } from '../quiz/imported';
 import { findCorrectChoice, validateQuiz, type FinalQuestion, type Question, type Quiz } from '../quiz/schema';
 import { encodeQuiz } from '../quiz/share';
-import { go } from '../../../hub/nav';
+import { go, redirect } from '../../../hub/nav';
 import { blankQuiz, clearDraft, copyText, lastSavedSlug, loadDraft, markDraftDone, saveDraft, savedSlugOf } from './draft';
 import MediaPicker from './MediaPicker';
 import { ask } from '../../../hub/ask';
@@ -12,7 +12,7 @@ import { BackPill } from '../../../hub/components/BackButton';
 
 const DIFFICULTY: Record<number, string> = { 100: 'facilissima', 200: 'facile', 300: 'media', 400: 'difficile', 500: 'da esperti' };
 
-// Routes: #/crea (board)  #/crea/<c>-<q> (one question)  #/crea/codice (share)
+// Routes: #/jeopardy/crea (board)  #/jeopardy/crea/<c>-<q> (one question)  #/jeopardy/crea/codice (share)
 export default function Creator({ sub }: { sub: string }) {
   const [quiz, setQuiz] = useState<Quiz>(() => {
     const draft = loadDraft();
@@ -26,7 +26,7 @@ export default function Creator({ sub }: { sub: string }) {
   const [storageFull, setStorageFull] = useState(false);
 
   useEffect(() => {
-    if (sub === 'nuovo') location.replace('#/crea');
+    if (sub === 'nuovo') redirect('#/jeopardy/crea');
   }, [sub]);
 
   useEffect(() => {
@@ -58,16 +58,16 @@ type SetQuiz = React.Dispatch<React.SetStateAction<Quiz>>;
 
 function missing(quiz: Quiz) {
   const list: { label: string; href: string }[] = [];
-  if (!quiz.title.trim()) list.push({ label: 'Titolo del quiz', href: '#/crea' });
+  if (!quiz.title.trim()) list.push({ label: 'Titolo del quiz', href: '#/jeopardy/crea' });
   quiz.categories.forEach((cat, ci) => {
-    if (!cat.name.trim()) list.push({ label: `Nome della categoria ${ci + 1}`, href: '#/crea' });
+    if (!cat.name.trim()) list.push({ label: `Nome della categoria ${ci + 1}`, href: '#/jeopardy/crea' });
     cat.questions.forEach((q, qi) => {
-      if (!isQuestionComplete(q)) list.push({ label: `${cat.name || `Categoria ${ci + 1}`} ${q.points}`, href: `#/crea/${ci}-${qi}` });
+      if (!isQuestionComplete(q)) list.push({ label: `${cat.name || `Categoria ${ci + 1}`} ${q.points}`, href: `#/jeopardy/crea/${ci}-${qi}` });
     });
   });
   // The final question is optional, but once started it must be complete.
   const f = cleanFinal(quiz.final);
-  if (f && (!f.category || !f.answer || (!f.question && !f.media))) list.push({ label: 'Domanda finale', href: '#/crea/finale' });
+  if (f && (!f.category || !f.answer || (!f.question && !f.media))) list.push({ label: 'Domanda finale', href: '#/jeopardy/crea/finale' });
   return list;
 }
 
@@ -87,7 +87,7 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   return (
     <>
       <header className="cr-header">
-        <BackPill href="#/jeopardy" label="Esci" />
+        <BackPill label="Esci" />
         <h1>Crea un quiz</h1>
       </header>
 
@@ -110,7 +110,7 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
           <input className="cr-cat-name" value={cat.name} onChange={(e) => setCat(ci, e.target.value)} placeholder={`Nome categoria ${ci + 1}`} />
           <div className="cr-chips">
             {cat.questions.map((q, qi) => (
-              <a key={qi} href={`#/crea/${ci}-${qi}`} className={isQuestionComplete(q) ? 'done' : ''}>
+              <a key={qi} href={`#/jeopardy/crea/${ci}-${qi}`} className={isQuestionComplete(q) ? 'done' : ''}>
                 {q.points}
                 <small>{isQuestionComplete(q) ? '✓' : '+'}</small>
               </a>
@@ -119,12 +119,12 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
         </section>
       ))}
 
-      <a className={`cr-final ${cleanFinal(quiz.final) ? 'done' : ''}`} href="#/crea/finale">
+      <a className={`cr-final ${cleanFinal(quiz.final) ? 'done' : ''}`} href="#/jeopardy/crea/finale">
         🏆 Domanda finale <small>{cleanFinal(quiz.final) ? '✓' : 'facoltativa: ogni squadra scommette i suoi punti'}</small>
       </a>
 
       <div className="cr-secondary">
-        <a className="btn ghost" href="#/carica">📥 Modifica un quiz da codice</a>
+        <a className="btn ghost" href="#/jeopardy/carica">📥 Modifica un quiz da codice</a>
         <button className="btn ghost" onClick={reset}>🗑 Ricomincia da zero</button>
       </div>
 
@@ -133,13 +133,13 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
           <div style={{ width: `${(done / total) * 100}%` }} />
         </div>
         {todo.length === 0 ? (
-          <a className="btn primary big" href="#/crea/codice">✨ Genera il codice</a>
+          <a className="btn primary big" href="#/jeopardy/crea/codice">✨ Genera il codice</a>
         ) : (
-          <a className="btn primary big" href={(todo.find((t) => t.href !== '#/crea') ?? todo[0]).href} onClick={() => window.scrollTo(0, 0)}>
+          <a className="btn primary big" href={(todo.find((t) => t.href !== '#/jeopardy/crea') ?? todo[0]).href} onClick={() => window.scrollTo(0, 0)}>
             {done}/{total} domande · Continua →
           </a>
         )}
-        {todo.length > 0 && (todo.length <= 4 || todo.some((t) => t.href === '#/crea')) && (
+        {todo.length > 0 && (todo.length <= 4 || todo.some((t) => t.href === '#/jeopardy/crea')) && (
           <p className="cr-missing">Manca: {todo.slice(0, 4).map((t) => t.label).join(', ')}{todo.length > 4 ? '…' : ''}</p>
         )}
       </footer>
@@ -151,7 +151,7 @@ function QuestionStep({ quiz, setQuiz, c, q }: { quiz: Quiz; setQuiz: SetQuiz; c
   const [preview, setPreview] = useState(false);
   const cat = quiz.categories[c];
   const question = cat?.questions[q];
-  if (!question) return <p className="cr-error">Domanda non trovata. <a href="#/crea">Torna al tabellone</a></p>;
+  if (!question) return <p className="cr-error">Domanda non trovata. <a href="#/jeopardy/crea">Torna al tabellone</a></p>;
 
   const set = (patch: Partial<Question>) =>
     setQuiz((z) => ({
@@ -175,7 +175,7 @@ function QuestionStep({ quiz, setQuiz, c, q }: { quiz: Quiz; setQuiz: SetQuiz; c
   return (
     <>
       <header className="cr-header">
-        <BackPill href="#/crea" label="Indietro" />
+        <BackPill label="Indietro" />
         <h1>
           {cat.name || `Categoria ${c + 1}`} <span className="gold">{question.points}</span>
         </h1>
@@ -230,7 +230,7 @@ function QuestionStep({ quiz, setQuiz, c, q }: { quiz: Quiz; setQuiz: SetQuiz; c
       </details>
 
       <footer className="cr-bar cr-nav">
-        <button className="btn ghost" disabled={!prev} onClick={() => prev && go(`/crea/${prev}`)}>‹</button>
+        <button className="btn ghost" disabled={!prev} onClick={() => prev && go(`/jeopardy/crea/${prev}`)}>‹</button>
         <button className="btn ghost" onClick={() => setPreview(true)}>👁 Anteprima</button>
         <button className="btn primary" onClick={() => go(next ? `/crea/${next}` : '/crea')}>
           {next ? 'Avanti ›' : 'Fatto ✓'}
@@ -260,13 +260,13 @@ function FinalStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   const remove = async () => {
     if (await ask('Togliere la domanda finale?', 'Togli')) {
       setQuiz((z) => ({ ...z, final: undefined }));
-      go('/crea');
+      go('/jeopardy/crea');
     }
   };
   return (
     <>
       <header className="cr-header">
-        <BackPill href="#/crea" label="Indietro" />
+        <BackPill label="Indietro" />
         <h1>🏆 Domanda finale</h1>
       </header>
       <p className="cr-tip small">
@@ -300,7 +300,7 @@ function FinalStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
       </details>
       <footer className="cr-bar cr-nav">
         {quiz.final && <button className="btn ghost" onClick={remove}>🗑 Togli</button>}
-        <button className="btn primary" onClick={() => go('/crea')}>Fatto ✓</button>
+        <button className="btn primary" onClick={() => go('/jeopardy/crea')}>Fatto ✓</button>
       </footer>
     </>
   );
@@ -334,7 +334,7 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
     return (
       <>
         <header className="cr-header">
-          <BackPill href="#/crea" label="Indietro" />
+          <BackPill label="Indietro" />
           <h1>Quasi pronto</h1>
         </header>
         <p className="cr-tip">Completa prima queste parti:</p>
@@ -350,7 +350,7 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
     );
   }
 
-  const link = `${location.origin}${location.pathname}#/carica/${code}`;
+  const link = `${location.origin}${location.pathname}#/jeopardy/carica/${code}`;
   const flash = (text: string) => {
     setMsg(text);
     setTimeout(() => setMsg(''), 2500);
@@ -385,12 +385,12 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
     a.click();
     URL.revokeObjectURL(a.href);
   };
-  const play = () => go(`/q/${saveImported(cleaned)}/setup`);
+  const play = () => go(`/jeopardy/${saveImported(cleaned)}/setup`);
 
   return (
     <>
       <header className="cr-header">
-        <BackPill href="#/crea" label="Indietro" />
+        <BackPill label="Indietro" />
         <h1>Quiz pronto! 🎉</h1>
       </header>
       <p className="cr-tip">

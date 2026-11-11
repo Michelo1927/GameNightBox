@@ -155,7 +155,6 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
   return (
     <div className="board-page pp-page">
       <PlayHeader
-        back="#/passaparola"
         title={data.title}
         undo={safeUndo}
         canUndo={canUndo}

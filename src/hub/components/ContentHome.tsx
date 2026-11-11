@@ -82,7 +82,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
 
   return (
     <div className={`page home theme-${game}`}>
-      <BackButton href="#/" label="Tutti i giochi" />
+      <BackButton label="Tutti i giochi" />
       <header className="home-header">
         <h1 className="logo">
           {icon} {name.toUpperCase()}

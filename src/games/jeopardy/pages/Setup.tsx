@@ -36,7 +36,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
     if (await ask('Azzerare punteggi e caselle giocate?', 'Azzera')) setGame((g) => resetGame(g, quiz));
   };
   const [wheel, setWheel] = useState(false);
-  const play = () => go(`/q/${slug}/play`);
+  const play = () => go(`/jeopardy/${slug}/play`);
   // A new game with several teams starts with the wheel that draws the order.
   const start = () => (!inProgress && game.teams.length > 1 ? setWheel(true) : play());
   const startWith = (order: Team[]) => {
@@ -53,7 +53,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
 
   return (
     <div className="page setup theme-jeopardy">
-      <BackButton href="#/jeopardy" label="Tutti i quiz" />
+      <BackButton label="Tutti i quiz" />
       <h1 className="title">{quiz.title}</h1>
       {quiz.description && <p className="muted">{quiz.description}</p>}
 

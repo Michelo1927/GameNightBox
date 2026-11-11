@@ -40,7 +40,7 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
 
   const back = (
     <header className="cr-header">
-      <BackPill href={`#/${game}/crea`} label="Indietro" />
+      <BackPill label="Indietro" />
       <h1>{errors.length ? 'Quasi pronto' : 'Pronto! 🎉'}</h1>
     </header>
   );

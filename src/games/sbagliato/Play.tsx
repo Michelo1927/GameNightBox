@@ -147,7 +147,6 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
   return (
     <div className="board-page sb-page">
       <PlayHeader
-        back="#/sbagliato"
         title={data.title}
         undo={safeUndo}
         canUndo={canUndo}
