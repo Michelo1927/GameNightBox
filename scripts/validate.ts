@@ -10,6 +10,7 @@ import { validatePassaparola } from '../src/games/passaparola/schema';
 import { validateCatena } from '../src/games/catena/schema';
 import { validatePlaylist, type Playlist } from '../src/games/musichiere/schema';
 import { validateTopTen } from '../src/games/topten/schema';
+import { validateSbagliato } from '../src/games/sbagliato/schema';
 import type { Validation } from '../src/hub/content';
 
 const root = join(import.meta.dirname, '..', 'quizzes');
@@ -83,6 +84,7 @@ const validators: Record<string, (d: unknown) => Validation> = {
   catena: validateCatena,
   musichiere: validatePlaylist,
   topten: validateTopTen,
+  sbagliato: validateSbagliato,
 };
 let checked = slugs.length;
 for (const [game, validate] of Object.entries(validators)) {

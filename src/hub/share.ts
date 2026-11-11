@@ -8,6 +8,7 @@ export const CODES: { prefix: string; game: string; name: string }[] = [
   { prefix: 'CT1.', game: 'catena', name: 'Catena' },
   { prefix: 'MU1.', game: 'musichiere', name: 'Musichiere' },
   { prefix: 'TT1.', game: 'topten', name: 'Top Ten' },
+  { prefix: 'SB1.', game: 'sbagliato', name: 'Sbagliato!' },
 ];
 
 /** Codes longer than this don't fit in a chat message: share them as a file. */

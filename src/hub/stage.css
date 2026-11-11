@@ -20,6 +20,7 @@
   --cyan: #36d6ff;
   --orange: #ff8a1f;
   --lime: #b4f03c;
+  --violet: #b47cff;
   --ok: #2ee68a;
   --ko: #ff4d5e;
 
@@ -31,6 +32,7 @@
 .ct-page, .theme-catena { --accent: var(--orange); }
 .mu-page, .theme-musichiere { --accent: var(--magenta); }
 .tt-page, .theme-topten { --accent: var(--lime); }
+.sb-page, .theme-sbagliato { --accent: var(--violet); }
 
 /* ---------- The studio: backdrop, two spotlights, a glossy floor ---------- */
 html { background: var(--bg); }

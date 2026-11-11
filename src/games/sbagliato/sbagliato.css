@@ -1,0 +1,110 @@
+.sb-page .game-stage {
+  /* Tight on a small screen, roomier as the screen grows. */
+  --space: clamp(8px, calc((100vh - 700px) / 12 + 8px), 34px);
+  gap: var(--space); padding: 8px 0 calc(var(--space) / 2);
+}
+.sb-page .team-strip { gap: 12px; }
+.sb-page .team-chip small { font-weight: 800; }
+
+/* Before a team's go. */
+.sb-intro {
+  display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 2vh, 22px); max-width: 820px; padding: clamp(18px, 3vh, 36px);
+  border-radius: 22px; background: rgba(0, 0, 0, 0.3); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 0 50px color-mix(in srgb, var(--accent) 20%, transparent); animation: pop-in 0.5s var(--ease-spring) backwards;
+}
+.sb-tag { padding: 6px 16px; border-radius: 99px; background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.sb-intro h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, 8vh, 5rem); line-height: 1; text-shadow: 0 0 30px currentColor; }
+.sb-intro ol { margin: 0; padding-left: 24px; text-align: left; display: flex; flex-direction: column; gap: 8px; font-size: clamp(1rem, 2.2vh, 1.35rem); line-height: 1.4; }
+.sb-intro p { margin: 0; }
+
+/* Clock and the path of lights to finish. */
+.sb-top { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 2vw, 32px); width: min(1700px, 100% - 32px); }
+.sb-clock {
+  flex: none; min-width: 3.2em; padding: 4px 16px; border-radius: 16px; text-align: center;
+  font-family: var(--font-display); font-size: clamp(2.2rem, 7vh, 4.6rem); line-height: 1.15; color: var(--gold-hi);
+  background: rgba(0, 0, 0, 0.45); border: 2px solid color-mix(in srgb, var(--gold) 45%, transparent); text-shadow: 0 0 20px rgba(255, 201, 40, 0.55);
+}
+.sb-clock.hurry { color: #fff; background: linear-gradient(180deg, #ff8f99, var(--ko) 70%); border-color: #ffc2c8; animation: sb-hurry 1s ease-in-out infinite; }
+@keyframes sb-hurry { 50% { transform: scale(1.06); } }
+.sb-path { flex: 1; display: grid; grid-template-columns: repeat(var(--steps), minmax(0, 1fr)); gap: clamp(3px, 0.5vw, 10px); max-width: calc(var(--steps) * 96px); }
+.sb-path span {
+  aspect-ratio: 1; max-height: clamp(34px, 8vh, 84px); display: grid; place-items: center; border-radius: 12px;
+  font-family: var(--font-display); font-size: clamp(0.9rem, 3vh, 2rem); color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(180deg, #1d1460, #120b3f); border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+.sb-path span.on {
+  color: #2a0f4f; background: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--accent) 45%, #fff));
+  border-color: #fff; box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 80%, transparent); animation: sb-step 0.45s var(--ease-spring) backwards;
+}
+.sb-path span:last-child { border-color: var(--gold); color: var(--gold); }
+.sb-path span:last-child.on { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: #2a1c00; }
+/* The best run so far, after a restart. */
+.sb-path span.best { box-shadow: inset 0 -4px 0 var(--gold); color: var(--gold-hi); }
+@keyframes sb-step { from { transform: scale(1.5); filter: brightness(2); } }
+
+/* The question and the two answers. */
+.sb-play { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space); width: min(1200px, 100% - 32px); }
+.sb-question {
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, min(5vw, 7.5vh), 4.4rem); line-height: 1.1; letter-spacing: 0.5px;
+  max-width: 100%; text-wrap: balance; animation: sb-in 0.28s var(--ease-out) backwards;
+}
+@keyframes sb-in { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
+.sb-options { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px, 2.4vw, 40px); width: 100%; animation: sb-in 0.28s var(--ease-out) 0.05s backwards; }
+.sb-option {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 14px; min-width: 0;
+  padding: clamp(14px, 3vh, 34px) clamp(14px, 2vw, 28px); border-radius: 20px; color: var(--text); font: inherit;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 34%, var(--bg-3)), var(--bg-2));
+  border: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  box-shadow: 0 0 34px color-mix(in srgb, var(--accent) 22%, transparent), 0 14px 34px rgba(0, 0, 0, 0.4);
+  transition: transform 0.08s, filter 0.15s;
+}
+.sb-option:hover:not(:disabled) { filter: brightness(1.2); }
+.sb-option:active:not(:disabled) { transform: scale(0.98); }
+.sb-option:disabled { opacity: 1; cursor: default; }
+.sb-option span { font-family: var(--font-display); font-size: clamp(1.6rem, min(4.4vw, 7vh), 4rem); line-height: 1.1; text-transform: uppercase; overflow-wrap: anywhere; }
+.sb-option kbd { position: absolute; top: 10px; left: 12px; font-size: 0.9rem; }
+
+/* The host's hint: how long the team is taking on this question. */
+.sb-hint { width: min(700px, 100%); height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.sb-hint div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); }
+.sb-hint.late div { background: var(--ko); box-shadow: 0 0 12px var(--ko); animation: sb-late 0.5s ease-in-out infinite alternate; }
+@keyframes sb-late { to { opacity: 0.4; } }
+
+/* Paused: the question is hidden, so nobody thinks about it in the meantime. */
+.sb-play.paused .sb-question, .sb-play.paused .sb-options { filter: blur(18px); opacity: 0.5; }
+.sb-pause {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-family: var(--font-display); font-size: clamp(2rem, 7vh, 4rem); color: var(--gold-hi); text-shadow: 0 0 24px rgba(0, 0, 0, 0.8);
+}
+
+.sb-flash { min-height: 1.5em; margin: calc(var(--space) / -2) 0; font-weight: 800; font-size: clamp(1.1rem, 2.4vh, 1.6rem); }
+.sb-flash span { display: inline-block; animation: pop-in 0.4s var(--ease-spring) backwards; }
+
+.sb-done {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; padding: clamp(18px, 3vh, 34px) 40px; border-radius: 22px;
+  background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); animation: pop-in 0.5s var(--ease-spring) backwards;
+}
+.sb-done h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 6vh, 3.8rem); }
+.sb-done p { margin: 0; font-size: clamp(1.05rem, 2.4vh, 1.5rem); }
+
+@media (max-width: 700px) {
+  .sb-top { flex-direction: column; gap: 8px; }
+  .sb-path { width: 100%; }
+  .sb-path span { border-radius: 6px; font-size: 0.9rem; }
+  /* A long path goes on two rows, so the numbers still fit. */
+  .sb-path.long { grid-template-columns: repeat(var(--half), minmax(0, 1fr)); }
+  .sb-options { grid-template-columns: 1fr; }
+  .sb-option kbd { display: none; }
+}
+
+/* Creator */
+.sb-ed { display: grid; grid-template-columns: 28px 1fr; gap: 6px 8px; align-items: center; padding: 10px 0; border-top: 1px dashed var(--line); }
+.sb-ed > span { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #1a0d33; font-weight: 800; font-size: 0.85rem; }
+.sb-ed .sb-ed-line, .sb-ed .cr-row, .sb-ed .cr-error { grid-column: 2; margin: 0; }
+.sb-ed-line { display: flex; gap: 6px; }
+.sb-ed-line input { flex: 1; min-width: 0; font-weight: 700; }
+.sb-ed .cr-row input { flex: 1; min-width: 0; }
+.sb-ed .sb-true { border-color: color-mix(in srgb, var(--ok) 50%, transparent); }
+.sb-ed .sb-false { border-color: color-mix(in srgb, var(--ko) 50%, transparent); }
+.sb-preview ol { margin: 6px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
