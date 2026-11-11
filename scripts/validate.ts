@@ -9,6 +9,7 @@ import { localMediaFiles, validateQuiz, youtubeId, type Media, type Quiz } from 
 import { validatePassaparola } from '../src/games/passaparola/schema';
 import { validateCatena } from '../src/games/catena/schema';
 import { validatePlaylist, type Playlist } from '../src/games/musichiere/schema';
+import { validateTopTen } from '../src/games/topten/schema';
 import type { Validation } from '../src/hub/content';
 
 const root = join(import.meta.dirname, '..', 'quizzes');
@@ -81,6 +82,7 @@ const validators: Record<string, (d: unknown) => Validation> = {
   passaparola: validatePassaparola,
   catena: validateCatena,
   musichiere: validatePlaylist,
+  topten: validateTopTen,
 };
 let checked = slugs.length;
 for (const [game, validate] of Object.entries(validators)) {

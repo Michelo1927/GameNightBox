@@ -17,7 +17,9 @@ interface Props {
 export default function PlayHeader({ back, title, children, undo, canUndo, onRanking, onSetup }: Props) {
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest?.('input, textarea')) return;
+      const field = (e.target as HTMLElement).closest?.('input, textarea') as HTMLInputElement | null;
+      // In a text field Ctrl+Z undoes the typing; only an empty field (e.g. the answer box, always focused) undoes the game.
+      if (field && (field.value || !(e.ctrlKey || e.metaKey))) return;
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
         e.preventDefault();
         undo();

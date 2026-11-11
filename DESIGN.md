@@ -28,7 +28,7 @@ e creazione dei quiz tramite Claude.
 ## Architettura
 
 Il sito è un **hub di giochi**: la home (`#/`) elenca i giochi, ognuno ha le sue pagine.
-Giochi: Jeopardy, Passaparola, Catena, Musichiere (vedi "Gli altri giochi" più sotto).
+Giochi: Jeopardy, Passaparola, Catena, Musichiere, Top Ten (vedi "Gli altri giochi" più sotto).
 
 ```
 GameNightBox/
@@ -40,7 +40,8 @@ GameNightBox/
 ├─ content/                    ← contenuti degli altri giochi: un file JSON ciascuno
 │  ├─ passaparola/esempio.json
 │  ├─ catena/esempio.json
-│  └─ musichiere/esempio.json
+│  ├─ musichiere/esempio.json
+│  └─ topten/esempio.json
 ├─ src/
 │  ├─ App.tsx                  smista gli indirizzi: home dell'hub o pagine di un gioco
 │  ├─ hub/                     ← motore comune a tutti i giochi
@@ -50,7 +51,7 @@ GameNightBox/
 │  │  ├─ useSaved.ts           stato salvato nel browser + Annulla
 │  │  ├─ content.ts            contenuti del sito + quelli creati sul dispositivo
 │  │  ├─ creation.tsx          indirizzi per creare e condividere: crea, crea/codice, carica
-│  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1.)
+│  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1. TT1.)
 │  │  ├─ buzzer.ts             prenotazione: un tasto per squadra, o decide l'host
 │  │  ├─ keys.ts  text.ts  youtube.ts  sounds.ts  media.ts  nav.ts
 │  │  └─ components/           Timer, OrderWheel, Ranking, Media, TeamList, SetupPage,
@@ -65,7 +66,7 @@ GameNightBox/
 │        ├─ quiz/schema.ts     tipi + validazione del formato
 │        ├─ creator/           "Crea un quiz" dal telefono, Claude, caricamento da codice
 │        └─ editor/            editor visuale (attivo solo in locale)
-│     ├─ passaparola/  catena/  musichiere/
+│     ├─ passaparola/  catena/  musichiere/  topten/
 │     │  ├─ index.tsx          scheda, indirizzi, pagina elenco, setup, "Crea con Claude"
 │     │  ├─ schema.ts          formato + validazione (usata anche da scripts/validate.ts)
 │     │  ├─ prompt.ts          prompt per Claude
@@ -74,7 +75,7 @@ GameNightBox/
 │     │  └─ Play.tsx           schermata di gioco
 ├─ scripts/validate.ts         controlla quiz e contenuti (usato da Claude e in CI)
 ├─ vite-plugin-editor.ts       API locali per salvare file dall'editor (solo dev)
-├─ .claude/skills/             crea-quiz, crea-passaparola, crea-catena, crea-musichiere
+├─ .claude/skills/             crea-quiz, crea-passaparola, crea-catena, crea-musichiere, crea-topten
 └─ .github/workflows/deploy.yml
 ```
 
@@ -132,6 +133,19 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   (numero della squadra o clic sulla colonna). Si sceglie nel setup.
 - I link YouTube sono il punto debole dei contenuti generati da Claude: la pagina "Crea con Claude" li
   controlla uno per uno (oEmbed di YouTube) e mostra il titolo vero del video, con il link modificabile.
+
+**Top Ten** (`#/topten`)
+- Ogni lista è una classifica vera (o un elenco chiuso) di 5-10 risposte, con la fonte sotto la domanda:
+  così le risposte "giuste" non sono un sondaggio inventato e nessuno può contestarle.
+- Tutte le risposte valgono 10 punti, che vanno in palio e finiscono tutti alla squadra che vince la lista.
+- Sfida: prenotazione (tasti o host); la prima squadra che dice una risposta del tabellone gioca la lista,
+  chi sbaglia è fuori dalla sfida (se sbagliano tutte, si riparte).
+- Gioco: una risposta alla volta finché il tabellone è pieno o finiscono gli errori (2/3/4, nel setup).
+- Rubata: le altre squadre si prenotano, una risposta a testa; chi indovina prende tutto il palio,
+  altrimenti resta a chi giocava. Con più di due squadre la sfida e la rubata sono aperte a tutte.
+- L'host scrive la risposta e l'app la cerca nella lista: senza accenti e articolo iniziale, un errore di
+  battitura dalle 6 lettere, più i nomi alternativi del contenuto (`also`). Una risposta già scoperta non conta come errore.
+- A fine lista l'host svela le risposte mancanti (Invio = tutte, o una alla volta toccandole).
 
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.

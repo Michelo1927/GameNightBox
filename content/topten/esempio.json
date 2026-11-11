@@ -1,0 +1,92 @@
+{
+  "title": "Esempio: Italia e mondo",
+  "description": "Sei liste per provare il gioco: città, fiumi, pianeti, paesi, colli e nani",
+  "liste": [
+    {
+      "question": "Le 10 città italiane più popolose",
+      "source": "ISTAT, residenti al 1° gennaio 2024 (arrotondati)",
+      "answers": [
+        { "text": "Roma", "note": "2,75 milioni" },
+        { "text": "Milano", "note": "1,37 milioni" },
+        { "text": "Napoli", "note": "910 mila" },
+        { "text": "Torino", "note": "850 mila" },
+        { "text": "Palermo", "note": "630 mila" },
+        { "text": "Genova", "note": "560 mila" },
+        { "text": "Bologna", "note": "390 mila" },
+        { "text": "Firenze", "note": "360 mila" },
+        { "text": "Bari", "note": "315 mila" },
+        { "text": "Catania", "note": "300 mila" }
+      ]
+    },
+    {
+      "question": "I 10 fiumi più lunghi d'Italia",
+      "source": "Wikipedia: Fiumi d'Italia",
+      "answers": [
+        { "text": "Po", "note": "652 km" },
+        { "text": "Adige", "note": "410 km" },
+        { "text": "Tevere", "note": "405 km" },
+        { "text": "Adda", "note": "313 km" },
+        { "text": "Oglio", "note": "280 km" },
+        { "text": "Tanaro", "note": "276 km" },
+        { "text": "Ticino", "note": "248 km" },
+        { "text": "Arno", "note": "241 km" },
+        { "text": "Piave", "note": "220 km" },
+        { "text": "Reno", "note": "212 km" }
+      ]
+    },
+    {
+      "question": "Gli 8 pianeti del Sistema solare, dal più grande",
+      "source": "NASA, diametro all'equatore",
+      "answers": [
+        { "text": "Giove", "note": "142.984 km" },
+        { "text": "Saturno", "note": "120.536 km" },
+        { "text": "Urano", "note": "51.118 km" },
+        { "text": "Nettuno", "note": "49.528 km" },
+        { "text": "Terra", "note": "12.756 km" },
+        { "text": "Venere", "note": "12.104 km" },
+        { "text": "Marte", "note": "6.792 km" },
+        { "text": "Mercurio", "note": "4.879 km" }
+      ]
+    },
+    {
+      "question": "Gli 8 paesi più popolosi del mondo",
+      "source": "ONU, World Population Prospects 2024",
+      "answers": [
+        { "text": "India", "note": "1,45 miliardi" },
+        { "text": "Cina", "also": ["Repubblica Popolare Cinese"], "note": "1,42 miliardi" },
+        { "text": "Stati Uniti", "also": ["USA", "America", "Stati Uniti d'America"], "note": "345 milioni" },
+        { "text": "Indonesia", "note": "283 milioni" },
+        { "text": "Pakistan", "note": "251 milioni" },
+        { "text": "Nigeria", "note": "233 milioni" },
+        { "text": "Brasile", "note": "212 milioni" },
+        { "text": "Bangladesh", "note": "174 milioni" }
+      ]
+    },
+    {
+      "question": "I 7 colli di Roma",
+      "source": "Wikipedia: Sette colli di Roma",
+      "answers": [
+        { "text": "Palatino" },
+        { "text": "Aventino" },
+        { "text": "Campidoglio", "also": ["Capitolino"] },
+        { "text": "Quirinale" },
+        { "text": "Viminale" },
+        { "text": "Esquilino" },
+        { "text": "Celio" }
+      ]
+    },
+    {
+      "question": "I 7 nani di Biancaneve (nomi italiani Disney)",
+      "source": "Biancaneve e i sette nani, Disney 1937",
+      "answers": [
+        { "text": "Dotto" },
+        { "text": "Brontolo" },
+        { "text": "Mammolo" },
+        { "text": "Pisolo" },
+        { "text": "Gongolo" },
+        { "text": "Eolo" },
+        { "text": "Cucciolo" }
+      ]
+    }
+  ]
+}

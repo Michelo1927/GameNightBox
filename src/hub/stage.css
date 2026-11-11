@@ -19,6 +19,7 @@
   --magenta: #ff3d8b;
   --cyan: #36d6ff;
   --orange: #ff8a1f;
+  --lime: #b4f03c;
   --ok: #2ee68a;
   --ko: #ff4d5e;
 
@@ -29,6 +30,7 @@
 .pp-page, .theme-passaparola { --accent: var(--cyan); }
 .ct-page, .theme-catena { --accent: var(--orange); }
 .mu-page, .theme-musichiere { --accent: var(--magenta); }
+.tt-page, .theme-topten { --accent: var(--lime); }
 
 /* ---------- The studio: backdrop, two spotlights, a glossy floor ---------- */
 html { background: var(--bg); }
@@ -203,7 +205,12 @@ kbd { border-radius: 5px; }
 @keyframes bulbs { from { opacity: 0.65; } to { opacity: 1; filter: drop-shadow(0 0 4px rgba(255, 220, 120, 0.9)); } }
 .marquee-accent { color: #fff; text-shadow: 0 0 12px var(--magenta), 0 0 36px var(--magenta), 3px 4px 0 #4a0024; }
 
-.game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: clamp(12px, 2vh, 18px); }
+.hub-home { max-width: 1400px; }
+/* Up to three cards per row on a TV; a short last row stays centred. */
+.game-grid { --gap: clamp(12px, 2vh, 18px); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+.game-grid > .game-card { flex: 1 1 360px; max-width: calc((100% - 2 * var(--gap)) / 3); }
+@media (max-width: 1140px) { .game-grid > .game-card { max-width: calc((100% - var(--gap)) / 2); } }
+@media (max-width: 760px) { .game-grid > .game-card { max-width: 100%; } }
 .game-card {
   position: relative; display: flex; align-items: center; gap: 20px; padding: clamp(14px, 2.4vh, 22px) 22px; border-radius: 22px; overflow: hidden;
   background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 26%, var(--bg-3)), var(--bg-2) 65%);

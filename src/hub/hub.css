@@ -21,7 +21,7 @@
   background: var(--bg-2); border: 2px solid transparent; border-left: 6px solid; font-weight: 700;
 }
 .team-chip.on { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.25); }
-.team-chip.off { opacity: 0.45; }
+.team-chip.off, .team-chip.off:disabled { opacity: 0.45; }
 .team-chip .score { font-family: 'Anton', sans-serif; font-size: 1.4rem; font-weight: 400; }
 .team-chip button { border: 0; background: rgba(255, 255, 255, 0.08); border-radius: 6px; width: 26px; height: 26px; }
 
