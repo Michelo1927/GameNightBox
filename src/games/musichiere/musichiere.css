@@ -8,8 +8,11 @@
   border: 2px solid rgba(255, 255, 255, 0.08); color: inherit; font: inherit;
   background: linear-gradient(180deg, color-mix(in srgb, var(--team) 18%, var(--bg-3)), var(--bg-2) 60%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 16px 40px rgba(0, 0, 0, 0.45);
-  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  transition: transform 0.3s var(--ease-back), box-shadow 0.2s, opacity 0.2s, filter 0.2s;
+  /* The towers rise one after the other when the game opens. */
+  animation: rise-in 0.5s var(--ease-out) backwards; animation-delay: calc(var(--n, 0) * 70ms);
 }
+.mu-side + .mu-center + .mu-side .mu-col { animation-delay: calc(140ms + var(--n, 0) * 70ms); }
 .mu-col::before {
   /* The team's light on top of the tower. */
   content: ''; position: absolute; top: -2px; left: 18%; right: 18%; height: 4px; border-radius: 99px;
@@ -30,9 +33,14 @@
 .mu-slot.right {
   background: linear-gradient(180deg, #ffffff, #fff3c4);
   box-shadow: 0 0 14px rgba(255, 240, 190, 0.9), 0 0 28px color-mix(in srgb, var(--team) 60%, transparent);
-  animation: mu-light 0.5s ease-out;
+  animation: mu-light 0.7s var(--ease-out);
 }
-@keyframes mu-light { from { background: var(--gold); transform: scale(1.15); } }
+/* A box won: it flares up, swells and settles. */
+@keyframes mu-light {
+  from { background: var(--gold); transform: scale(0.8); filter: brightness(2.2); }
+  35% { transform: scale(1.22); }
+  65% { transform: scale(0.96); }
+}
 .mu-name {
   min-width: 100%; padding: 5px 10px; border-radius: 8px; text-align: center;
   background: var(--team); color: #fff; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
@@ -50,9 +58,12 @@
     radial-gradient(circle, transparent 30%, rgba(255, 255, 255, 0.05) 31%, transparent 32%, transparent 40%, rgba(255, 255, 255, 0.05) 41%, transparent 42%, transparent 52%, rgba(255, 255, 255, 0.05) 53%, transparent 54%, transparent 64%, rgba(255, 255, 255, 0.05) 65%, transparent 66%),
     conic-gradient(from 30deg, #120a2c, #2a1b5c 12%, #120a2c 25%, #2a1b5c 50%, #120a2c 62%, #2a1b5c 85%, #120a2c);
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06), 0 0 50px color-mix(in srgb, var(--accent) 35%, transparent), 0 20px 50px rgba(0, 0, 0, 0.5);
+  /* Always spinning, but held still until the song plays: on pause the record stops where it is instead of snapping back. */
+  animation: mu-spin 2.2s linear infinite paused, pop-in 0.5s var(--ease-spring) backwards;
+  transition: box-shadow 0.4s;
 }
-.mu-disc.on { animation: mu-spin 2.2s linear infinite; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08), 0 0 70px color-mix(in srgb, var(--accent) 70%, transparent), 0 20px 50px rgba(0, 0, 0, 0.5); }
-@keyframes mu-spin { to { transform: rotate(360deg); } }
+.mu-disc.on { animation-play-state: running, running; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08), 0 0 70px color-mix(in srgb, var(--accent) 70%, transparent), 0 20px 50px rgba(0, 0, 0, 0.5); }
+@keyframes mu-spin { to { rotate: 360deg; } }
 .mu-label {
   width: 34%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
   background: radial-gradient(circle, #fff 7%, var(--accent) 8%, #c01f66);
@@ -61,7 +72,8 @@
 .mu-bar { width: 100%; height: 10px; border-radius: 99px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
 .mu-bar div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); box-shadow: 0 0 12px var(--accent); transition: width 0.2s linear; }
 
-.mu-reveal { animation: buzz-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1); display: flex; flex-direction: column; align-items: center; }
+.mu-reveal { animation: buzz-in 0.55s var(--ease-spring) backwards; display: flex; flex-direction: column; align-items: center; }
+.mu-artist { animation: rise-in 0.4s var(--ease-out) 0.25s backwards; }
 .mu-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4.4vw, 3.4rem); color: var(--gold-hi); line-height: 1.1; text-shadow: 0 0 26px rgba(255, 201, 40, 0.55); }
 .mu-artist { font-size: clamp(1.1rem, 2.4vw, 1.7rem); font-weight: 700; margin-top: 8px; }
 .mu-help { margin: 0; }

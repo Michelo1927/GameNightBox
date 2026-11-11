@@ -11,7 +11,27 @@
   --ko: #e74c3c;
   --radius: 10px;
   color-scheme: dark;
+
+  /* Movimento: le stesse curve per tutte le animazioni del sito.
+     out = arriva e rallenta; in = parte piano e accelera (uscite, cadute);
+     back = supera di poco l'arrivo e torna; spring = molla che si assesta (dove il browser la supporta). */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.3, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.9, 0.5);
+  --ease-back: cubic-bezier(0.2, 1.4, 0.4, 1);
+  --ease-spring: var(--ease-back);
 }
+@supports (animation-timing-function: linear(0, 1)) {
+  :root {
+    --ease-spring: linear(0, 0.045 3%, 0.158 6%, 0.307 9%, 0.469 12%, 0.675 16%, 0.846 20%, 0.972 24%, 1.053 28%, 1.095 32%, 1.107 36%, 1.099 40%, 1.074 45%, 1.046 50%, 1.017 56%, 0.998 62%, 0.989 70%, 0.991 80%, 0.997 90%, 1);
+  }
+}
+
+/* Ingressi usati un po' ovunque: l'arrivo è sempre lo stile normale dell'elemento. */
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.86); } }
+@keyframes drop-in { from { opacity: 0; transform: translateY(-8px) scale(0.96); } }
+@keyframes lift-in { from { opacity: 0; transform: translateY(8px) scale(0.96); } }
 
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
@@ -112,6 +132,9 @@ kbd {
   background: color-mix(in srgb, var(--team, #fff) 25%, transparent); box-shadow: inset 0 0 0 2px var(--team, transparent);
 }
 .turn-badge b { font-weight: 800; }
+/* A new turn: the badge pops in again (Board.tsx gives it a key per team). */
+.turn-badge { animation: badge-in 0.5s var(--ease-spring) backwards; }
+@keyframes badge-in { from { opacity: 0; transform: translateY(-8px) scale(0.8); } }
 .turn-badge.shared { background: #ff7b00; color: #1a0a00; font-weight: 800; animation: pulse 1.4s ease-in-out infinite; }
 .turn-badge.finished { background: var(--gold); color: #1a1400; font-weight: 800; }
 @keyframes pulse { 50% { transform: scale(1.06); } }
@@ -123,9 +146,15 @@ kbd {
 
 /* ---------- Overlays ---------- */
 .overlay { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(2, 4, 20, 0.85); padding: 16px; }
-.question-overlay { padding: 0; background: var(--bg); animation: grow 0.35s cubic-bezier(0.2, 0.8, 0.3, 1); }
-@keyframes grow { from { opacity: 0.4; transform: scale(0.12); } }
+/* The question grows out of its cell (transform-origin set inline) and, closing, goes back into it. */
+.question-overlay { padding: 0; background: var(--bg); animation: grow 0.42s cubic-bezier(0.2, 0.9, 0.25, 1); }
+.question-overlay.closing { animation: shrink 0.24s var(--ease-in) forwards; pointer-events: none; }
+@keyframes grow { from { opacity: 0; transform: scale(0.06); } 35% { opacity: 1; } }
+@keyframes shrink { to { opacity: 0; transform: scale(0.06); } }
 @keyframes pop { from { opacity: 0; transform: scale(0.96); } }
+/* The text and the picture follow a moment later, once the screen is almost open. */
+.q-body > :where(.q-text, .rules, .media, .choices, .q-split, .final-help, .final-bets) { animation: rise-in 0.45s var(--ease-out) 0.16s backwards; }
+.q-body > .final-bets .final-bet { animation: rise-in 0.4s var(--ease-out) backwards; animation-delay: calc(0.3s + var(--n, 0) * 60ms); }
 .question { width: 100%; height: 100%; display: flex; flex-direction: column; background: linear-gradient(170deg, var(--cell), var(--cell-2)); }
 .q-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; font-family: 'Anton', sans-serif; font-size: clamp(1.1rem, 2.5vw, 1.8rem); letter-spacing: 0.5px; text-transform: uppercase; background: rgba(0, 0, 0, 0.25); }
 .q-points { color: var(--gold); }
@@ -145,10 +174,12 @@ kbd {
 .choices { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; width: min(1100px, 100%); }
 .choices li { padding: 14px 16px; border-radius: 8px; background: rgba(0, 0, 0, 0.3); font-size: clamp(1rem, 2vw, 1.5rem); font-weight: 600; text-align: left; transition: all 0.25s; }
 .choices li b { color: var(--gold); margin-right: 8px; }
-.choices li.correct { background: var(--ok); color: #002b12; }
+.choices li.correct { background: var(--ok); color: #002b12; animation: correct-pop 0.5s ease-out; }
+@keyframes correct-pop { 35% { transform: scale(1.06); box-shadow: 0 0 34px rgba(46, 230, 138, 0.7); } }
 .choices li.correct b { color: #002b12; }
 .choices li.dim { opacity: 0.35; }
-.answer { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 28px; border-radius: 12px; background: rgba(0, 0, 0, 0.35); border: 2px solid var(--gold); animation: pop 0.25s ease-out; max-width: 100%; }
+.answer { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 28px; border-radius: 12px; background: rgba(0, 0, 0, 0.35); border: 2px solid var(--gold); animation: answer-in 0.55s var(--ease-spring) backwards; max-width: 100%; }
+@keyframes answer-in { from { opacity: 0; transform: translateY(18px) scale(0.84); } }
 .answer-label { font-size: 0.8rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
 .answer-text { font-weight: 800; color: var(--gold); }
 .host-note { margin: 0; font-size: 0.95rem; color: var(--muted); font-style: italic; max-width: 900px; }
@@ -201,18 +232,36 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .anim-num { display: inline-block; padding: 0 10px; border-radius: 8px; }
 .flash-up { animation: flash-up 0.9s ease-out; }
 .flash-down { animation: flash-down 0.9s ease-out; }
-@keyframes flash-up { 0% { background: var(--ok); color: #002b12; transform: scale(1.25); } 100% { background: transparent; transform: scale(1); } }
-@keyframes flash-down { 0% { background: var(--ko); transform: scale(0.85) rotate(-3deg); } 100% { background: transparent; transform: none; } }
+/* Up: the number jumps and lands. Down: it drops and shakes its head. The color fades out slower than the movement. */
+@keyframes flash-up {
+  0% { background: var(--ok); color: #002b12; transform: scale(1); }
+  18% { transform: scale(1.32); }
+  45% { transform: scale(0.97); color: #002b12; }
+  65% { transform: scale(1.03); }
+  100% { background: transparent; transform: none; }
+}
+@keyframes flash-down {
+  0% { background: var(--ko); transform: none; }
+  15% { transform: scale(0.84) rotate(-5deg); }
+  35% { transform: scale(0.9) rotate(4deg); }
+  55% { transform: scale(0.96) rotate(-2deg); }
+  100% { background: transparent; transform: none; }
+}
 
 /* ---------- Header extras ---------- */
 .btn.icon { padding: 8px 12px; }
 .turn-badge.final { background: var(--gold); color: #1a1400; font-weight: 800; animation: pulse 1.4s ease-in-out infinite; }
 
 /* ---------- Board intro: categories revealed one by one ---------- */
-.board.dealing .cat-cell { animation: cat-in 0.5s both; }
-.board.dealing .cell { animation: cell-in 0.3s both; }
-@keyframes cat-in { from { opacity: 0; transform: rotateX(90deg) scale(0.8); } }
-@keyframes cell-in { from { opacity: 0; transform: scale(0.6); } }
+/* Each category flips down like a panel hinged at the top and swings a little before it settles; then the cells drop in. */
+.board.dealing .cat-cell { transform-origin: 50% 0; animation: cat-in 0.7s var(--ease-spring) both; }
+.board.dealing .cell { animation: cell-in 0.5s var(--ease-spring) both; }
+@keyframes cat-in {
+  from { opacity: 0; transform: perspective(700px) rotateX(-88deg); }
+  25% { opacity: 1; }
+  to { transform: perspective(700px) rotateX(0deg); }
+}
+@keyframes cell-in { from { opacity: 0; transform: translateY(-14px) scale(0.6); } 40% { opacity: 1; } }
 .double-mark { position: absolute; top: 4px; right: 6px; font-size: 0.9rem; }
 
 /* ---------- Timer ---------- */
@@ -221,13 +270,25 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .timer-text { position: relative; }
 .timer.hurry .timer-bar { background: color-mix(in srgb, var(--ko) 70%, transparent); }
 .timer.hurry { animation: pulse 1s ease-in-out infinite; }
-.timer.over { background: var(--ko); }
+.timer.over { background: var(--ko); animation: time-up 0.5s ease-out; }
+@keyframes time-up { 15% { translate: -5px 0; } 35% { translate: 5px 0; } 55% { translate: -4px 0; } 75% { translate: 3px 0; } }
 
 /* ---------- Special cell surprise screen ---------- */
 .double { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, color-mix(in srgb, var(--team) 35%, var(--cell)) 0%, var(--bg) 75%); }
 .double-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px; text-align: center; max-width: 720px; }
-.double-title { font-family: 'Anton', sans-serif; font-size: clamp(3rem, 11vw, 8rem); color: var(--gold); text-shadow: 4px 5px 0 #000; animation: wobble 0.8s ease-out; }
-@keyframes wobble { 0% { transform: scale(0.2) rotate(-20deg); } 60% { transform: scale(1.15) rotate(4deg); } 100% { transform: none; } }
+.double-title { font-family: 'Anton', sans-serif; font-size: clamp(3rem, 11vw, 8rem); color: var(--gold); text-shadow: 4px 5px 0 #000; animation: wobble 0.9s ease-out backwards; }
+@keyframes wobble {
+  0% { opacity: 0; transform: scale(0.2) rotate(-20deg); }
+  20% { opacity: 1; }
+  50% { transform: scale(1.16) rotate(5deg); }
+  70% { transform: scale(0.96) rotate(-2deg); }
+  85% { transform: scale(1.02) rotate(1deg); }
+  100% { transform: none; }
+}
+/* The rule of the special cell follows its title, one line after the other. */
+.double-cat { animation: rise-in 0.4s var(--ease-out) 0.3s backwards; }
+.double-team { animation: rise-in 0.4s var(--ease-out) 0.42s backwards; }
+.double .double-quick, .double .double-actions { animation: rise-in 0.4s var(--ease-out) 0.55s backwards; }
 .double-cat { margin: 0; font-family: 'Anton', sans-serif; font-size: clamp(1.2rem, 3vw, 2rem); text-transform: uppercase; }
 .double-team { margin: 0; font-size: clamp(1.2rem, 2.6vw, 1.8rem); }
 .double-team b { color: var(--team); }
@@ -243,13 +304,27 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .final-bet input { width: 140px; font-family: 'Anton', sans-serif; font-size: 2rem; text-align: center; color: var(--text); background: rgba(0, 0, 0, 0.4); border: 1px solid var(--line); border-radius: 8px; }
 
 /* ---------- Winner ---------- */
-.ranking.celebrate { position: relative; z-index: 1; animation: pop 0.4s ease-out; }
+.ranking.celebrate { position: relative; z-index: 1; }
 .winner { margin-bottom: 18px; }
 .winner-label { font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
 .winner-name { font-family: 'Anton', sans-serif; font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: 1.1; text-shadow: 3px 3px 0 #000; animation: wobble 0.9s ease-out; }
 .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
-.confetti i { position: absolute; top: -20px; border-radius: 2px; animation: fall linear infinite; }
-@keyframes fall { to { transform: translate(var(--drift), 110vh) rotate(720deg); } }
+/* Each piece falls along a lazy S (it drifts one way, then the other) while it tumbles, showing its thin edge
+   as it turns: --t is how long the fall takes, --d when it starts (Ranking.tsx). */
+.confetti i {
+  position: absolute; top: -20px; border-radius: 2px;
+  animation: confetti-fall var(--t, 4s) linear var(--d, 0s) infinite backwards, confetti-tumble calc(var(--t, 4s) / 3.5) linear var(--d, 0s) infinite;
+}
+@keyframes confetti-fall {
+  from { translate: 0 -4vh; }
+  35% { translate: calc(var(--drift) * -0.7) 36vh; }
+  70% { translate: calc(var(--drift) * 0.6) 76vh; }
+  to { translate: var(--drift) 112vh; }
+}
+@keyframes confetti-tumble {
+  from { transform: rotate(0deg) rotateX(0deg); }
+  to { transform: rotate(var(--spin, 360deg)) rotateX(720deg); }
+}
 
 /* ---------- Setup ---------- */
 .team-order { display: flex; flex-direction: column; gap: 2px; }
@@ -441,7 +516,9 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .wheel-pointer { fill: var(--gold); stroke: #000; stroke-width: 1.5; stroke-linejoin: round; }
 .wheel-status { margin: 0; font-size: clamp(1.05rem, min(2.6vw, 3.6vh), 1.5rem); font-weight: 600; min-height: 1.5em; }
 .wheel-order { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; counter-reset: pos; }
-.wheel-order li { counter-increment: pos; padding: 6px 14px; border-radius: 999px; background: var(--team); color: #000; font-weight: 800; animation: pop 0.3s ease-out; }
+.wheel-order li { counter-increment: pos; padding: 6px 14px; border-radius: 999px; background: var(--team); color: #000; font-weight: 800; animation: pop-in 0.5s var(--ease-spring) backwards; }
+/* The pointer flicks every time a slice edge passes under it (OrderWheel.tsx). */
+.wheel-pointer { transform-box: fill-box; transform-origin: 50% 0; }
 .wheel-order li::before { content: counter(pos) 'ª · '; }
 .wheel-order.big { flex-direction: column; align-items: center; gap: 10px; margin: 8px 0; }
 .wheel-order.big li { font-size: clamp(1.2rem, min(3.4vw, 4.5vh), 1.8rem); padding: 8px 26px; min-width: 60%; }

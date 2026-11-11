@@ -13,24 +13,34 @@
   box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 55%, transparent), inset 0 0 40px color-mix(in srgb, var(--accent) 35%, transparent);
   background: radial-gradient(circle, rgba(54, 214, 255, 0.12), rgba(11, 7, 50, 0.6) 70%);
 }
+/* Each team's wheel spins into place when its go begins (Play.tsx gives the wheel a key per team). */
+.pp-wheel { animation: pp-wheel-in 0.9s var(--ease-spring) backwards; }
+@keyframes pp-wheel-in { from { opacity: 0; transform: rotate(-70deg) scale(0.7); } 30% { opacity: 1; } }
 .pp-letter {
-  position: absolute; transform: translate(-50%, -50%);
+  /* Centered with "translate", so "scale" and "rotate" below turn the letter around its own middle. */
+  position: absolute; translate: -50% -50%;
   width: calc(var(--size) * 0.098); height: calc(var(--size) * 0.098); border-radius: 50%;
   display: grid; place-items: center; padding: 0;
   border: 2px solid rgba(255, 255, 255, 0.9);
   background: radial-gradient(circle at 35% 28%, #9ff0ff, #1aa6e0 45%, #0b5aa8);
   color: #fff; font-family: var(--font-display); font-size: calc(var(--size) * 0.05); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 14px rgba(54, 214, 255, 0.4); transition: transform 0.25s, background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 14px rgba(54, 214, 255, 0.4); transition: scale 0.35s var(--ease-back), box-shadow 0.3s;
 }
-.pp-letter.right { background: radial-gradient(circle at 35% 28%, #b9ffd9, #2ee68a 45%, #0f8a4c); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 18px rgba(46, 230, 138, 0.7); }
-.pp-letter.wrong { background: radial-gradient(circle at 35% 28%, #ffc0c6, #ff4d5e 45%, #a3182a); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 18px rgba(255, 77, 94, 0.7); }
+/* A right answer makes the letter jump, a wrong one makes it shake its head. */
+.pp-letter.right { background: radial-gradient(circle at 35% 28%, #b9ffd9, #2ee68a 45%, #0f8a4c); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 18px rgba(46, 230, 138, 0.7); animation: pp-right 0.55s ease-out; }
+.pp-letter.wrong { background: radial-gradient(circle at 35% 28%, #ffc0c6, #ff4d5e 45%, #a3182a); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 18px rgba(255, 77, 94, 0.7); animation: pp-wrong 0.5s ease-out; }
 .pp-letter.on {
-  transform: translate(-50%, -50%) scale(1.35); border-color: #fff; z-index: 1;
+  scale: 1.35; border-color: #fff; z-index: 1;
   background: radial-gradient(circle at 35% 28%, #fff4c2, var(--gold) 45%, #c98a00); color: #3a2400; text-shadow: none;
   box-shadow: 0 0 0 5px rgba(255, 201, 40, 0.35), 0 0 34px rgba(255, 201, 40, 0.9);
   animation: pp-on 1.2s ease-in-out infinite alternate;
 }
+/* Marked while still lit (a mistake waits on the answer): same names as above, so leaving the letter doesn't replay them. */
+.pp-letter.on.right { animation: pp-on 1.2s ease-in-out infinite alternate, pp-right 0.55s ease-out; }
+.pp-letter.on.wrong { animation: pp-on 1.2s ease-in-out infinite alternate, pp-wrong 0.5s ease-out; }
 @keyframes pp-on { to { box-shadow: 0 0 0 8px rgba(255, 201, 40, 0.2), 0 0 48px rgba(255, 201, 40, 1); } }
+@keyframes pp-right { 0% { filter: brightness(1.9); } 25% { scale: 1.6; } 55% { scale: 0.9; } 78% { scale: 1.06; } }
+@keyframes pp-wrong { 0% { filter: brightness(1.7); } 15% { rotate: -16deg; } 35% { rotate: 13deg; } 55% { rotate: -9deg; } 75% { rotate: 5deg; } }
 
 .pp-center {
   position: absolute; inset: 17%; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -43,7 +53,12 @@
   background: var(--gold); color: #3a2400; font-family: var(--font-display); font-weight: 400; font-size: 1.3em;
   box-shadow: 0 0 16px rgba(255, 201, 40, 0.7);
 }
-.pp-question { margin: 0; font-weight: 600; font-size: clamp(1rem, calc(var(--size) * 0.048), 2.3rem); line-height: 1.25; }
+/* A new definition slides in (Play.tsx: key per letter); the team's name and the result pop. */
+.pp-question { margin: 0; font-weight: 600; font-size: clamp(1rem, calc(var(--size) * 0.048), 2.3rem); line-height: 1.25; animation: rise-in 0.35s var(--ease-out) backwards; }
+.pp-kind { animation: fade-in 0.3s ease-out backwards; }
+.pp-kind b { animation: pop-in 0.45s var(--ease-spring) backwards; }
+.pp-center > .pp-team { animation: pop-in 0.6s var(--ease-spring) 0.25s backwards; }
+.pp-center > .pp-team ~ * { animation: rise-in 0.4s var(--ease-out) 0.45s backwards; }
 .pp-answer {
   font-family: var(--font-display); font-size: calc(var(--size) * 0.075); color: var(--gold-hi); text-transform: uppercase;
   text-shadow: 0 0 22px rgba(255, 201, 40, 0.7); animation: buzz-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
@@ -65,7 +80,8 @@
   background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); border: 2px solid var(--line);
 }
 .pp-count b, .pp-time b { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 7vh, 5rem); line-height: 1.05; }
-.pp-count b { color: var(--ok); text-shadow: 0 0 22px rgba(46, 230, 138, 0.6); }
+.pp-count b { color: var(--ok); text-shadow: 0 0 22px rgba(46, 230, 138, 0.6); animation: pp-count 0.5s ease-out; }
+@keyframes pp-count { 30% { scale: 1.3; filter: brightness(1.5); } }
 .pp-time b { color: var(--text); font-variant-numeric: tabular-nums; }
 .pp-count small, .pp-time small { color: var(--muted); font-weight: 600; }
 .pp-time.hurry { border-color: var(--ko); animation: pp-hurry 0.5s ease-in-out infinite alternate; }

@@ -27,6 +27,7 @@ export default function OrderWheel({ teams, onDone, onSkip, onClose }: Props) {
   const [spinning, setSpinning] = useState(false);
   const [picked, setPicked] = useState<Team>();
   const wheel = useRef<SVGGElement>(null);
+  const pointer = useRef<SVGPathElement>(null);
   const done = left.length === 0;
   const seg = 360 / Math.max(left.length, 1);
 
@@ -48,7 +49,14 @@ export default function OrderWheel({ teams, onDone, onSkip, onClose }: Props) {
         const m = new DOMMatrix(getComputedStyle(el).transform);
         const deg = ((Math.atan2(m.b, m.a) * 180) / Math.PI + 360) % 360;
         const slice = Math.floor(deg / seg);
-        if (last !== -1 && slice !== last) sounds.tick();
+        if (last !== -1 && slice !== last) {
+          sounds.tick();
+          // The pointer is pushed aside by the edge and springs back.
+          pointer.current?.animate([{ transform: 'rotate(-16deg)' }, { transform: 'rotate(5deg)', offset: 0.6 }, { transform: 'none' }], {
+            duration: 140,
+            easing: 'ease-out',
+          });
+        }
         last = slice;
       }
       frame = requestAnimationFrame(follow);
@@ -134,7 +142,7 @@ export default function OrderWheel({ teams, onDone, onSkip, onClose }: Props) {
                 ))}
               </g>
               <circle r="12" className="wheel-hub" />
-              <path d="M -9 -112 L 9 -112 L 0 -94 Z" className="wheel-pointer" />
+              <path ref={pointer} d="M -9 -112 L 9 -112 L 0 -94 Z" className="wheel-pointer" />
             </svg>
           </div>
         )}

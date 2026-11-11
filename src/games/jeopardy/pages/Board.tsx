@@ -403,7 +403,8 @@ function TurnBadge({ turn, over, hasFinal, onRanking, onFinal }: BadgeProps) {
   if (turn.shared) return <span className="turn-badge shared">🔥 Domanda per tutti!</span>;
   if (!turn.team) return null;
   return (
-    <span className="turn-badge" style={{ ['--team' as string]: turn.team.color }}>
+    // The key makes the badge pop in again at every change of turn.
+    <span key={turn.team.id} className="turn-badge" style={{ ['--team' as string]: turn.team.color }}>
       Tocca a <b>{turn.team.name}</b>
     </span>
   );

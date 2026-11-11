@@ -1,7 +1,16 @@
 .ct-page .game-stage { gap: 8px; justify-content: flex-start; padding-top: 8px; }
 
 .ct-chain { display: flex; flex-direction: column; align-items: center; }
-.ct-row { position: relative; display: flex; flex-direction: column; align-items: center; }
+/* A new chain comes down one word after the other (Play.tsx gives the chain a key per round). */
+.ct-row { position: relative; display: flex; flex-direction: column; align-items: center; animation: rise-in 0.4s var(--ease-out) backwards; animation-delay: calc(var(--n, 0) * 55ms); }
+/* A letter that appears flips over; a solved word does a little wave, letter by letter (--i: its place in the word). */
+.tile:not(.hidden) { animation: tile-in 0.45s var(--ease-out) backwards; }
+.ct-word.solved .tile, .tiles.solved .tile { animation: tile-win 0.55s var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
+@keyframes tile-in { from { transform: perspective(300px) rotateX(-90deg); filter: brightness(2); } }
+@keyframes tile-win { from { filter: brightness(1.8); } 35% { transform: translateY(-28%) scale(1.08); } 70% { transform: translateY(6%); } }
+.ct-link { animation: fade-in 0.4s ease-out 0.3s backwards; }
+.ct-flash span { display: inline-block; animation: pop-in 0.45s var(--ease-spring) backwards; }
+.ct-intro, .ct-final { animation: rise-in 0.45s var(--ease-out) backwards; }
 /* The link between two words: a short lit wire. */
 .ct-row + .ct-row::before {
   content: ''; width: 4px; height: clamp(4px, 1.1vh, 10px); border-radius: 99px;
@@ -40,8 +49,10 @@
 .ct-clue {
   display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; border-radius: 14px; min-width: 0;
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 30%, var(--bg-3)), var(--bg-2)); border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); animation: buzz-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); animation: ct-clue-in 0.6s var(--ease-spring) backwards;
 }
+/* A clue turns over like a card. */
+@keyframes ct-clue-in { from { opacity: 0; transform: perspective(500px) rotateY(80deg) scale(0.8); } 30% { opacity: 1; } }
 .ct-clue small { font-size: 0.75rem; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 1px; }
 .ct-clue b { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(1.1rem, 2.6vw, 2.1rem); letter-spacing: 0.5px; overflow-wrap: anywhere; text-align: center; }
 .ct-clue-pts { font-size: 0.8rem; font-weight: 700; color: rgba(255, 255, 255, 0.45); }

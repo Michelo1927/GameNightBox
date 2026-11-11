@@ -7,6 +7,7 @@ import { youtubeId } from '../../hub/media';
 import { go } from '../../hub/nav';
 import { sounds } from '../../hub/sounds';
 import type { Team } from '../../hub/teams';
+import AnimatedNumber from '../../hub/components/AnimatedNumber';
 import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import { usePlayer } from './player';
@@ -131,7 +132,7 @@ export default function Play({ loaded }: { loaded: Loaded<Playlist> }) {
           ))}
         </div>
         <div className="mu-name">{t.name}</div>
-        <div className="mu-score">{scoreOf(game, t)}</div>
+        <div className="mu-score"><AnimatedNumber value={scoreOf(game, t)} /></div>
       </button>
     );
   };
@@ -146,7 +147,7 @@ export default function Play({ loaded }: { loaded: Loaded<Playlist> }) {
         onRanking={() => setRanking(game.over ? 'celebrate' : 'normal')}
         onSetup={() => go(`/musichiere/${slug}/setup`)}
       >
-        <span className="pill">
+        <span className="pill" key={game.index}>
           Canzone {Math.min(game.index + 1, data.songs.length)} di {data.songs.length}
         </span>
       </PlayHeader>

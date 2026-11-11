@@ -5,6 +5,7 @@ import './styles.css';
 import './games/jeopardy/creator/creator.css';
 import './hub/hub.css';
 import './hub/stage.css';
+import './hub/motion.css';
 import './hub/intro.css';
 
 createRoot(document.getElementById('root')!).render(

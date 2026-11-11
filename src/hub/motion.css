@@ -1,0 +1,65 @@
+/* Movimento condiviso da tutte le pagine: ingressi di pagina, finestre, menu.
+   Le curve (--ease-out, --ease-in, --ease-back, --ease-spring) e gli ingressi di base
+   (fade-in, rise-in, pop-in, drop-in, lift-in) stanno in cima a styles.css.
+   Le animazioni di un gioco stanno nel css di quel gioco; quella d'avvio in intro.css.
+
+   Regola per gli ingressi: riempimento solo "backwards" (mai "both" o "forwards"), così finita
+   l'animazione l'elemento torna al suo stile normale e hover, selezione e transizioni funzionano. */
+
+@keyframes card-in { from { opacity: 0; transform: translateY(28px) scale(0.93); } }
+@keyframes sign-in { from { opacity: 0; transform: scale(0.84) rotate(-2deg); } }
+
+/* Posto nella fila (--n), per far entrare gli elementi di un elenco uno dopo l'altro. */
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(2) { --n: 1; }
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(3) { --n: 2; }
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(4) { --n: 3; }
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(5) { --n: 4; }
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(6) { --n: 5; }
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(7) { --n: 6; }
+:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(n + 8) { --n: 7; }
+
+/* ---------- Ingressi di pagina ----------
+   Solo dentro .enter-on (App.tsx): la pagina uscita dalla scatola dell'intro non li rifà. */
+.enter-on .page { animation: rise-in 0.4s var(--ease-out) backwards; }
+/* Solo opacità sulle schermate di gioco: una trasformazione sposterebbe le finestre a tutto schermo che contengono. */
+.enter-on .board-page { animation: fade-in 0.35s ease-out backwards; }
+.enter-on .marquee { animation: sign-in 0.7s var(--ease-spring) backwards; }
+.enter-on :is(.game-card, .quiz-card) {
+  animation: card-in 0.6s var(--ease-spring) backwards;
+  animation-delay: calc(70ms + var(--n, 0) * 55ms);
+}
+.team-row { animation: rise-in 0.3s var(--ease-out) backwards; }
+
+/* ---------- Finestre sopra la pagina ---------- */
+.overlay:not(.question-overlay, .wheel-overlay) { animation: fade-in 0.2s ease-out; }
+.ask-backdrop { animation: fade-in 0.18s ease-out; }
+.ask { animation: pop-in 0.4s var(--ease-spring) backwards; }
+.zoom { animation: fade-in 0.2s ease-out; }
+.zoom img { animation: pop-in 0.3s var(--ease-out) backwards; }
+
+/* Menu a tendina: si aprono dal pulsante. */
+.more-menu, .timer-menu { transform-origin: top right; animation: drop-in 0.16s var(--ease-out) backwards; }
+.q-actions .timer-menu { transform-origin: bottom right; animation-name: lift-in; }
+
+/* ---------- Classifica: il riquadro salta fuori, le righe entrano una dopo l'altra ---------- */
+.ranking { animation: pop-in 0.5s var(--ease-spring) backwards; }
+.ranking li {
+  animation: rise-in 0.45s var(--ease-out) backwards;
+  animation-delay: calc(0.16s + var(--n, 0) * 70ms);
+}
+/* A fine partita prima si legge chi ha vinto, poi scorre la classifica. */
+.ranking.celebrate li { animation-delay: calc(0.75s + var(--n, 0) * 90ms); }
+.winner-label { animation: drop-in 0.5s var(--ease-spring) 0.1s backwards; }
+
+/* ---------- Piccoli gesti ---------- */
+.swatch { transition: transform 0.15s var(--ease-out), box-shadow 0.15s; }
+.swatch:hover { transform: scale(1.15); }
+.seg button, .timer-menu button, .more-menu button { transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.back { transition: color 0.15s; }
+/* Un punteggio nei segnaposto delle squadre: conta e lampeggia come sul tabellone (AnimatedNumber). */
+.team-chip .anim-num, .mu-score .anim-num { padding: 0 4px; }
+
+/* Chi ha chiesto al sistema meno animazioni: tutto arriva subito. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

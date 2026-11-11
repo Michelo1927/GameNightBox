@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { sounds } from '../../../hub/sounds';
 import Timer from '../../../hub/components/Timer';
 import type { Gift, Result, Team } from '../state';
@@ -51,13 +51,26 @@ export default function QuestionModal({ category, question, teams, results, onRe
       return !r;
     });
 
+  // Closing: the question shrinks back into its cell (styles.css, .closing), then the board takes over.
+  const [closing, setClosing] = useState(false);
+  const closed = useRef(false);
+  const latestClose = useRef(onClose);
+  latestClose.current = onClose;
+  const close = () => {
+    if (closed.current) return;
+    closed.current = true;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return onClose();
+    setClosing(true);
+    setTimeout(() => latestClose.current(), 230);
+  };
+
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         if ((e.target as HTMLElement).closest('input, textarea, select')) return;
         e.preventDefault();
         reveal();
-      } else if (e.key === 'Escape') onClose();
+      } else if (e.key === 'Escape') close();
     };
     addEventListener('keydown', on, true);
     return () => removeEventListener('keydown', on, true);
@@ -92,7 +105,7 @@ export default function QuestionModal({ category, question, teams, results, onRe
   );
 
   return (
-    <div className="overlay question-overlay" style={style}>
+    <div className={`overlay question-overlay${closing ? ' closing' : ''}`} style={style}>
       <div className="question">
         <header className="q-header">
           <span>{category}</span>
@@ -199,7 +212,7 @@ export default function QuestionModal({ category, question, teams, results, onRe
             <button className="btn primary" onClick={reveal}>
               {revealed ? 'Nascondi risposta' : 'Mostra risposta'} <kbd>Spazio</kbd>
             </button>
-            <button className="btn ghost" onClick={onClose}>
+            <button className="btn ghost" onClick={close}>
               Tabellone <kbd>Esc</kbd>
             </button>
           </div>

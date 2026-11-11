@@ -64,6 +64,8 @@ body {
 .play-info .pill {
   background: color-mix(in srgb, var(--accent) 16%, rgba(0, 0, 0, 0.4));
   border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  /* Pops in again when it changes (the games give it a key: the team, the round). */
+  animation: badge-in 0.5s var(--ease-spring) backwards;
 }
 
 /* ---------- Buttons: lit panels ---------- */
@@ -115,9 +117,9 @@ kbd { border-radius: 5px; }
   position: relative; padding: 14px 34px; border-radius: 18px;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7), 0 0 40px currentColor, 0 14px 40px rgba(0, 0, 0, 0.5);
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
-  animation: buzz-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+  animation: buzz-in 0.55s var(--ease-spring) backwards;
 }
-@keyframes buzz-in { from { transform: scale(0.4); opacity: 0; } }
+@keyframes buzz-in { from { transform: scale(0.4); opacity: 0; } 30% { opacity: 1; } }
 
 /* Letter tiles: lit panels. */
 .tile {
@@ -146,10 +148,6 @@ kbd { border-radius: 5px; }
 }
 @keyframes lights-ok { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes lights-ko { 0% { opacity: 0; } 20% { opacity: 1; } 40% { opacity: 0.5; } 60% { opacity: 1; } 100% { opacity: 0; } }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
 
 /* ---------- Jeopardy in the studio: lit board, podium scores ---------- */
 .board { gap: 7px; padding: 7px; border-radius: 14px; background: #04031a; box-shadow: 0 0 0 2px rgba(120, 140, 255, 0.25), 0 0 50px rgba(60, 80, 255, 0.35); }
@@ -214,6 +212,15 @@ kbd { border-radius: 5px; }
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 .game-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 40%, transparent), 0 16px 40px rgba(0, 0, 0, 0.4); }
+.game-card:active { transform: translateY(-1px) scale(0.985); transition-duration: 0.08s; }
+/* Hovering: a glint of light crosses the card and the icon leans in. */
+.game-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; translate: -110% 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.13) 50%, transparent 62%);
+}
+.game-card:hover::after { translate: 110% 0; transition: translate 0.75s var(--ease-out); }
+.game-icon { transition: transform 0.5s var(--ease-spring); }
+.game-card:hover .game-icon { transform: scale(1.1) rotate(-8deg); }
 .game-icon {
   flex: none; width: clamp(64px, min(9vw, 11vh), 104px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
   font-size: clamp(2rem, min(4vw, 5vh), 3.2rem);
@@ -242,6 +249,8 @@ kbd { border-radius: 5px; }
   border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
 }
+.home .quiz-card { transition: transform 0.2s var(--ease-out), box-shadow 0.2s, border-color 0.2s; }
+.home .quiz-card:not(.broken):active { transform: translateY(-1px) scale(0.985); transition-duration: 0.08s; }
 .home .quiz-card:not(.broken):hover { border-color: var(--accent); box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 35%, transparent), 0 14px 34px rgba(0, 0, 0, 0.35); }
 .home .quiz-card.broken { background: #3b0d22; border-color: rgba(255, 77, 94, 0.4); }
 .home .quiz-card h2 { font-family: var(--font-display); }

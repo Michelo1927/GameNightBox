@@ -28,7 +28,14 @@ export default function App() {
   const [opened, setOpened] = useState(false);
   const openIntro = useCallback(() => setOpened(true), []);
   const endIntro = useCallback(() => setIntro(false), []);
-  const shell = intro ? `app-shell app-intro${opened ? '' : ' app-waiting'}` : 'app-shell';
+  // La pagina uscita dalla scatola è già entrata in scena: le animazioni d'ingresso (hub/motion.css)
+  // valgono dalla pagina successiva in poi.
+  const [introHash, setIntroHash] = useState<string | null>(() => (intro ? location.hash : null));
+  useEffect(() => {
+    if (introHash !== null && hash !== introHash) setIntroHash(null);
+  }, [hash, introHash]);
+  const enter = introHash === null || hash !== introHash ? ' enter-on' : '';
+  const shell = `app-shell${enter}${intro ? ` app-intro${opened ? '' : ' app-waiting'}` : ''}`;
   return (
     <>
       <div className={shell}>

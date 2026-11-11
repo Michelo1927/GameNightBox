@@ -3,6 +3,7 @@ import type { Loaded } from '../../hub/content';
 import { useKeys } from '../../hub/keys';
 import { go } from '../../hub/nav';
 import { sounds } from '../../hub/sounds';
+import AnimatedNumber from '../../hub/components/AnimatedNumber';
 import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import { LETTERS, type Passaparola } from './schema';
@@ -162,7 +163,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
         onSetup={() => go(`/passaparola/${slug}/setup`)}
       >
         {team && !game.over && (
-          <span className="pill" style={{ color: team.color }}>
+          <span className="pill" key={team.id} style={{ color: team.color }}>
             {team.name} ({game.current + 1} di {game.teams.length})
           </span>
         )}
@@ -171,7 +172,8 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
       <div className="game-stage">
         {run && ruota && team ? (
           <div className="pp-arena" style={{ ['--team' as string]: team.color } as CSSProperties}>
-          <div className="pp-wheel">
+          {/* Keys here and below replay the entrance animations: the wheel per team, the definition per letter. */}
+          <div className="pp-wheel" key={team.id}>
             {LETTERS.map((l, i) => {
               const a = (i / LETTERS.length) * 2 * Math.PI - Math.PI / 2;
               const m = run.marks[l];
@@ -202,10 +204,10 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
               )}
               {item && (phase === 'play' || phase === 'revealed' || phase === 'wrong') && (
                 <>
-                  <div className="pp-kind">
+                  <div className="pp-kind" key={`kind-${run.pos}`}>
                     {item.type === 'inizia' ? 'Inizia con la' : 'Contiene la'} <b>{item.letter}</b>
                   </div>
-                  <p className="pp-question">{item.question}</p>
+                  <p className="pp-question" key={run.pos}>{item.question}</p>
                   {(phase === 'revealed' || phase === 'wrong') && (
                     <div className={`pp-answer ${phase === 'wrong' ? 'ko' : ''}`}>
                       {item.answer}
@@ -237,7 +239,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
           <div className="pp-dial">
             <div className="pp-dial-team">{team.name}</div>
             <div className="pp-count">
-              <b>{rights(run)}</b>
+              <b key={rights(run)}>{rights(run)}</b>
               <small>giuste</small>
             </div>
             <div className={`pp-time ${running && left <= 10000 ? 'hurry' : ''}`}>
@@ -284,7 +286,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
             return (
               <div key={t.id} className={`team-chip ${i === game.current && !game.over ? 'on' : ''} ${i > game.current && !game.over ? 'off' : ''}`} style={{ borderLeftColor: t.color }}>
                 {t.name}
-                <span className="score">{rights(r) + t.adjust}</span>
+                <span className="score"><AnimatedNumber value={rights(r) + t.adjust} /></span>
                 <span className="muted">{done ? `${wrongs(r)} ✗` : fmt(i === game.current ? left : (r?.timeLeft ?? game.seconds * 1000))}</span>
               </div>
             );

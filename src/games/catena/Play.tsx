@@ -5,6 +5,7 @@ import { useKeys } from '../../hub/keys';
 import { go } from '../../hub/nav';
 import { sounds } from '../../hub/sounds';
 import { sameAnswer } from '../../hub/text';
+import AnimatedNumber from '../../hub/components/AnimatedNumber';
 import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import { CHAIN_LENGTH, CLUES, type CatenaSet } from './schema';
@@ -17,7 +18,7 @@ function Tiles({ word, shown, solved }: { word: string; shown: number; solved?: 
   return (
     <div className={`tiles ${solved ? 'solved' : ''}`}>
       {chars.map((c, i) => (
-        <span key={i} className={`tile ${i < shown ? '' : 'hidden'}`}>{i < shown ? c : '·'}</span>
+        <span key={i} className={`tile ${i < shown ? '' : 'hidden'}`} style={{ ['--i' as string]: i }}>{i < shown ? c : '·'}</span>
       ))}
     </div>
   );
@@ -156,15 +157,16 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
         onRanking={() => setRanking(game.stage === 'over' ? 'celebrate' : 'normal')}
         onSetup={() => go(`/catena/${slug}/setup`)}
       >
-        <span className="pill">{phaseLabel}</span>
+        {/* The keys make a pill pop in again when the round or the turn changes. */}
+        <span className="pill" key={phaseLabel}>{phaseLabel}</span>
         {chain && !chainDone && team && (
-          <span className="pill" style={{ color: team.color }}>Tocca a {team.name}</span>
+          <span className="pill" key={team.id} style={{ color: team.color }}>Tocca a {team.name}</span>
         )}
       </PlayHeader>
 
       <div className="game-stage">
         {chain && (
-          <div className="ct-chain">
+          <div className="ct-chain" key={game.index}>
             {chain.words.map((w, i) => {
               const solved = game.solved[i];
               const can = options.includes(i) && !chainDone;
@@ -277,7 +279,7 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
           <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale</button>
         )}
 
-        <div className="ct-flash">{flash && <span className={flash.ok ? 'flash-ok' : 'flash-ko'}>{flash.text}</span>}</div>
+        <div className="ct-flash">{flash && <span key={flash.text} className={flash.ok ? 'flash-ok' : 'flash-ko'}>{flash.text}</span>}</div>
 
         {((chain && !chainDone) || (final && buzzedTeam && !game.done)) && (
           <div className="host-bar">
@@ -324,7 +326,7 @@ export default function Play({ loaded }: { loaded: Loaded<CatenaSet> }) {
               >
                 {final && <span className="key-hint">{game.buzz === 'keys' ? buzzKeyOf(game.teams, t.id) : i + 1}</span>}
                 {t.name}
-                <span className="score">{scoreOf(game, t)}</span>
+                <span className="score"><AnimatedNumber value={scoreOf(game, t)} /></span>
               </button>
             );
           })}
