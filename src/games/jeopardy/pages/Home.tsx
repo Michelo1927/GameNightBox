@@ -6,6 +6,7 @@ import { archivedSlugs, setArchived } from '../quiz/archive';
 import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
 import { ask } from '../../../hub/ask';
+import BackButton from '../../../hub/components/BackButton';
 
 export default function Home() {
   const [imported, setImported] = useState(importedQuizzes);
@@ -35,7 +36,7 @@ export default function Home() {
 
   return (
     <div className="page home theme-jeopardy">
-      <a className="back" href="#/">← Tutti i giochi</a>
+      <BackButton href="#/" label="Tutti i giochi" />
       <header className="home-header">
         <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>
         <p className="muted">Scegli un quiz per iniziare</p>

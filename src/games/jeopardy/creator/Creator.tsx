@@ -8,6 +8,7 @@ import { go } from '../../../hub/nav';
 import { blankQuiz, clearDraft, copyText, lastSavedSlug, loadDraft, markDraftDone, saveDraft, savedSlugOf } from './draft';
 import MediaPicker from './MediaPicker';
 import { ask } from '../../../hub/ask';
+import { BackPill } from '../../../hub/components/BackButton';
 
 const DIFFICULTY: Record<number, string> = { 100: 'facilissima', 200: 'facile', 300: 'media', 400: 'difficile', 500: 'da esperti' };
 
@@ -86,7 +87,7 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   return (
     <>
       <header className="cr-header">
-        <a className="back" href="#/jeopardy">←</a>
+        <BackPill href="#/jeopardy" label="Esci" />
         <h1>Crea un quiz</h1>
       </header>
 
@@ -174,7 +175,7 @@ function QuestionStep({ quiz, setQuiz, c, q }: { quiz: Quiz; setQuiz: SetQuiz; c
   return (
     <>
       <header className="cr-header">
-        <a className="back" href="#/crea">←</a>
+        <BackPill href="#/crea" label="Indietro" />
         <h1>
           {cat.name || `Categoria ${c + 1}`} <span className="gold">{question.points}</span>
         </h1>
@@ -265,7 +266,7 @@ function FinalStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
   return (
     <>
       <header className="cr-header">
-        <a className="back" href="#/crea">←</a>
+        <BackPill href="#/crea" label="Indietro" />
         <h1>🏆 Domanda finale</h1>
       </header>
       <p className="cr-tip small">
@@ -333,7 +334,7 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
     return (
       <>
         <header className="cr-header">
-          <a className="back" href="#/crea">←</a>
+          <BackPill href="#/crea" label="Indietro" />
           <h1>Quasi pronto</h1>
         </header>
         <p className="cr-tip">Completa prima queste parti:</p>
@@ -389,7 +390,7 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
   return (
     <>
       <header className="cr-header">
-        <a className="back" href="#/crea">←</a>
+        <BackPill href="#/crea" label="Indietro" />
         <h1>Quiz pronto! 🎉</h1>
       </header>
       <p className="cr-tip">

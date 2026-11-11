@@ -5,6 +5,7 @@ import { gameKey } from '../content';
 import { startDraft } from '../draft';
 import { go } from '../nav';
 import { ask } from '../ask';
+import BackButton from './BackButton';
 
 interface Props<T> {
   game: string;
@@ -81,7 +82,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
 
   return (
     <div className={`page home theme-${game}`}>
-      <a className="back" href="#/">← Tutti i giochi</a>
+      <BackButton href="#/" label="Tutti i giochi" />
       <header className="home-header">
         <h1 className="logo">
           {icon} {name.toUpperCase()}

@@ -3,6 +3,7 @@ import type { Library, Validation } from '../content';
 import { startDraft } from '../draft';
 import { go } from '../nav';
 import { decode } from '../share';
+import { BackPill } from './BackButton';
 
 interface Props<T> {
   game: string;
@@ -77,7 +78,7 @@ export default function ImportCode<T extends { title: string; author?: string }>
   return (
     <div className="import-page">
       <header className="cr-header">
-        <a className="back" href={`#/${game}`}>←</a>
+        <BackPill href={`#/${game}`} label="Esci" />
         <h1>Carica {what}</h1>
       </header>
       <p className="cr-tip">Incolla il codice (inizia con <b>{prefix}</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>

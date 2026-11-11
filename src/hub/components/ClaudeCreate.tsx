@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { Validation } from '../content';
 import { copyText } from '../text';
+import { BackPill } from './BackButton';
 
 export interface Field {
   key: string;
@@ -74,7 +75,7 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
   return (
     <div className="creator claude-page">
       <header className="cr-header">
-        <a className="back" href={back}>←</a>
+        <BackPill href={back} label="Esci" />
         <h1>🤖 {title}</h1>
       </header>
       <p className="cr-tip">{intro}</p>

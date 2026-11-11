@@ -24,6 +24,7 @@ import type { LoadedQuiz } from '../quiz/load';
 import type { Quiz } from '../quiz/schema';
 import { TIMER_CHOICES } from '../../../hub/components/Timer';
 import { ask } from '../../../hub/ask';
+import BackButton from '../../../hub/components/BackButton';
 
 export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
   const { slug, quiz } = loaded;
@@ -52,7 +53,7 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
 
   return (
     <div className="page setup theme-jeopardy">
-      <a className="back" href="#/jeopardy">← Tutti i quiz</a>
+      <BackButton href="#/jeopardy" label="Tutti i quiz" />
       <h1 className="title">{quiz.title}</h1>
       {quiz.description && <p className="muted">{quiz.description}</p>}
 

@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { toggleFullscreen } from '../keys';
 import SoundButtons from './SoundButtons';
+import { BackPill } from './BackButton';
 
 interface Props {
   back: string;
@@ -31,7 +32,7 @@ export default function PlayHeader({ back, title, children, undo, canUndo, onRan
 
   return (
     <header className="board-header play-header">
-      <a className="back" href={back}>←</a>
+      <BackPill href={back} label="Esci" />
       <h1 className="title">{title}</h1>
       <div className="play-info">{children}</div>
       <div className="header-actions">

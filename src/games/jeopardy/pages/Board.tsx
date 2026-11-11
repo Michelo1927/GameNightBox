@@ -25,6 +25,7 @@ import Ranking from '../../../hub/components/Ranking';
 import AnimatedNumber from '../../../hub/components/AnimatedNumber';
 import Timer from '../../../hub/components/Timer';
 import { ask } from '../../../hub/ask';
+import { BackPill } from '../../../hub/components/BackButton';
 
 const SCORE_STEP = 50;
 const NEW_FINAL: FinalState = { stage: 'bets', bets: {}, results: {} };
@@ -157,7 +158,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   return (
     <div className="board-page">
       <header className="board-header">
-        <a className="back" href="#/jeopardy">←</a>
+        <BackPill href="#/jeopardy" label="Esci" />
         <h1 className="title">{quiz.title}</h1>
         <span className="muted progress">
           {turn.played}/{turn.total}

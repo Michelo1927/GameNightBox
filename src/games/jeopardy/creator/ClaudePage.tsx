@@ -4,6 +4,7 @@ import { saveImported } from '../quiz/imported';
 import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
 import { copyText, replaceDraft } from './draft';
+import { BackPill } from '../../../hub/components/BackButton';
 
 // #/claude: builds a ready prompt for claude.ai; the JSON it answers with is pasted back here and played.
 
@@ -96,7 +97,7 @@ export default function ClaudePage() {
   return (
     <div className="creator claude-page">
       <header className="cr-header">
-        <a className="back" href="#/jeopardy">←</a>
+        <BackPill href="#/jeopardy" label="Esci" />
         <h1>🤖 Crea con Claude</h1>
       </header>
       <p className="cr-tip">

@@ -4,6 +4,7 @@ import { fingerprint, loadDraft, saveDraft } from '../draft';
 import { go } from '../nav';
 import { encode, MESSAGE_LIMIT } from '../share';
 import { copyText } from '../text';
+import { BackPill } from './BackButton';
 
 interface Props<T> {
   game: string;
@@ -39,7 +40,7 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
 
   const back = (
     <header className="cr-header">
-      <a className="back" href={`#/${game}/crea`}>←</a>
+      <BackPill href={`#/${game}/crea`} label="Indietro" />
       <h1>{errors.length ? 'Quasi pronto' : 'Pronto! 🎉'}</h1>
     </header>
   );

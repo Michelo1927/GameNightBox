@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Validation } from '../content';
 import { ask } from '../ask';
+import { BackPill } from './BackButton';
 
 interface Props {
   game: string;
@@ -20,7 +21,7 @@ export default function CreatorPage({ game, title, tip, validation, progress, fu
   return (
     <div className={`creator theme-${game}`}>
       <header className="cr-header">
-        <a className="back" href={`#/${game}`}>←</a>
+        <BackPill href={`#/${game}`} label="Esci" />
         <h1>{title}</h1>
       </header>
       <p className="cr-tip">{tip}</p>

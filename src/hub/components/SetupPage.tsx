@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import type { Team } from '../teams';
 import OrderWheel from './OrderWheel';
 import TeamList from './TeamList';
+import BackButton from './BackButton';
 import { ask } from '../ask';
 
 interface Props {
@@ -29,7 +30,7 @@ export default function SetupPage({ back, backLabel, title, description, teams, 
 
   return (
     <div className={`page setup theme-${back.replace(/^#\//, '').split('/')[0]}`}>
-      <a className="back" href={back}>{backLabel}</a>
+      <BackButton href={back} label={backLabel.replace(/^←\s*/, '')} />
       <h1 className="title">{title}</h1>
       {description && <p className="muted">{description}</p>}
 
