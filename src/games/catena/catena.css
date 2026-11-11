@@ -1,4 +1,6 @@
 .ct-page .game-stage { gap: 8px; justify-content: flex-start; padding-top: 8px; }
+/* The stage's gap is enough: the paragraph's own margins pushed the screen 5px past 720. */
+.ct-page .ct-help { margin: 4px 0; }
 
 .ct-chain { display: flex; flex-direction: column; align-items: center; }
 /* A new chain comes down one word after the other (Play.tsx gives the chain a key per round). */
@@ -41,6 +43,10 @@
 .ct-word.on .ct-value { background: var(--accent); color: #2a1200; }
 .ct-value.big { position: static; font-size: 1.3rem; }
 .ct-link { font-size: clamp(0.8rem, 1.8vh, 1.05rem); color: var(--accent); font-weight: 600; }
+/* Beside the word, where its points were during the round: under it, the solved chain no longer fit the screen. */
+@media (min-width: 701px) {
+  .ct-link { position: absolute; left: calc(100% + 12px); bottom: 0; transform: translateY(50%); white-space: nowrap; text-align: left; }
+}
 
 /* Final word */
 .ct-final, .ct-intro { display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 2.4vh, 24px); width: min(1100px, 100%); }
