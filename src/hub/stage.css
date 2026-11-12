@@ -21,6 +21,7 @@
   --orange: #ff8a1f;
   --lime: #b4f03c;
   --violet: #b47cff;
+  --mint: #2ff0c0;
   --ok: #2ee68a;
   --ko: #ff4d5e;
 
@@ -33,6 +34,7 @@
 .mu-page, .theme-musichiere { --accent: var(--magenta); }
 .tt-page, .theme-topten { --accent: var(--lime); }
 .sb-page, .theme-sbagliato { --accent: var(--violet); }
+.if-page, .theme-infila { --accent: var(--mint); }
 
 /* ---------- The studio: backdrop, two spotlights, a glossy floor ---------- */
 html { background: var(--bg); }

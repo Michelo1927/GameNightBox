@@ -1,0 +1,124 @@
+.if-page .game-stage {
+  /* Tight on a small screen, roomier as the screen grows (720p: 8px, 1080p: 28px). */
+  --space: clamp(8px, calc((100vh - 700px) / 14 + 8px), 28px);
+  gap: var(--space); justify-content: center; padding: 8px 0 calc(var(--space) / 2);
+}
+.if-page .team-strip { margin-top: calc(var(--space) / 3); gap: 12px; }
+
+/* The question: a lit banner over the row. */
+.if-question {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; max-width: min(1200px, 100%); padding: 10px 28px; border-radius: 16px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, var(--bg-3)), var(--bg-2));
+  border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 0 34px color-mix(in srgb, var(--accent) 25%, transparent), 0 12px 30px rgba(0, 0, 0, 0.4);
+  text-align: center; animation: drop-in 0.5s var(--ease-spring) backwards;
+}
+.if-question h2 { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: 0.5px; line-height: 1.1; font-size: clamp(1.4rem, min(3.2vw, 5vh), 2.8rem); }
+.if-question small { color: var(--muted); font-size: clamp(0.75rem, 1.6vh, 0.95rem); }
+
+/* The row: places 1st..nth from left to right, the shuffled cards under it. */
+.if-line { width: min(calc(var(--n) * 190px), 100%); display: flex; flex-direction: column; gap: clamp(8px, 1.6vh, 16px); }
+.if-ends {
+  display: flex; justify-content: space-between; gap: 16px; margin-bottom: -4px;
+  font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: clamp(0.8rem, 1.8vh, 1.15rem);
+  color: color-mix(in srgb, var(--accent) 80%, white);
+}
+.if-row { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: clamp(6px, 1vw, 14px); }
+
+.if-card, .if-slot {
+  position: relative; min-width: 0; height: clamp(86px, 15vh, 150px); border-radius: 14px; padding: 22px 8px 8px; font: inherit; color: inherit;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center;
+}
+.if-card b {
+  font-weight: 800; line-height: 1.15; font-size: clamp(0.9rem, min(1.6vw, 2.5vh), 1.45rem);
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: break-word; hyphens: auto;
+}
+.if-num {
+  position: absolute; top: 5px; left: 0; right: 0; text-align: center;
+  font-family: var(--font-display); font-size: clamp(0.85rem, 2vh, 1.2rem); letter-spacing: 1px; opacity: 0.7;
+}
+
+/* An empty place: a dashed lit outline. */
+.if-slot.empty {
+  border: 2px dashed color-mix(in srgb, var(--accent) 45%, transparent); background: rgba(0, 0, 0, 0.25);
+}
+.if-slot.empty .if-num { top: 50%; translate: 0 -50%; font-size: clamp(1.4rem, 4vh, 2.4rem); opacity: 0.45; color: var(--accent); }
+
+/* A card: a white lit panel (in the row) or a darker one (still to place). */
+.if-card {
+  border: 0; cursor: pointer;
+  background: linear-gradient(180deg, #ffffff, #e2fbf3); color: #0f2f46;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35), 0 0 22px color-mix(in srgb, var(--accent) 30%, transparent);
+  animation: pop-in 0.3s var(--ease-spring) backwards;
+}
+.if-card:disabled { opacity: 1; cursor: default; }
+.if-card:not(:disabled):hover { filter: brightness(1.06); transform: translateY(-2px); }
+.if-pool .if-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 28%, #1d1460), #140c46); color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent), 0 6px 18px rgba(0, 0, 0, 0.4);
+  padding-top: 8px; animation-delay: calc(var(--i, 0) * 40ms);
+}
+.if-ghost { height: clamp(86px, 15vh, 150px); border-radius: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* Revealed: the right order, green where the team had it right, red where not. */
+/* The cards to place are gone by now: the revealed ones grow to fit text, value and where the team had them. */
+.if-slot.shown { height: auto; min-height: clamp(86px, 15vh, 150px); padding-bottom: 10px; }
+.if-slot.shown { cursor: default; animation: if-flip 0.6s var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 180ms); perspective: 600px; }
+.if-slot.shown.ok { background: linear-gradient(180deg, #ffffff, #c9ffe2); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35), 0 0 0 3px var(--ok), 0 0 26px rgba(46, 230, 138, 0.5); }
+.if-slot.shown.ko { background: linear-gradient(180deg, #ffffff, #ffd9dd); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35), 0 0 0 3px var(--ko), 0 0 22px rgba(255, 77, 94, 0.4); }
+.if-value {
+  font-family: var(--font-display); font-size: clamp(1.1rem, 3.4vh, 2rem); line-height: 1; color: #0b5c3a; letter-spacing: 0.5px;
+}
+.if-slot.ko .if-value { color: #8f1424; }
+.if-slot small { font-weight: 800; font-size: clamp(0.7rem, 1.5vh, 0.9rem); color: #8f1424; }
+@keyframes if-flip { from { transform: rotateY(-90deg); filter: brightness(2); opacity: 0; } 60% { transform: rotateY(10deg); opacity: 1; } }
+
+.if-guide {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; max-width: min(900px, 100%); text-align: center;
+  padding: clamp(8px, 1.4vh, 16px) clamp(16px, 2vw, 32px); border-radius: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line);
+}
+.if-guide b { font-size: clamp(1.15rem, 2.6vh, 1.8rem); }
+.if-guide span { font-size: clamp(0.95rem, 1.9vh, 1.3rem); }
+.if-count {
+  display: inline-block; padding: 0 10px; border-radius: 10px; font-size: 1.15em !important; color: #0f2f46;
+  background: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--accent) 50%, white)); animation: pop-in 0.45s var(--ease-spring) backwards;
+}
+/* The message after a check: its line is always there, so nothing jumps when it appears. */
+.if-flash { min-height: 1.5em; margin: calc(var(--space) / -2) 0; font-weight: 800; font-size: clamp(1rem, 2vh, 1.35rem); }
+.if-flash span { display: inline-block; animation: pop-in 0.45s var(--ease-spring) backwards; }
+
+/* Big TV: bigger cards. */
+@media (min-height: 900px) and (min-width: 1400px) {
+  .if-line { width: min(calc(var(--n) * 240px), 100%); }
+  .if-page .host-bar .btn { font-size: 1.2rem; padding: 14px 24px; }
+}
+
+/* Phone: the row wraps, four places per line. */
+@media (max-width: 700px) {
+  .if-row { grid-template-columns: repeat(min(var(--n), 4), minmax(0, 1fr)); }
+  .if-card, .if-slot, .if-ghost { height: auto; min-height: 76px; }
+  .if-card { padding: 26px 4px 8px; }
+  .if-pool .if-card { padding-top: 8px; }
+  .if-card b { font-size: 0.8rem; -webkit-line-clamp: 6; overflow-wrap: break-word; hyphens: auto; }
+  .if-question { padding: 8px 14px; }
+  .if-ends { font-size: 0.75rem; }
+}
+
+/* Creator */
+.if-ed-card { display: grid; grid-template-columns: 28px 1fr; gap: 4px 8px; align-items: center; padding: 8px 0; border-top: 1px dashed var(--line); }
+.if-ed-card > span {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: #062a22; font-weight: 800; font-size: 0.85rem;
+}
+/* Card text, value and tools on one line; on a phone the value goes under the text. */
+.if-ed-line { display: grid; grid-template-columns: minmax(0, 1fr) 9em auto; grid-template-areas: 'text value tools'; gap: 6px; min-width: 0; }
+.if-ed-line input { min-width: 0; grid-area: text; }
+.if-ed-line input.if-ed-value { grid-area: value; }
+.if-ed-line .if-ed-tools { grid-area: tools; }
+@media (max-width: 560px) {
+  .if-ed-line { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'text tools' 'value value'; }
+}
+.if-ed-tools { display: flex; gap: 4px; }
+.if-ed-tools .btn { padding: 6px 10px; }
+.if-ed-end { font-size: 0.85rem; font-weight: 700; color: var(--muted); padding: 4px 0 0 36px; }
+.if-preview ol { margin: 6px 0 12px; padding-left: 22px; }

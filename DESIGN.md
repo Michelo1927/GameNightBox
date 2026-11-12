@@ -28,7 +28,7 @@ e creazione dei quiz tramite Claude.
 ## Architettura
 
 Il sito è un **hub di giochi**: la home (`#/`) elenca i giochi, ognuno ha le sue pagine.
-Giochi: Jeopardy, Passaparola, Catena, Musichiere, Top Ten, Sbagliato! (vedi "Gli altri giochi" più sotto).
+Giochi: Jeopardy, Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila! (vedi "Gli altri giochi" più sotto).
 
 ```
 GameNightBox/
@@ -42,7 +42,8 @@ GameNightBox/
 │  ├─ catena/esempio.json
 │  ├─ musichiere/esempio.json
 │  ├─ topten/esempio.json
-│  └─ sbagliato/esempio.json
+│  ├─ sbagliato/esempio.json
+│  └─ infila/esempio.json
 ├─ src/
 │  ├─ App.tsx                  smista gli indirizzi: home dell'hub o pagine di un gioco
 │  ├─ hub/                     ← motore comune a tutti i giochi
@@ -52,7 +53,7 @@ GameNightBox/
 │  │  ├─ useSaved.ts           stato salvato nel browser + Annulla
 │  │  ├─ content.ts            contenuti del sito + quelli creati sul dispositivo
 │  │  ├─ creation.tsx          indirizzi per creare e condividere: crea, crea/codice, carica
-│  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1. TT1. SB1.)
+│  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1. TT1. SB1. IF1.)
 │  │  ├─ buzzer.ts             prenotazione: un tasto per squadra, o decide l'host
 │  │  ├─ keys.ts  text.ts  youtube.ts  sounds.ts  media.ts  nav.ts
 │  │  └─ components/           Timer, OrderWheel, Ranking, Media, TeamList, SetupPage,
@@ -67,7 +68,7 @@ GameNightBox/
 │        ├─ quiz/schema.ts     tipi + validazione del formato
 │        ├─ creator/           "Crea un quiz" dal telefono, Claude, caricamento da codice
 │        └─ editor/            editor visuale (attivo solo in locale)
-│     ├─ passaparola/  catena/  musichiere/  topten/  sbagliato/
+│     ├─ passaparola/  catena/  musichiere/  topten/  sbagliato/  infila/
 │     │  ├─ index.tsx          scheda, indirizzi, pagina elenco, setup, "Crea con Claude"
 │     │  ├─ schema.ts          formato + validazione (usata anche da scripts/validate.ts)
 │     │  ├─ prompt.ts          prompt per Claude
@@ -76,7 +77,7 @@ GameNightBox/
 │     │  └─ Play.tsx           schermata di gioco
 ├─ scripts/validate.ts         controlla quiz e contenuti (usato da Claude e in CI)
 ├─ vite-plugin-editor.ts       API locali per salvare file dall'editor (solo dev)
-├─ .claude/skills/             crea-quiz, crea-passaparola, crea-catena, crea-musichiere, crea-topten, crea-sbagliato
+├─ .claude/skills/             crea-quiz, crea-passaparola, crea-catena, crea-musichiere, crea-topten, crea-sbagliato, crea-infila
 └─ .github/workflows/deploy.yml
 ```
 
@@ -165,6 +166,24 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - Le liste si pescano da un mazzo mescolato comune quando la squadra parte, così le squadre hanno domande diverse
   finché ce ne sono abbastanza (poi si rimescola; mai doppioni nella stessa lista se le domande bastano).
 - Punti: 10 per ogni passo della serie migliore, +1 per ogni secondo avanzato a chi arriva in fondo.
+
+**In fila!** (`#/infila`)
+- Ogni sequenza è una domanda con 4-8 carte, da mettere in fila tra due capi scritti nel contenuto
+  (`first` / `last`, es. "Il più vecchio" / "Il più recente"). Nel contenuto le carte sono già nell'ordine giusto,
+  ognuna con il suo valore (`value`, es. "1989"), che si vede solo alla fine. Criteri misurabili e valori veri, con la fonte.
+- Se i valori sono numeri con la stessa unità ("1.281 m", "2,75 milioni", "44 a.C."), la validazione avvisa
+  quando non vanno tutti in su o tutti in giù, o quando due sono uguali: è l'errore tipico di Claude.
+- Le squadre giocano una sequenza a testa, a turno; si giocano tante sequenze quante ne servono per darne lo stesso
+  numero a ogni squadra (le altre restano fuori). Tempo facoltativo (30/60/90 s), avviato dall'host con T.
+- La squadra dice l'ordine completo; l'host tocca le carte nell'ordine detto (vanno al primo posto libero della fila,
+  toccando una carta nella fila la si toglie). Disposizione in riga, da sinistra a destra.
+- Punti: 10 per carta al posto giusto, +20 se è tutto giusto.
+- Rubata: se l'ordine non è tutto giusto, lo schermo dice quante carte sono al posto giusto (non quali). Le altre
+  squadre si prenotano (tasti o host) e cambiano l'ordine come vogliono, partendo da quello sullo schermo: tutto giusto =
+  tutti i punti (10 a carta + 20); altrimenti si vede il nuovo conteggio e può provare un'altra squadra. Se nessuno ci
+  riesce, la squadra di turno prende i punti delle sue carte giuste.
+- Alla fine si vede l'ordine giusto con i valori: verde le carte che la squadra aveva al posto giusto, rosso le altre
+  (con il posto in cui le aveva messe).
 
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.

@@ -1,0 +1,111 @@
+{
+  "title": "Esempio: un po' di tutto",
+  "description": "Otto sequenze per provare il gioco: storia, montagne, città, fiumi, film, pianeti, personaggi e paesi",
+  "sequenze": [
+    {
+      "question": "Quando sono successe queste cose?",
+      "first": "Il più vecchio",
+      "last": "Il più recente",
+      "source": "Wikipedia",
+      "cards": [
+        { "text": "Cade il Muro di Berlino", "value": "1989" },
+        { "text": "Nasce Google", "value": "1998" },
+        { "text": "L'euro arriva nelle tasche", "value": "2002" },
+        { "text": "Nasce Facebook", "value": "2004" },
+        { "text": "Esce il primo iPhone", "value": "2007" }
+      ]
+    },
+    {
+      "question": "Quanto sono alte queste montagne?",
+      "first": "La più bassa",
+      "last": "La più alta",
+      "source": "Wikipedia",
+      "cards": [
+        { "text": "Vesuvio", "value": "1.281 m" },
+        { "text": "Cervino", "value": "4.478 m" },
+        { "text": "Monte Bianco", "value": "4.806 m" },
+        { "text": "Kilimangiaro", "value": "5.895 m" },
+        { "text": "Everest", "value": "8.849 m" }
+      ]
+    },
+    {
+      "question": "Quanti abitanti hanno queste città?",
+      "first": "La meno popolosa",
+      "last": "La più popolosa",
+      "source": "ISTAT, residenti al 1° gennaio 2024 (arrotondati)",
+      "cards": [
+        { "text": "Firenze", "value": "360 mila" },
+        { "text": "Palermo", "value": "630 mila" },
+        { "text": "Napoli", "value": "910 mila" },
+        { "text": "Milano", "value": "1,37 milioni" },
+        { "text": "Roma", "value": "2,75 milioni" }
+      ]
+    },
+    {
+      "question": "Quanto sono lunghi questi fiumi?",
+      "first": "Il più corto",
+      "last": "Il più lungo",
+      "source": "Wikipedia",
+      "cards": [
+        { "text": "Tevere", "value": "405 km" },
+        { "text": "Po", "value": "652 km" },
+        { "text": "Reno", "value": "1.233 km" },
+        { "text": "Danubio", "value": "2.850 km" },
+        { "text": "Nilo", "value": "6.650 km" }
+      ]
+    },
+    {
+      "question": "Quando sono usciti questi film?",
+      "first": "Il più vecchio",
+      "last": "Il più recente",
+      "source": "Wikipedia",
+      "cards": [
+        { "text": "Via col vento", "value": "1939" },
+        { "text": "La dolce vita", "value": "1960" },
+        { "text": "Il padrino", "value": "1972" },
+        { "text": "Titanic", "value": "1997" },
+        { "text": "Avatar", "value": "2009" }
+      ]
+    },
+    {
+      "question": "Quanto sono lontani dal Sole questi pianeti?",
+      "first": "Il più vicino",
+      "last": "Il più lontano",
+      "source": "NASA, distanza media dal Sole",
+      "cards": [
+        { "text": "Mercurio", "value": "58 milioni di km" },
+        { "text": "Venere", "value": "108 milioni di km" },
+        { "text": "Terra", "value": "150 milioni di km" },
+        { "text": "Marte", "value": "228 milioni di km" },
+        { "text": "Giove", "value": "778 milioni di km" },
+        { "text": "Saturno", "value": "1,43 miliardi di km" }
+      ]
+    },
+    {
+      "question": "Quando sono nati questi italiani famosi?",
+      "first": "Il più vecchio",
+      "last": "Il più giovane",
+      "source": "Wikipedia",
+      "cards": [
+        { "text": "Dante Alighieri", "value": "1265" },
+        { "text": "Leonardo da Vinci", "value": "1452" },
+        { "text": "Galileo Galilei", "value": "1564" },
+        { "text": "Giuseppe Verdi", "value": "1813" },
+        { "text": "Rita Levi-Montalcini", "value": "1909" }
+      ]
+    },
+    {
+      "question": "Quanto sono grandi questi paesi?",
+      "first": "Il più piccolo",
+      "last": "Il più grande",
+      "source": "Wikipedia, superficie totale (arrotondata)",
+      "cards": [
+        { "text": "San Marino", "value": "61 km²" },
+        { "text": "Svizzera", "value": "41 mila km²" },
+        { "text": "Italia", "value": "302 mila km²" },
+        { "text": "Germania", "value": "358 mila km²" },
+        { "text": "Spagna", "value": "506 mila km²" }
+      ]
+    }
+  ]
+}

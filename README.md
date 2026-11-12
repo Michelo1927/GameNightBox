@@ -11,13 +11,14 @@ Sito: https://michelo1927.github.io/GameNightBox/
 | 🎵 **Musichiere** | Canzoni da YouTube a raffica: vince la prima squadra che riempie la sua colonna |
 | 🔟 **Top Ten** | Classifiche vere da indovinare: chi vince la sfida gioca la lista, con troppi errori gli altri rubano i punti |
 | ❌ **Sbagliato!** | Domande facilissime a raffica: bisogna dire la risposta sbagliata, tante volte di fila, contro il tempo |
+| ↔️ **In fila!** | Carte mescolate da rimettere in ordine (date, altezze, distanze...): chi sbaglia si fa rubare i punti |
 
 Ogni gioco si può creare in tre modi:
 - **✏️ Crea**: a mano dal telefono, si salva da solo; alla fine **✨ Genera il codice** dà un codice e un link
   da mandare a chi fa da host, che lo apre o lo incolla in **📥 Carica**. Con ✏️ su un contenuto lo si modifica.
 - **🤖 Crea con Claude**: scegli il tema, copia il prompt su claude.ai, incolla la risposta e si gioca
   (o la si apre nel creatore per sistemarla).
-- Con Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`.
+- Con Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`, `/crea-infila`.
 
 Un codice ricevuto si salva nel sito con `npm run import -- <file|codice|link>` (poi commit e push). Regole complete nel riquadro "Come si gioca" di ogni gioco.
 I contenuti del sito stanno in `quizzes/` (Jeopardy) e `content/<gioco>/` (gli altri).
