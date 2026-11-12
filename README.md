@@ -17,7 +17,7 @@ Sito: https://michelo1927.github.io/GameNightBox/
 Ogni gioco si può creare in tre modi:
 - **✏️ Crea**: a mano dal telefono, si salva da solo; alla fine **✨ Genera il codice** dà un codice e un link
   da mandare a chi fa da host, che lo apre o lo incolla in **📥 Carica**. Con ✏️ su un contenuto lo si modifica.
-- **🤖 Crea con Claude**: scegli il tema, copia il prompt su claude.ai, incolla la risposta e si gioca
+- **🤖 Crea con l'IA**: scegli il tema, copia il prompt nella tua IA (ChatGPT, Claude, Gemini…), incolla la risposta e si gioca
   (o la si apre nel creatore per sistemarla).
 - Con Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`, `/crea-infila`, `/crea-asta`.
 
@@ -102,10 +102,10 @@ npm run import -- codice.txt      # oppure il codice o il link direttamente
 
 Lo script crea `quizzes/<nome>/` estraendo le foto in file; poi commit e push.
 
-## Creare un quiz con Claude (dal sito)
+## Creare un quiz con l'IA (dal sito)
 
-Sul sito tocca **🤖 Crea con Claude**: scrivi il tema (o le 5 categorie), copia il prompt e incollalo
-su [claude.ai](https://claude.ai). Poi incolla qui la risposta di Claude: puoi giocare subito, oppure
+Sul sito tocca **🤖 Crea con l'IA**: scrivi il tema (o le 5 categorie), copia il prompt e incollalo
+nella tua intelligenza artificiale (ChatGPT, Claude, Gemini…). Poi incolla qui la risposta: puoi giocare subito, oppure
 premere **✏️ Modifica e aggiungi foto** per aprirlo nel creatore e sistemare domande, categorie e media.
 Funziona anche dal telefono e non serve installare niente (le domande sono solo testo).
 

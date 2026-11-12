@@ -33,7 +33,7 @@ export const HUB_TUTORIAL: Tutorial = {
           <p>In ogni gioco trovi partite già pronte. Puoi anche prepararne di tue:</p>
           <ul>
             <li><b>✏️ Crea</b>: le scrivi tu, anche dal telefono.</li>
-            <li><b>🤖 Crea con Claude</b>: le fai scrivere all'intelligenza artificiale, con un copia e incolla.</li>
+            <li><b>🤖 Crea con l'IA</b>: le fai scrivere all'intelligenza artificiale (ChatGPT, Claude, Gemini…), con un copia e incolla.</li>
             <li><b>📥 Carica</b>: apri quella che ti ha mandato un amico (codice o link).</li>
           </ul>
         </>
@@ -85,11 +85,11 @@ export const GAME_TUTORIAL: Tutorial = {
       ),
     },
     {
-      title: '🤖 Crea con Claude',
+      title: "🤖 Crea con l'IA",
       target: '.home-actions > :nth-child(2)',
       text: (
         <p>
-          Dici il tema e l'app prepara la richiesta per <b>Claude</b> (claude.ai). Tu la incolli nella chat, copi la risposta e la
+          Dici il tema e l'app prepara la richiesta per l'intelligenza artificiale che usi (ChatGPT, Claude, Gemini…). Tu la incolli nella chat, copi la risposta e la
           incolli qui: in un minuto la partita è pronta.
         </p>
       ),
@@ -177,11 +177,11 @@ export const CLAUDE_TUTORIAL: Tutorial = {
   id: 'claude',
   steps: [
     {
-      title: 'Crea con Claude',
+      title: "Crea con l'IA",
       text: (
         <>
           <p>
-            Claude è un'intelligenza artificiale: si usa gratis su <b>claude.ai</b> (serve solo un account).
+            Va bene l'intelligenza artificiale che usi già: <b>ChatGPT</b>, <b>Claude</b>, <b>Gemini</b>… Si usano gratis, al massimo serve un account.
           </p>
           <p>Qui l'app scrive per te la richiesta giusta: tu fai solo copia e incolla, in tre passi.</p>
         </>
@@ -193,11 +193,11 @@ export const CLAUDE_TUTORIAL: Tutorial = {
       text: <p>Scrivi il tema e scegli quanto deve essere lunga la partita. I campi “facoltativo” puoi lasciarli vuoti.</p>,
     },
     {
-      title: '2 · Chiedi a Claude',
+      title: "2 · Chiedi all'IA",
       target: '.creator .cr-cat:nth-of-type(2)',
       text: (
         <p>
-          Tocca <b>📋 Copia il prompt</b>, poi <b>Apri claude.ai</b>: incolla il testo in una nuova chat e invialo. Claude risponde con
+          Tocca <b>📋 Copia il prompt</b>, poi apri la tua IA (ci sono i link): incolla il testo in una nuova chat e invialo. L'IA risponde con
           un blocco di testo tra parentesi graffe.
         </p>
       ),
@@ -208,10 +208,10 @@ export const CLAUDE_TUTORIAL: Tutorial = {
       text: (
         <>
           <p>
-            Copia <b>tutta</b> la risposta di Claude (su claude.ai c'è il pulsante <b>Copia</b> sotto ogni risposta) e incollala qui. L'app la controlla
+            Copia <b>tutta</b> la risposta dell'IA (di solito c'è il pulsante <b>Copia</b> sotto ogni risposta) e incollala qui. L'app la controlla
             e ti mostra cosa ha letto.
           </p>
-          <p>Se c'è qualche errore ti prepara il messaggio da rimandare a Claude per farlo correggere.</p>
+          <p>Se c'è qualche errore ti prepara il messaggio da rimandare nella stessa chat per farlo correggere.</p>
         </>
       ),
     },

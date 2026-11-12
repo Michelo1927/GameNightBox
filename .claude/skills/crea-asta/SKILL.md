@@ -23,7 +23,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 ## 2. Leggere formato e regole
 
 - `src/games/asta/schema.ts`: tipi e validazione (fonte di verità del formato).
-- `src/games/asta/prompt.ts`: **le regole per scegliere i temi** (le stesse della pagina "Crea con Claude"). Seguile tutte.
+- `src/games/asta/prompt.ts`: **le regole per scegliere i temi** (le stesse della pagina "Crea con l'IA"). Seguile tutte.
 - `content/asta/*.json`: per **non ripetere** temi già usati.
 
 ## 3. Scrivere

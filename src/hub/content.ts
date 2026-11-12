@@ -1,5 +1,5 @@
 // Content of the games other than Jeopardy: content/<game>/<slug>.json in the repo,
-// plus what was made with Claude on this device (kept in localStorage).
+// plus what was made with an AI on this device (kept in localStorage).
 import { hash, slugify } from './text';
 
 export interface Validation {
@@ -11,7 +11,7 @@ export interface Loaded<T> {
   slug: string;
   data: T;
   errors: string[];
-  /** Saved on this device (made with Claude), not part of the site. */
+  /** Saved on this device (made with an AI), not part of the site. */
   local?: boolean;
 }
 

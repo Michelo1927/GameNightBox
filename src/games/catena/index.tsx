@@ -78,10 +78,10 @@ const catena: Game = {
       return (
         <ClaudeCreate<CatenaSet>
           back="#/catena"
-          title="Catena con Claude"
+          title="Catena con l'IA"
           intro={
             <>
-              Scegli quante catene vuoi, copia il prompt e incollalo su <b>claude.ai</b>. Poi incolla qui la risposta: l'app controlla
+              Scegli quante catene vuoi, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta: l'app controlla
               che ogni catena abbia {CHAIN_LENGTH} parole singole.
             </>
           }

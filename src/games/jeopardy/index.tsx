@@ -15,7 +15,7 @@ import { findQuiz } from './quiz/load';
 //   #/jeopardy/<slug>/play      board
 //   #/jeopardy/crea[/...]       quiz creator for phones (see creator/Creator.tsx)
 //   #/jeopardy/carica[/<code>]  load a quiz from a shared code or link
-//   #/jeopardy/claude           prompt for claude.ai + paste its answer
+//   #/jeopardy/claude           prompt for an AI chat + paste its answer
 // The full editor is a separate page (editor.html), available only with `npm run dev`.
 
 // Before the hub the quiz pages were at the top (#/q/<slug>/…, #/crea, #/carica/<code>, #/claude): links and codes

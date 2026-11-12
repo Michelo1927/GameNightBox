@@ -2,7 +2,7 @@ import { LETTERS } from './schema';
 
 type Form = Record<string, string | number | boolean>;
 
-/** Prompt for claude.ai (also the reference for the Claude Code skill). */
+/** Prompt for any AI chat: ChatGPT, Claude, Gemini… (also the reference for the Claude Code skill). */
 export function prompt(f: Form): string {
   const n = Number(f.teams) || 2;
   const topic = String(f.topic ?? '').trim();

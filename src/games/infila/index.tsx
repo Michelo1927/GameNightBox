@@ -113,10 +113,10 @@ const infila: Game = {
       return (
         <ClaudeCreate<InFilaSet>
           back="#/infila"
-          title="In fila! con Claude"
+          title="In fila! con l'IA"
           intro={
             <>
-              Scegli tema e numero di sequenze, copia il prompt e incollalo su <b>claude.ai</b> (meglio con la ricerca web attiva, così controlla i
+              Scegli tema e numero di sequenze, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>) (meglio con la ricerca web attiva, così controlla i
               valori). Poi incolla qui la risposta: l'app controlla che ogni sequenza abbia da {MIN_CARDS} a {MAX_CARDS} carte, ognuna con il suo
               valore, e che i valori tornino con l'ordine.
             </>

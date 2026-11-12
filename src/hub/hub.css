@@ -136,3 +136,7 @@ body:has(.overlay, .zoom, .ask-backdrop, .app-intro) .help-fab { display: none; 
 }
 /* Phone: the sign on the home page fills the width, so it starts below the "?" button. */
 @media (max-width: 560px) { body:has(.help-fab) .hub-home { padding-top: 76px; } }
+
+/* "Crea con l'IA": links to the best known AI chats. */
+.ai-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ai-links .btn { flex: 1 1 auto; text-align: center; }

@@ -142,10 +142,10 @@ const musichiere: Game = {
       return (
         <ClaudeCreate<Playlist>
           back="#/musichiere"
-          title="Playlist con Claude"
+          title="Playlist con l'IA"
           intro={
             <>
-              Scegli tema e numero di canzoni, copia il prompt e incollalo su <b>claude.ai</b>. Poi incolla qui la risposta: l'app
+              Scegli tema e numero di canzoni, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta: l'app
               controlla ogni link YouTube e ti mostra il titolo vero del video, così sistemi quelli sbagliati prima di giocare.
             </>
           }

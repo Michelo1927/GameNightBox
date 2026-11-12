@@ -26,7 +26,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 
 - `src/games/topten/schema.ts`: tipi e validazione (fonte di verità del formato).
 - `src/games/topten/prompt.ts`: **le regole per scegliere e scrivere le liste** (le stesse della pagina
-  "Crea con Claude"). Seguile tutte.
+  "Crea con l'IA"). Seguile tutte.
 - `content/topten/*.json`: per **non ripetere** liste già usate.
 
 ## 3. Cercare e verificare le liste

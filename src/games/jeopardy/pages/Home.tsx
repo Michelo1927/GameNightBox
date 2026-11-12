@@ -45,7 +45,7 @@ export default function Home() {
         <p className="muted">Scegli un quiz per iniziare</p>
         <div className="home-actions">
           <a className="btn primary" href="#/jeopardy/crea/nuovo">✏️ Crea un quiz</a>
-          <a className="btn ghost" href="#/jeopardy/claude">🤖 Crea con Claude</a>
+          <a className="btn ghost" href="#/jeopardy/claude">🤖 Crea con l'IA</a>
           <a className="btn ghost" href="#/jeopardy/carica">📥 Carica un quiz</a>
           {import.meta.env.DEV && <a className="btn ghost" href="/editor.html">🛠 Editor (locale)</a>}
         </div>

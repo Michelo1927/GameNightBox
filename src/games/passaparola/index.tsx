@@ -93,10 +93,10 @@ const passaparola: Game = {
       return (
         <ClaudeCreate<Passaparola>
           back="#/passaparola"
-          title="Passaparola con Claude"
+          title="Passaparola con l'IA"
           intro={
             <>
-              Scegli tema e numero di squadre, copia il prompt e incollalo su <b>claude.ai</b>. Poi incolla qui la risposta: l'app
+              Scegli tema e numero di squadre, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta: l'app
               controlla che ogni risposta inizi (o contenga) la lettera giusta.
             </>
           }

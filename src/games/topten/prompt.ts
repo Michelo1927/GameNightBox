@@ -2,7 +2,7 @@ import { MAX_ANSWERS, MIN_ANSWERS } from './schema';
 
 type Form = Record<string, string | number | boolean>;
 
-/** Prompt for claude.ai (also the reference for the Claude Code skill). */
+/** Prompt for any AI chat: ChatGPT, Claude, Gemini… (also the reference for the Claude Code skill). */
 export function prompt(f: Form): string {
   const lists = Number(f.lists) || 6;
   const answers = Math.min(MAX_ANSWERS, Math.max(MIN_ANSWERS, Number(f.answers) || 10));

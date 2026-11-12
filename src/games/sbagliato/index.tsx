@@ -102,10 +102,10 @@ const sbagliato: Game = {
       return (
         <ClaudeCreate<SbagliatoSet>
           back="#/sbagliato"
-          title="Sbagliato! con Claude"
+          title="Sbagliato! con l'IA"
           intro={
             <>
-              Scegli tema e numero di domande, copia il prompt e incollalo su <b>claude.ai</b>. Poi incolla qui la risposta: l'app controlla che
+              Scegli tema e numero di domande, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta: l'app controlla che
               ogni domanda abbia la risposta vera e quella da dire (ne servono almeno {MIN_QUESTIONS}).
             </>
           }

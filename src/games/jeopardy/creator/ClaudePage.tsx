@@ -5,10 +5,11 @@ import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
 import { copyText, replaceDraft } from './draft';
 import { BackPill } from '../../../hub/components/BackButton';
+import { AiLinks } from '../../../hub/components/ClaudeCreate';
 import TutorialButton from '../../../hub/components/Tutorial';
 import { CLAUDE_TUTORIAL } from '../../../hub/tutorials';
 
-// #/claude: builds a ready prompt for claude.ai; the JSON it answers with is pasted back here and played.
+// #/claude: builds a ready prompt for any AI chat; the JSON it answers with is pasted back here and played.
 
 interface Form {
   topic: string;
@@ -62,7 +63,7 @@ Rispondi SOLO con un blocco di codice JSON valido, senza altro testo, con questa
 }`;
 }
 
-/** Claude may wrap the JSON in ``` fences or add a sentence: keep only the outermost {...}. */
+/** The AI may wrap the JSON in ``` fences or add a sentence: keep only the outermost {...}. */
 function extractJson(text: string): string {
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
@@ -92,7 +93,7 @@ export default function ClaudePage() {
       setQuiz(await decodeQuiz(extractJson(text)));
     } catch (e) {
       const msg = (e as Error).message;
-      setError(msg.startsWith('Il quiz') ? msg : 'Non riesco a leggere la risposta: copia tutto il blocco JSON che ha scritto Claude.');
+      setError(msg.startsWith('Il quiz') ? msg : "Non riesco a leggere la risposta: copia tutto il blocco JSON che ha scritto l'IA.");
     }
   };
 
@@ -100,11 +101,11 @@ export default function ClaudePage() {
     <div className="creator claude-page">
       <header className="cr-header">
         <BackPill label="Esci" />
-        <h1>🤖 Crea con Claude</h1>
+        <h1>🤖 Crea con l'IA</h1>
         <TutorialButton tutorial={CLAUDE_TUTORIAL} />
       </header>
       <p className="cr-tip">
-        Descrivi il quiz, copia il prompt e incollalo su <b>claude.ai</b>. Poi copia la risposta di Claude e incollala qui sotto: puoi
+        Descrivi il quiz, copia il prompt e incollalo in una chat con l'intelligenza artificiale che usi (ChatGPT, Claude, Gemini…). Poi copia la risposta e incollala qui sotto: puoi
         giocare subito oppure aprire il quiz nel creatore per sistemare domande e categorie e aggiungere foto o video.
       </p>
 
@@ -129,11 +130,9 @@ export default function ClaudePage() {
       </section>
 
       <section className="cr-cat">
-        <div className="cr-label">2 · Chiedi a Claude</div>
+        <div className="cr-label">2 · Chiedi all'IA</div>
         <button className="btn primary big" onClick={copy}>{copied ? '✓ Prompt copiato' : '📋 Copia il prompt'}</button>
-        <a className="btn ghost" href="https://claude.ai/new" target="_blank" rel="noreferrer">
-          Apri claude.ai ↗
-        </a>
+        <AiLinks />
         <details className="cr-more">
           <summary>Vedi il prompt</summary>
           <pre className="prompt-text">{prompt}</pre>
@@ -142,7 +141,7 @@ export default function ClaudePage() {
 
       <section className="cr-cat">
         <div className="cr-label">3 · Incolla la risposta</div>
-        <textarea rows={6} value={answer} onChange={(e) => read(e.target.value)} placeholder="Incolla qui tutto quello che ha risposto Claude…" />
+        <textarea rows={6} value={answer} onChange={(e) => read(e.target.value)} placeholder="Incolla qui tutto quello che ha risposto l'IA…" />
         {error && <p className="cr-error">{error}</p>}
         {quiz && (
           <>

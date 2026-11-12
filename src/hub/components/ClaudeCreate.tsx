@@ -31,14 +31,35 @@ interface Props<T> {
   onEdit?: (data: T) => void;
 }
 
-/** Claude may wrap the JSON in ``` fences or add a sentence: keep only the outermost {...}. */
+/** Where to paste the prompt: any AI chat works, these are the best known. */
+export const AI_CHATS = [
+  { name: 'ChatGPT', href: 'https://chatgpt.com/' },
+  { name: 'Claude', href: 'https://claude.ai/new' },
+  { name: 'Gemini', href: 'https://gemini.google.com/app' },
+];
+
+/** Links to open an AI chat in a new tab. */
+export function AiLinks() {
+  return (
+    <div className="ai-links">
+      <span className="muted">Apri:</span>
+      {AI_CHATS.map((c) => (
+        <a key={c.name} className="btn ghost" href={c.href} target="_blank" rel="noreferrer">
+          {c.name} ↗
+        </a>
+      ))}
+    </div>
+  );
+}
+
+/** The AI may wrap the JSON in ``` fences or add a sentence: keep only the outermost {...}. */
 function extractJson(text: string): string {
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
   return start >= 0 && end > start ? text.slice(start, end + 1) : text;
 }
 
-/** #/<game>/claude: builds a prompt for claude.ai; the JSON it answers with is pasted back here and played. */
+/** #/<game>/claude: builds a prompt for any AI chat (ChatGPT, Claude, Gemini…); the JSON it answers with is pasted back here and played. */
 export default function ClaudeCreate<T>({ back, title, intro, fields, initial, prompt, validate, preview, onPlay, onEdit }: Props<T>) {
   const [form, setForm] = useState<Form>(initial);
   const [copied, setCopied] = useState('');
@@ -61,7 +82,7 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
     try {
       parsed = JSON.parse(extractJson(value));
     } catch {
-      setErrors(['Non riesco a leggere la risposta: copia tutto il blocco JSON che ha scritto Claude.']);
+      setErrors(["Non riesco a leggere la risposta: copia tutto il blocco JSON che ha scritto l'IA."]);
       return;
     }
     const v = validate(parsed);
@@ -112,13 +133,11 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
       </section>
 
       <section className="cr-cat">
-        <div className="cr-label">2 · Chiedi a Claude</div>
+        <div className="cr-label">2 · Chiedi all'IA</div>
         <button className="btn primary big" onClick={() => copy('prompt', text)}>
           {copied === 'prompt' ? '✓ Prompt copiato' : '📋 Copia il prompt'}
         </button>
-        <a className="btn ghost" href="https://claude.ai/new" target="_blank" rel="noreferrer">
-          Apri claude.ai ↗
-        </a>
+        <AiLinks />
         <details className="cr-more">
           <summary>Vedi il prompt</summary>
           <pre className="prompt-text">{text}</pre>
@@ -127,7 +146,7 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
 
       <section className="cr-cat">
         <div className="cr-label">3 · Incolla la risposta</div>
-        <textarea rows={6} value={answer} onChange={(e) => read(e.target.value)} placeholder="Incolla qui tutto quello che ha risposto Claude…" />
+        <textarea rows={6} value={answer} onChange={(e) => read(e.target.value)} placeholder="Incolla qui tutto quello che ha risposto l'IA…" />
         {errors.length > 0 && (
           <>
             <ul className="cr-error">
@@ -138,7 +157,7 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
             </ul>
             {data && (
               <button className="btn ghost" onClick={() => copy('fix', fix)}>
-                {copied === 'fix' ? '✓ Copiato: incollalo nella chat con Claude' : '🔧 Copia la richiesta di correzione per Claude'}
+                {copied === 'fix' ? '✓ Copiato: incollalo nella stessa chat' : "🔧 Copia la richiesta di correzione per l'IA"}
               </button>
             )}
           </>

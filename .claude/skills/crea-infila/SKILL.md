@@ -27,7 +27,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 
 - `src/games/infila/schema.ts`: tipi e validazione (fonte di verità del formato).
 - `src/games/infila/prompt.ts`: **le regole per scegliere e scrivere le sequenze** (le stesse della pagina
-  "Crea con Claude"). Seguile tutte.
+  "Crea con l'IA"). Seguile tutte.
 - `content/infila/*.json`: per **non ripetere** sequenze già usate.
 
 ## 3. Scegliere e verificare le sequenze

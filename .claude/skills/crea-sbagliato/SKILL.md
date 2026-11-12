@@ -26,7 +26,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 
 - `src/games/sbagliato/schema.ts`: tipi e validazione (fonte di verità del formato).
 - `src/games/sbagliato/prompt.ts`: **le regole per scrivere le domande** (le stesse della pagina
-  "Crea con Claude"). Seguile tutte.
+  "Crea con l'IA"). Seguile tutte.
 - `content/sbagliato/*.json`: per **non ripetere** domande già usate.
 
 ## 3. Scrivere

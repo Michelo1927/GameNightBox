@@ -69,7 +69,7 @@ GameNightBox/
 │        ├─ creator/           "Crea un quiz" dal telefono, Claude, caricamento da codice
 │        └─ editor/            editor visuale (attivo solo in locale)
 │     ├─ passaparola/  catena/  musichiere/  topten/  sbagliato/  infila/
-│     │  ├─ index.tsx          scheda, indirizzi, pagina elenco, setup, "Crea con Claude"
+│     │  ├─ index.tsx          scheda, indirizzi, pagina elenco, setup, "Crea con l'IA"
 │     │  ├─ schema.ts          formato + validazione (usata anche da scripts/validate.ts)
 │     │  ├─ prompt.ts          prompt per Claude
 │     │  ├─ Editor.tsx         creatore a mano (dal telefono)
@@ -109,8 +109,8 @@ Regole dell'hub:
 
 Tutti si giocano su **un solo schermo** (portatile collegato alla TV, anche duplicato): l'host non deve
 conoscere le risposte, le conosce l'app. Tutti hanno: squadre e ruota dell'ordine, Annulla (Ctrl+Z),
-schermo intero (F), classifica finale, partita salvata nel browser, pagina "Crea con Claude"
-(prompt da copiare su claude.ai, risposta incollata e controllata dall'app, salvata sul dispositivo).
+schermo intero (F), classifica finale, partita salvata nel browser, pagina "Crea con l'IA"
+(prompt da copiare in una chat con un'IA a scelta, ChatGPT, Claude, Gemini…; risposta incollata e controllata dall'app, salvata sul dispositivo).
 
 Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub/`:
 - `#/<gioco>/crea`: creatore a mano (`Editor.tsx` del gioco dentro `CreatorPage`), bozza salvata a ogni modifica.
@@ -119,7 +119,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   (`#/<gioco>/carica/<codice>`), condividi, copia, scarica file.
 - `#/<gioco>/carica`: incolla codice/link o apri il file → Gioca o ✏️ Modifica. Un codice di un altro gioco
   viene riconosciuto e indirizzato alla pagina giusta.
-- ✏️ su ogni contenuto (del sito o del dispositivo) lo apre nel creatore; "Crea con Claude" può aprire la
+- ✏️ su ogni contenuto (del sito o del dispositivo) lo apre nel creatore; "Crea con l'IA" può aprire la
   risposta nel creatore anche se ha errori, per correggerli a mano.
 - `npm run import` riconosce il prefisso e scrive `content/<gioco>/<slug>.json`.
 
@@ -160,7 +160,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   - La torre di ogni squadra mostra la sua lista (giusta, sbagliata, passata, in corso); oltre 10 canzoni
     va su due colonne, sul telefono in righe da quattro.
 - Lettore YouTube nascosto (solo audio).
-- I link YouTube sono il punto debole dei contenuti generati da Claude: la pagina "Crea con Claude" li
+- I link YouTube sono il punto debole dei contenuti generati dall'IA: la pagina "Crea con l'IA" li
   controlla uno per uno (oEmbed di YouTube) e mostra il titolo vero del video, con il link modificabile.
 
 **Top Ten** (`#/topten`)
@@ -324,7 +324,7 @@ Tipi di `media`: `image`, `audio`, `video` (file locale), `youtube` (link).
 
 Sempre disponibili: **Annulla** (Ctrl+Z, ultime 50 azioni, solo in memoria), schermo intero (F),
 suoni sintetizzati con Web Audio (nessun file, 🔇 per spegnerli, scelta salvata nel browser).
-La pagina `#/jeopardy/claude` costruisce un prompt per claude.ai e carica il JSON che Claude risponde.
+La pagina `#/jeopardy/claude` costruisce un prompt per una chat con un'IA (link a ChatGPT, Claude, Gemini) e carica il JSON che risponde.
 
 ## Editor locale
 

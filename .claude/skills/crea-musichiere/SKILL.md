@@ -24,7 +24,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 
 - `src/games/musichiere/schema.ts`: tipi e validazione (fonte di verità del formato).
 - `src/games/musichiere/prompt.ts`: **le regole per scegliere le canzoni** (le stesse della pagina
-  "Crea con Claude"). Seguile tutte.
+  "Crea con l'IA"). Seguile tutte.
 - `content/musichiere/*.json`: per **non ripetere** canzoni già usate.
 
 ## 3. Trovare i link YouTube veri

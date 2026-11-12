@@ -24,7 +24,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 
 - `src/games/passaparola/schema.ts`: tipi e validazione (fonte di verità del formato).
 - `src/games/passaparola/prompt.ts`: **le regole per scrivere le definizioni** (le stesse che usa la pagina
-  "Crea con Claude"). Seguile tutte.
+  "Crea con l'IA"). Seguile tutte.
 - `content/passaparola/*.json`: per **non ripetere** risposte o definizioni già usate.
 
 ## 3. Scrivere

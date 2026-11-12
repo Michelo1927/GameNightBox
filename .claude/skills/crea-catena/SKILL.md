@@ -26,7 +26,7 @@ Fai al massimo **una** domanda di chiarimento, e solo se manca qualcosa di essen
 
 - `src/games/catena/schema.ts`: tipi e validazione (fonte di verità del formato).
 - `src/games/catena/prompt.ts`: **le regole per costruire catene e finali** (le stesse della pagina
-  "Crea con Claude"). Seguile tutte.
+  "Crea con l'IA"). Seguile tutte.
 - `content/catena/*.json`: per **non ripetere** catene o parole finali già usate.
 
 ## 3. Scrivere

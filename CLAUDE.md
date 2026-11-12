@@ -11,7 +11,7 @@ Hub di giochi a squadre da serata (React + Vite + TypeScript), pubblicato su Git
 - Qualsiasi contenuto condiviso come codice (creatore del sito, codici `JQ1.` `PP1.` `CT1.` `MU1.` `TT1.` `SB1.` `IF1.` `AS1.`) si salva nel repo con
   `npm run import -- <file|codice|link>`.
 - Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila!, All'asta!: un file `content/<gioco>/<slug>.json`. Formato in `src/games/<gioco>/schema.ts`;
-  per crearne uno segui le regole del prompt in `src/games/<gioco>/prompt.ts` (lo stesso che usa la pagina "Crea con Claude").
+  per crearne uno segui le regole del prompt in `src/games/<gioco>/prompt.ts` (lo stesso che usa la pagina "Crea con l'IA").
   Musichiere: cerca i link YouTube veri e controllali con `npm run validate -- musichiere/<slug> --online`.
   Top Ten: solo classifiche vere, verificate con la ricerca web, con la fonte in `source`.
   In fila!: carte già nell'ordine giusto, valori veri verificati con la ricerca web, con la fonte in `source`.

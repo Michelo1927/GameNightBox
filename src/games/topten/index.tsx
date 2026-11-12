@@ -109,10 +109,10 @@ const topten: Game = {
       return (
         <ClaudeCreate<TopTenSet>
           back="#/topten"
-          title="Top Ten con Claude"
+          title="Top Ten con l'IA"
           intro={
             <>
-              Scegli tema e numero di liste, copia il prompt e incollalo su <b>claude.ai</b> (meglio con la ricerca web attiva, così controlla
+              Scegli tema e numero di liste, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>) (meglio con la ricerca web attiva, così controlla
               le classifiche). Poi incolla qui la risposta: l'app controlla che ogni lista abbia da {MIN_ANSWERS} a {MAX_ANSWERS} risposte.
             </>
           }

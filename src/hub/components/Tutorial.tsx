@@ -120,7 +120,7 @@ function FirstQuestion({ onAnswer }: { onAnswer: (yes: boolean) => void }) {
       <div className="ask" role="dialog" aria-modal aria-labelledby="tour-ask-title">
         <p id="tour-ask-title">Prima volta qui? Vuoi un mini tutorial che ti mostra come funziona?</p>
         <p className="tour-ask-note">
-          Se dici sì, la prima volta che apri ogni sezione (i giochi, il creatore, "Crea con Claude"…) ti mostro a cosa servono i
+          Se dici sì, la prima volta che apri ogni sezione (i giochi, il creatore, "Crea con l'IA"…) ti mostro a cosa servono i
           pulsanti. Puoi rivederlo quando vuoi con il pulsante <b className="tour-q">?</b>
         </p>
         <div className="ask-buttons">

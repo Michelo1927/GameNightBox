@@ -25,7 +25,7 @@ interface Props<T> {
   hue: number;
 }
 
-/** First page of a game: what to play (from the site or made with Claude on this device). */
+/** First page of a game: what to play (from the site or made with an AI on this device). */
 export default function ContentHome<T>({ game, name, icon, intro, rules, items, onRemove, title, description, tags, hue }: Props<T>) {
   const [list, setList] = useState(items);
   const remove = async (e: MouseEvent, c: Loaded<T>) => {
@@ -95,7 +95,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
         <p className="muted">{intro}</p>
         <div className="home-actions">
           <a className="btn primary" href={`#/${game}/crea/nuovo`}>✏️ Crea</a>
-          <a className="btn primary" href={`#/${game}/claude`}>🤖 Crea con Claude</a>
+          <a className="btn primary" href={`#/${game}/claude`}>🤖 Crea con l'IA</a>
           <a className="btn ghost" href={`#/${game}/carica`}>📥 Carica</a>
         </div>
       </header>

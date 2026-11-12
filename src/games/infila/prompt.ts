@@ -2,7 +2,7 @@ import { MAX_CARDS, MIN_CARDS } from './schema';
 
 type Form = Record<string, string | number | boolean>;
 
-/** Prompt for claude.ai (also the reference for the Claude Code skill). */
+/** Prompt for any AI chat: ChatGPT, Claude, Gemini… (also the reference for the Claude Code skill). */
 export function prompt(f: Form): string {
   const sequences = Number(f.sequences) || 8;
   const cards = Math.min(MAX_CARDS, Math.max(MIN_CARDS, Number(f.cards) || 5));

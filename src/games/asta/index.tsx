@@ -93,10 +93,10 @@ const asta: Game = {
       return (
         <ClaudeCreate<AstaSet>
           back="#/asta"
-          title="All'asta! con Claude"
+          title="All'asta! con l'IA"
           intro={
             <>
-              Scegli il tema generale e quanti temi vuoi, copia il prompt e incollalo su <b>claude.ai</b>. Poi incolla qui la risposta: l'app
+              Scegli il tema generale e quanti temi vuoi, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta: l'app
               controlla che ci siano almeno {MIN_THEMES} temi.
             </>
           }
