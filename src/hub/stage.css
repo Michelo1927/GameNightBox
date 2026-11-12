@@ -189,14 +189,14 @@ kbd { border-radius: 5px; }
   min-height: 100vh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
   padding-top: clamp(12px, 2vh, 48px); padding-bottom: clamp(12px, 2vh, 48px);
 }
-/* Sizes follow the screen height: up to three rows of games (nine) fit on a TV, from 720p up,
-   even when every card's tags wrap onto two lines (they do at 1280×720). */
-.hub-hero { text-align: center; margin-bottom: clamp(14px, 2vh, 40px); }
+/* Sizes follow the screen height: up to three rows of games (nine) fit on a TV, from 720p up. */
+/* From 720p (where everything only just fits) the spare height goes to a bigger sign and a clear gap above the games. */
+.hub-hero { text-align: center; margin-bottom: clamp(20px, calc(12vh - 50px), 130px); }
 .hub-hero p { margin: clamp(8px, 1.5vh, 16px) auto 0; max-width: 70ch; color: var(--muted); font-size: clamp(0.95rem, 2vh, 1.2rem); }
 .marquee {
   position: relative; display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0 0.3em; margin: 0;
   padding: 0.28em 0.55em; border-radius: 22px;
-  font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, min(9vw, 7vh), 6rem); line-height: 1.05; letter-spacing: 1px;
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, min(9vw, calc(13vh - 30px)), 8rem); line-height: 1.05; letter-spacing: 1px;
   color: var(--gold-hi); text-shadow: 0 0 12px rgba(255, 201, 40, 0.8), 0 0 40px rgba(255, 201, 40, 0.45), 3px 4px 0 #3a1d00;
   background: linear-gradient(180deg, #2a1660, #150b3e);
   box-shadow: 0 0 0 3px #5a3a00, 0 0 60px rgba(255, 201, 40, 0.25), 0 24px 60px rgba(0, 0, 0, 0.5);
