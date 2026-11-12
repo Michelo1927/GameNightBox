@@ -185,14 +185,15 @@ kbd { border-radius: 5px; }
 .hub-home {
   /* Full screen is the usual case: the sign and the cards sit in the middle of it; a smaller window shrinks them (vh sizes below). */
   min-height: 100vh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
-  padding-top: clamp(16px, 4vh, 56px); padding-bottom: clamp(16px, 4vh, 56px);
+  padding-top: clamp(12px, 3vh, 48px); padding-bottom: clamp(12px, 3vh, 48px);
 }
-.hub-hero { text-align: center; margin-bottom: clamp(18px, 4vh, 48px); }
-.hub-hero p { margin: clamp(10px, 2vh, 18px) auto 0; max-width: 46ch; color: var(--muted); font-size: 1.1rem; }
+/* Sizes follow the screen height: up to three rows of games (nine) fit on a TV, from 720p up. */
+.hub-hero { text-align: center; margin-bottom: clamp(14px, 3vh, 40px); }
+.hub-hero p { margin: clamp(8px, 1.5vh, 16px) auto 0; max-width: 70ch; color: var(--muted); font-size: clamp(0.95rem, 2vh, 1.2rem); }
 .marquee {
   position: relative; display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0 0.3em; margin: 0;
   padding: 0.28em 0.55em; border-radius: 22px;
-  font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, min(9vw, 9vh), 6rem); line-height: 1.05; letter-spacing: 1px;
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, min(9vw, 8vh), 6rem); line-height: 1.05; letter-spacing: 1px;
   color: var(--gold-hi); text-shadow: 0 0 12px rgba(255, 201, 40, 0.8), 0 0 40px rgba(255, 201, 40, 0.45), 3px 4px 0 #3a1d00;
   background: linear-gradient(180deg, #2a1660, #150b3e);
   box-shadow: 0 0 0 3px #5a3a00, 0 0 60px rgba(255, 201, 40, 0.25), 0 24px 60px rgba(0, 0, 0, 0.5);
@@ -209,14 +210,17 @@ kbd { border-radius: 5px; }
 @keyframes bulbs { from { opacity: 0.65; } to { opacity: 1; filter: drop-shadow(0 0 4px rgba(255, 220, 120, 0.9)); } }
 .marquee-accent { color: #fff; text-shadow: 0 0 12px var(--magenta), 0 0 36px var(--magenta), 3px 4px 0 #4a0024; }
 
-.hub-home { max-width: 1400px; }
-/* Up to three cards per row on a TV; a short last row stays centred. */
-.game-grid { --gap: clamp(12px, 2vh, 18px); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
-.game-grid > .game-card { flex: 1 1 360px; max-width: calc((100% - 2 * var(--gap)) / 3); }
-@media (max-width: 1140px) { .game-grid > .game-card { max-width: calc((100% - var(--gap)) / 2); } }
-@media (max-width: 760px) { .game-grid > .game-card { max-width: 100%; } }
+/* Wider on a big TV, where the text grows with the screen height. */
+.hub-home { max-width: clamp(1100px, 90vw, 1760px); }
+/* Up to three cards per row on a TV (four from the tenth game on); a short last row stays centred. */
+.game-grid { --gap: clamp(10px, 1.8vh, 22px); --cols: 3; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+.game-grid.many { --cols: 4; }
+.game-grid > .game-card { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); min-width: 0; }
+@media (max-width: 1140px) { .game-grid { --cols: 2; } .game-grid.many { --cols: 2; } }
+@media (max-width: 760px) { .game-grid, .game-grid.many { --cols: 1; } }
 .game-card {
-  position: relative; display: flex; align-items: center; gap: 20px; padding: clamp(14px, 2.4vh, 22px) 22px; border-radius: 22px; overflow: hidden;
+  position: relative; display: flex; align-items: center; gap: clamp(14px, 1.4vw, 22px); padding: clamp(10px, 2vh, 24px) clamp(14px, 1.4vw, 22px);
+  border-radius: 22px; overflow: hidden;
   background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 26%, var(--bg-3)), var(--bg-2) 65%);
   border: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
@@ -233,16 +237,35 @@ kbd { border-radius: 5px; }
 .game-icon { transition: transform 0.5s var(--ease-spring); }
 .game-card:hover .game-icon { transform: scale(1.1) rotate(-8deg); }
 .game-icon {
-  flex: none; width: clamp(64px, min(9vw, 11vh), 104px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
-  font-size: clamp(2rem, min(4vw, 5vh), 3.2rem);
+  flex: none; width: clamp(52px, min(7vw, 10vh), 104px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  font-size: clamp(1.6rem, min(3.2vw, 4.6vh), 3.2rem);
   background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 55%, #fff), var(--accent) 45%, color-mix(in srgb, var(--accent) 50%, #000));
   box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -6px 12px rgba(0, 0, 0, 0.25);
 }
-.game-text { display: flex; flex-direction: column; gap: clamp(2px, 0.8vh, 6px); min-width: 0; }
-.game-card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem, min(3vw, 4.4vh), 2.4rem); letter-spacing: 0.5px; color: var(--text); }
-.game-card p { margin: 0; color: var(--muted); line-height: 1.4; }
-.game-card .tags { margin-top: clamp(2px, 0.8vh, 6px); }
-.game-card .tags span { background: color-mix(in srgb, var(--accent) 20%, rgba(0, 0, 0, 0.35)); color: var(--text); }
+.game-text { display: flex; flex-direction: column; gap: clamp(2px, 0.6vh, 6px); min-width: 0; }
+.game-card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, min(2.6vw, 4vh), 2.4rem); line-height: 1.15; letter-spacing: 0.5px; color: var(--text); }
+.game-card p {
+  margin: 0; color: var(--muted); line-height: 1.35; font-size: clamp(0.85rem, 1.9vh, 1.1rem);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.game-card .tags { margin-top: clamp(2px, 0.6vh, 6px); }
+
+/* More games below the screen (phone, or more than fit): a fade and a pill that scrolls down to them. */
+.more-games {
+  position: fixed; z-index: 4; left: 0; right: 0; bottom: 0; height: 120px; pointer-events: none;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 18px;
+  background: linear-gradient(transparent, rgba(11, 7, 50, 0.92));
+  animation: fade-in 0.4s ease-out backwards;
+}
+.more-games button {
+  pointer-events: auto; padding: 10px 20px; border-radius: 99px; font: inherit; font-weight: 800; color: #2a1c00; cursor: pointer;
+  border: 0; background: linear-gradient(180deg, var(--gold-hi), var(--gold)); box-shadow: 0 0 24px rgba(255, 201, 40, 0.5), 0 6px 18px rgba(0, 0, 0, 0.4);
+  animation: more-bob 1.6s ease-in-out infinite;
+}
+@keyframes more-bob { 50% { translate: 0 4px; } }
+/* Phone: on the left, clear of the sound buttons in the bottom right corner. */
+@media (max-width: 560px) { .more-games { justify-content: flex-start; padding-left: 16px; } }
+.game-card .tags span { background: color-mix(in srgb, var(--accent) 20%, rgba(0, 0, 0, 0.35)); color: var(--text); font-size: clamp(0.72rem, 1.3vh, 0.95rem); }
 
 @media (max-width: 520px) {
   .game-card { flex-direction: column; align-items: flex-start; }
