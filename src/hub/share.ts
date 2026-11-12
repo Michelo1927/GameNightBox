@@ -10,6 +10,7 @@ export const CODES: { prefix: string; game: string; name: string }[] = [
   { prefix: 'TT1.', game: 'topten', name: 'Top Ten' },
   { prefix: 'SB1.', game: 'sbagliato', name: 'Sbagliato!' },
   { prefix: 'IF1.', game: 'infila', name: 'In fila!' },
+  { prefix: 'AS1.', game: 'asta', name: "All'asta!" },
 ];
 
 /** Codes longer than this don't fit in a chat message: share them as a file. */

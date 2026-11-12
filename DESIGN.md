@@ -199,6 +199,23 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - Alla fine si vede l'ordine giusto con i valori: verde le carte che la squadra aveva al posto giusto, rosso le altre
   (con il posto in cui le aveva messe).
 
+**All'asta!** (`#/asta`)
+- Il contenuto è solo una lista di temi (es. "Animali della savana"): niente risposte, l'host le conta fidandosi.
+  Servono temi con tante risposte possibili, facili da giudicare al volo.
+- Ogni tema è un'asta a turno: le squadre dicono quante risposte sanno dare (rilancio di almeno 1) o lasciano, e chi
+  lascia è fuori fino al tema dopo. Chi apre deve offrire; ad aprire è ogni volta la squadra successiva (l'ordine
+  lo decide la ruota). L'asta finisce quando resta solo chi ha l'offerta più alta.
+- Lo schermo mostra un numero grande: la cifra che l'host prepara con ↑ ↓ per la squadra di turno, confermata con
+  Invio (L = lascia). Sotto, l'offerta più alta e di chi è. "Cambia tema" dà un altro tema e fa ripartire l'asta.
+- Chi vince l'asta ha un tempo fisso, scelto nel setup (30-120 s, di solito 60), uguale per qualsiasi offerta.
+  Countdown e contatore "7 / 12" grandi, affiancati; Invio per ogni risposta giusta (ripetute e non valide non si
+  premono), Spazio per la pausa, "Si arrendono". Appena il contatore arriva all'offerta il tema finisce.
+- Punti: 1 per tema. Ce la fa: alla squadra. Non ce la fa (tempo scaduto o resa): alla squadra che aveva fatto
+  l'offerta prima di lei; se nessuno aveva rilanciato sulla prima offerta, a nessuno.
+- Vince chi arriva per primo ai punti scelti nel setup (3/5/7/10, di solito 5); se i temi finiscono prima, chi ne ha di più.
+  I temi escono in ordine casuale, senza ripetersi.
+- Il totale delle risposte possibili non si mostra mai: il gioco sta tutto nel tema.
+
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.
 - Lo stato della partita (squadre, punteggi, caselle giocate) è salvato nel `localStorage`:

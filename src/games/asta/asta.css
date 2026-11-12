@@ -1,0 +1,114 @@
+.as-page .game-stage {
+  /* Tight on a small screen, roomier as the screen grows. */
+  --space: clamp(8px, calc((100vh - 700px) / 12 + 10px), 34px);
+  gap: var(--space); padding: 6px 0 calc(var(--space) / 2);
+}
+
+/* The theme: the only content of the game. */
+.as-theme { display: flex; flex-direction: column; align-items: center; gap: 6px; max-width: min(1300px, 100% - 32px); }
+.as-tag {
+  padding: 5px 16px; border-radius: 99px; background: color-mix(in srgb, var(--accent) 22%, transparent); color: color-mix(in srgb, var(--accent) 45%, #fff);
+  font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: clamp(0.8rem, 1.8vh, 1rem);
+}
+.as-theme h2 {
+  margin: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: 0.5px; line-height: 1.05; text-wrap: balance; overflow-wrap: anywhere;
+  font-size: clamp(2rem, min(5.4vw, 8vh), 5rem); color: #fff; text-shadow: 0 0 30px color-mix(in srgb, var(--accent) 70%, transparent);
+  animation: pop-in 0.5s var(--ease-spring) backwards;
+}
+.as-run .as-theme h2 { font-size: clamp(1.6rem, min(4vw, 6vh), 3.6rem); }
+
+/* The auction: the big number, with − and + either side. */
+.as-bid { display: flex; align-items: center; gap: clamp(12px, 2vw, 28px); }
+.as-step {
+  position: relative; display: grid; place-items: center; width: clamp(56px, 9vh, 88px); aspect-ratio: 1; border-radius: 50%;
+  font-size: clamp(1.6rem, 4.4vh, 2.6rem); font-weight: 900; line-height: 1;
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); transition: border-color 0.15s, box-shadow 0.15s, transform 0.08s;
+}
+.as-step:hover:not(:disabled) { border-color: var(--accent); box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 50%, transparent); }
+.as-step:active:not(:disabled) { transform: scale(0.94); }
+.as-step kbd { position: absolute; bottom: -24px; left: 50%; translate: -50% 0; margin: 0; font-size: 0.75rem; color: var(--muted); }
+.as-bid-box {
+  min-width: clamp(220px, 30vw, 420px); padding: clamp(8px, 1.6vh, 18px) 26px clamp(10px, 2vh, 20px); border-radius: 26px; text-align: center;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team) 30%, #120b3f), #0d0833 75%);
+  border: 3px solid var(--team); box-shadow: 0 0 50px color-mix(in srgb, var(--team) 45%, transparent), 0 18px 40px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.as-bid-box small { display: block; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: color-mix(in srgb, var(--team) 60%, #fff); font-size: clamp(0.85rem, 2vh, 1.15rem); }
+.as-bid-box b {
+  display: block; font-family: var(--font-display); font-weight: 400; line-height: 1; font-size: clamp(5rem, 22vh, 13rem);
+  color: #fff; text-shadow: 0 0 30px var(--team), 4px 5px 0 rgba(0, 0, 0, 0.45); font-variant-numeric: tabular-nums;
+  animation: as-bump 0.35s var(--ease-spring);
+}
+.as-bid-box.sold { animation: buzz-in 0.55s var(--ease-spring) backwards; }
+.as-bid-box.sold b { color: var(--gold-hi); text-shadow: 0 0 36px rgba(255, 201, 40, 0.55), 4px 5px 0 #3a1d00; }
+.as-bid-box span { display: block; font-size: clamp(0.95rem, 2.2vh, 1.3rem); font-weight: 700; color: var(--muted); }
+.as-bid-box em { font-style: normal; font-weight: 800; color: #fff; }
+@keyframes as-bump { from { transform: scale(1.18); } }
+
+/* Teams: who is on turn, who has the highest offer, who left. */
+.as-page .team-strip { gap: 12px; }
+.as-page .team-chip.off { opacity: 0.4; filter: grayscale(0.6); }
+.as-state { font-size: 0.75em; font-weight: 800; padding: 2px 8px; border-radius: 99px; background: rgba(0, 0, 0, 0.35); color: var(--muted); }
+.as-state.top { background: var(--gold); color: #2a1c00; }
+.as-state.turn { background: #fff; color: #120b3f; }
+.as-state.plus { background: var(--ok); color: #02281a; animation: pop-in 0.4s var(--ease-spring) backwards; }
+
+.host-hint { margin: 0; max-width: min(900px, 100% - 32px); color: var(--muted); font-size: clamp(0.85rem, 1.9vh, 1.05rem); }
+.host-hint b { color: var(--text); }
+
+/* The run: two big panels side by side, the clock and the count. */
+.as-banner {
+  padding: 6px 28px; border-radius: 16px; font-family: var(--font-display); font-size: clamp(1.4rem, 4vh, 2.6rem); color: #fff; background: var(--team);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 0 36px var(--team); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+  animation: buzz-in 0.55s var(--ease-spring) backwards;
+}
+.as-big { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 3vw, 48px); width: min(1200px, 100% - 32px); }
+.as-panel {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(10px, 2vh, 22px) 16px; border-radius: 26px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, var(--bg-3)), var(--bg-2) 80%);
+  border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 22%, transparent), 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+.as-panel small { font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: color-mix(in srgb, var(--accent) 45%, #fff); font-size: clamp(0.85rem, 2vh, 1.15rem); }
+.as-panel b { font-family: var(--font-display); font-weight: 400; line-height: 1.05; font-size: clamp(4.4rem, 21vh, 12rem); font-variant-numeric: tabular-nums; }
+.as-clock b { color: var(--gold-hi); text-shadow: 0 0 30px rgba(255, 201, 40, 0.5); }
+.as-clock.hurry { background: linear-gradient(180deg, #ff8f99, var(--ko) 70%); border-color: #ffc2c8; animation: as-hurry 1s ease-in-out infinite; }
+.as-clock.hurry b, .as-clock.hurry small { color: #fff; }
+@keyframes as-hurry { 50% { transform: scale(1.04); } }
+.as-big.paused .as-clock b { opacity: 0.45; }
+.as-big.paused .as-clock small::after { content: ' · in pausa'; }
+.as-count b { color: #fff; text-shadow: 0 0 30px color-mix(in srgb, var(--accent) 80%, transparent); }
+.as-count b i { font-style: normal; color: var(--muted); font-size: 0.55em; }
+.as-count .n { display: inline-block; animation: as-bump 0.35s var(--ease-spring); }
+.as-pips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 6px; max-width: 90%; }
+.as-pips span { width: clamp(10px, 1.8vh, 16px); aspect-ratio: 1; border-radius: 50%; background: rgba(255, 255, 255, 0.12); transition: background 0.2s, box-shadow 0.2s; }
+.as-pips span.on { background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+
+/* The result of a theme. */
+.as-done {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: min(900px, 100% - 32px);
+  padding: clamp(18px, 3vh, 34px) clamp(20px, 4vw, 48px); border-radius: 22px;
+  background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); animation: pop-in 0.5s var(--ease-spring) backwards;
+}
+.as-done h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 7vh, 4.4rem); line-height: 1.05; }
+.as-done p { margin: 0; font-size: clamp(1.05rem, 2.6vh, 1.6rem); }
+.as-point { padding: 4px 22px; border-radius: 14px; background: rgba(0, 0, 0, 0.35); font-family: var(--font-display); font-size: clamp(1.4rem, 4.4vh, 2.6rem); }
+
+@media (max-width: 700px) {
+  .as-bid { gap: 10px; width: calc(100% - 24px); }
+  .as-bid-box { min-width: 0; flex: 1; padding: 8px 12px 12px; }
+  .as-step kbd, .host-hint, .host-bar kbd { display: none; }
+  .as-big { gap: 10px; }
+  .as-panel { border-radius: 18px; }
+  .as-panel b { font-size: clamp(3rem, 17vw, 5rem); }
+}
+
+/* Creator */
+.as-ed { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; }
+.as-ed > span {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: #0b1440; font-weight: 800; font-size: 0.85rem;
+}
+.as-ed input { min-width: 0; font-weight: 700; }
+.as-preview ol { margin: 6px 0 0; padding-left: 22px; columns: 2 260px; }
