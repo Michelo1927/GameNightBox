@@ -30,7 +30,7 @@ const jeopardy: Game = {
   name: 'Jeopardy',
   icon,
   tagline: 'Tabellone 5×5 di domande da 100 a 500 punti, con caselle a sorpresa e domanda finale.',
-  tags: ['host'],
+  tags: ['turno'],
   href: '#/jeopardy',
   route([section, slug, view]) {
     if (section !== 'jeopardy') return null;

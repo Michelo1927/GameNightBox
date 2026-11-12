@@ -12,6 +12,7 @@ export const GAME_TAGS = {
       </>
     ),
   },
+  // Every game has a host at the computer, so no card shows it.
   host: {
     label: 'Serve un host',
     d: (

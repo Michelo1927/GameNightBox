@@ -98,7 +98,7 @@ const topten: Game = {
   name: 'Top Ten',
   icon,
   tagline: 'Classifiche vere da indovinare: chi vince la sfida gioca la lista, ma con troppi errori si fa rubare i punti.',
-  tags: ['prenotazione'],
+  tags: ['prenotazione', 'rubata'],
   href: '#/topten',
   route(parts) {
     const [section, slug, view] = parts;

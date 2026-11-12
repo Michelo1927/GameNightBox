@@ -21,8 +21,8 @@ export const HUB_TUTORIAL: Tutorial = {
       target: '.game-grid .game-card',
       text: (
         <p>
-          Ogni scheda è un gioco. Le iconcine in alto a destra dicono come si gioca (se serve un host, se si gioca a tempo, se
-          ci si prenota…): passaci sopra col mouse per leggerle. Toccane una per vedere le partite pronte.
+          Ogni scheda è un gioco. Le iconcine in alto a destra dicono come si gioca (a turno o prenotandosi, contro il tempo, se
+          si può rubare…): passaci sopra col mouse per leggerle. Toccane una per vedere le partite pronte.
         </p>
       ),
     },

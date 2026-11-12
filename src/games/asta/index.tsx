@@ -82,7 +82,7 @@ const asta: Game = {
   name: "All'asta!",
   icon,
   tagline: 'Esce un tema e le squadre rilanciano su quante risposte sanno dire: chi vince l\'asta deve dirle tutte prima che scada il tempo.',
-  tags: ['tempo'],
+  tags: ['turno', 'tempo'],
   href: '#/asta',
   route(parts) {
     const [section, slug, view] = parts;

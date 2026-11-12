@@ -102,7 +102,7 @@ const infila: Game = {
   name: 'In fila!',
   icon,
   tagline: "Carte mescolate da rimettere in ordine: date, altezze, distanze... Chi sbaglia si fa rubare i punti.",
-  tags: ['rubata'],
+  tags: ['turno', 'rubata'],
   href: '#/infila',
   route(parts) {
     const [section, slug, view] = parts;

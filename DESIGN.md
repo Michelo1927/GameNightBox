@@ -102,8 +102,10 @@ Regole dell'hub:
 - Tag dei giochi in home: niente testo, solo iconcine a linea in alto a destra della scheda, con la spiegazione al
   passaggio del mouse (`GAME_TAGS` in `src/hub/components/GameTags.tsx`; ogni gioco sceglie le sue in `tags`).
   Il titolo lascia loro lo spazio, così la scheda non si allunga. Si mostrano solo quelle che distinguono un gioco
-  dagli altri: "A squadre" e "Da creare" ce li hanno tutti, quindi restano definiti ma nascosti (il primo servirà
-  quando arriverà un gioco tutti contro tutti).
+  dagli altri: come si risponde (a turno, prenotandosi o entrambi), se il tempo fa parte del gioco, se si può
+  rubare, se serve internet. "A squadre", "Serve un host" e "Da creare" valgono per tutti, quindi restano definiti
+  ma nascosti ("A squadre" servirà quando arriverà un gioco tutti contro tutti). Le cose facoltative (il timer di
+  Jeopardy e di In fila!, il finale a prenotazione di Catena) non hanno icona.
 - Mini tutorial (`src/hub/components/Tutorial.tsx`): il pulsante "?" in home, nella pagina di ogni gioco e nelle
   pagine del creatore (crea, Claude, codice, carica) mostra i passi di quella pagina, illuminando i pulsanti di cui
   parlano. La prima volta l'app chiede una sola volta se si vogliono i tutorial; con "sì" ogni sezione mostra il suo
