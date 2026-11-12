@@ -7,7 +7,7 @@ export const HUB_NAME = { main: 'GAME NIGHT', accent: 'BOX' };
 export interface Game {
   id: string;
   name: string;
-  icon: string;
+  icon: ReactNode;
   /** One line on the home card. */
   tagline: string;
   /** Short facts shown as tags on the home card (e.g. "2-10 squadre"). */

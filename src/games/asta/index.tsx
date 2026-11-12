@@ -1,4 +1,5 @@
 import { library } from '../../hub/content';
+import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -79,7 +80,7 @@ function Preview({ data }: { data: AstaSet }) {
 const asta: Game = {
   id: 'asta',
   name: "All'asta!",
-  icon: '🔨',
+  icon,
   tagline: 'Esce un tema e le squadre rilanciano su quante risposte sanno dire: chi vince l\'asta deve dirle tutte prima che scada il tempo.',
   tags: ['A squadre', 'A tempo', 'Da creare'],
   href: '#/asta',
@@ -118,7 +119,7 @@ const asta: Game = {
         <ContentHome<AstaSet>
           game="asta"
           name="All'asta!"
-          icon="🔨"
+          icon={icon}
           hue={225}
           intro="Le squadre rilanciano su quante risposte sanno dire: chi vince l'asta deve dirle tutte in tempo."
           rules={RULES}

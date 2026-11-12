@@ -1,4 +1,5 @@
 import { BUZZ_MODES } from '../../hub/buzzer';
+import icon from './icon';
 import { library } from '../../hub/content';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -64,7 +65,7 @@ function Setup({ slug, data }: { slug: string; data: CatenaSet }) {
 const catena: Game = {
   id: 'catena',
   name: 'Catena',
-  icon: '🔗',
+  icon,
   tagline: 'Parole legate a due a due: si scoprono una alla volta, lettera dopo lettera. Con finale a prenotazione.',
   tags: ['A squadre', 'Serve un host', 'Da creare'],
   href: '#/catena',
@@ -111,7 +112,7 @@ const catena: Game = {
         <ContentHome<CatenaSet>
           game="catena"
           name="Catena"
-          icon="🔗"
+          icon={icon}
           hue={290}
           intro="Parole legate a due a due: trovate quelle in mezzo."
           rules={RULES}

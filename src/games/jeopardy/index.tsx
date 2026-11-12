@@ -1,4 +1,5 @@
 import type { Game } from '../../hub/games';
+import icon from './icon';
 import { addAlias } from '../../hub/nav';
 import Home from './pages/Home';
 import Setup from './pages/Setup';
@@ -27,7 +28,7 @@ addAlias(([first, ...rest]) => {
 const jeopardy: Game = {
   id: 'jeopardy',
   name: 'Jeopardy',
-  icon: '🏆',
+  icon,
   tagline: 'Tabellone 5×5 di domande da 100 a 500 punti, con caselle a sorpresa e domanda finale.',
   tags: ['A squadre', 'Serve un host', 'Quiz da creare'],
   href: '#/jeopardy',

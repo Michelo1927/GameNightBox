@@ -1,4 +1,5 @@
 import { BUZZ_KEYS, BUZZ_MODES } from '../../hub/buzzer';
+import icon from './icon';
 import { library } from '../../hub/content';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -95,7 +96,7 @@ function Preview({ data }: { data: TopTenSet }) {
 const topten: Game = {
   id: 'topten',
   name: 'Top Ten',
-  icon: '🔟',
+  icon,
   tagline: 'Classifiche vere da indovinare: chi vince la sfida gioca la lista, ma con troppi errori si fa rubare i punti.',
   tags: ['A squadre', 'Prenotazione', 'Da creare'],
   href: '#/topten',
@@ -135,7 +136,7 @@ const topten: Game = {
         <ContentHome<TopTenSet>
           game="topten"
           name="Top Ten"
-          icon="🔟"
+          icon={icon}
           hue={90}
           intro="Classifiche vere: trovate tutte le risposte prima di finire gli errori."
           rules={RULES}

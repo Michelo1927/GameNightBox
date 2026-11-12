@@ -1,4 +1,5 @@
 import { BUZZ_KEYS, BUZZ_MODES } from '../../hub/buzzer';
+import icon from './icon';
 import { library } from '../../hub/content';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -99,7 +100,7 @@ function Preview({ data }: { data: InFilaSet }) {
 const infila: Game = {
   id: 'infila',
   name: 'In fila!',
-  icon: '↔️',
+  icon,
   tagline: "Carte mescolate da rimettere in ordine: date, altezze, distanze... Chi sbaglia si fa rubare i punti.",
   tags: ['A squadre', 'Rubata', 'Da creare'],
   href: '#/infila',
@@ -140,7 +141,7 @@ const infila: Game = {
         <ContentHome<InFilaSet>
           game="infila"
           name="In fila!"
-          icon="↔️"
+          icon={icon}
           hue={165}
           intro="Rimettete le carte in ordine, da un capo all'altro della fila."
           rules={RULES}

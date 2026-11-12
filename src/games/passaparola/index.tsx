@@ -1,4 +1,5 @@
 import { library } from '../../hub/content';
+import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -79,7 +80,7 @@ function Setup({ slug, data }: { slug: string; data: Passaparola }) {
 const passaparola: Game = {
   id: 'passaparola',
   name: 'Passaparola',
-  icon: '🔤',
+  icon,
   tagline: 'Una ruota di 21 lettere per squadra: una definizione per lettera, contro il tempo.',
   tags: ['A squadre', 'Serve un host', 'Da creare'],
   href: '#/passaparola',
@@ -122,7 +123,7 @@ const passaparola: Game = {
         <ContentHome<Passaparola>
           game="passaparola"
           name="Passaparola"
-          icon="🔤"
+          icon={icon}
           hue={185}
           intro="Una ruota per squadra, una definizione per ogni lettera."
           rules={RULES}

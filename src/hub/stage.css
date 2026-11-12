@@ -239,12 +239,24 @@ kbd { border-radius: 5px; }
 .game-card:hover::after { translate: 110% 0; transition: translate 0.75s var(--ease-out); }
 .game-icon { transition: transform 0.5s var(--ease-spring); }
 .game-card:hover .game-icon { transform: scale(1.1) rotate(-8deg); }
-.game-icon {
-  flex: none; width: clamp(52px, min(7vw, 10vh), 104px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
-  font-size: clamp(1.6rem, min(3.2vw, 4.6vh), 3.2rem);
+/* A game's icon (hub/components/GameIcon.tsx): a white drawing on a glossy disk of the game's colour. */
+.game-icon, .icon-disk {
+  flex: none; aspect-ratio: 1; border-radius: 50%; display: inline-grid; place-items: center;
+  --ink: color-mix(in srgb, var(--accent) 28%, #120838);
   background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 55%, #fff), var(--accent) 45%, color-mix(in srgb, var(--accent) 50%, #000));
-  box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -6px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -6px 12px rgba(0, 0, 0, 0.25), inset 0 2px 0 rgba(255, 255, 255, 0.35);
 }
+.game-icon { width: clamp(52px, min(7vw, 10vh), 104px); }
+.glyph { width: 66%; height: 66%; overflow: visible; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3)); }
+.glyph .w { fill: #fff; }
+.glyph .d { fill: var(--ink); }
+.glyph .ws, .glyph .ds { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.glyph .ws { stroke: #fff; }
+.glyph .ds { stroke: var(--ink); }
+.glyph .t { font-family: var(--font-display); text-anchor: middle; }
+/* On a game's own page: by the title, and smaller on each card. */
+.logo .logo-icon { width: 0.95em; vertical-align: -0.12em; margin-right: 0.3em; box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -4px 8px rgba(0, 0, 0, 0.25); }
+.quiz-card .icon-disk.quiz-icon { width: 2.6rem; margin-bottom: 8px; box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent), inset 0 -3px 6px rgba(0, 0, 0, 0.25); }
 .game-text { display: flex; flex-direction: column; gap: clamp(2px, 0.6vh, 6px); min-width: 0; }
 .game-card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, min(2.6vw, 4vh), 2.4rem); line-height: 1.15; letter-spacing: 0.5px; color: var(--text); }
 .game-card p {

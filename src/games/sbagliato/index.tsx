@@ -1,4 +1,5 @@
 import { library } from '../../hub/content';
+import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -88,7 +89,7 @@ function Preview({ data }: { data: SbagliatoSet }) {
 const sbagliato: Game = {
   id: 'sbagliato',
   name: 'Sbagliato!',
-  icon: '❌',
+  icon,
   tagline: 'Domande facilissime a raffica: bisogna dire la risposta sbagliata, tante volte di fila, contro il tempo.',
   tags: ['A squadre', 'A tempo', 'Da creare'],
   href: '#/sbagliato',
@@ -127,7 +128,7 @@ const sbagliato: Game = {
         <ContentHome<SbagliatoSet>
           game="sbagliato"
           name="Sbagliato!"
-          icon="❌"
+          icon={icon}
           hue={270}
           intro="Domande facilissime a raffica: dite la risposta sbagliata."
           rules={RULES}

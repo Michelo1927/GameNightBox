@@ -6,11 +6,12 @@ import { startDraft } from '../draft';
 import { go } from '../nav';
 import { ask } from '../ask';
 import BackButton from './BackButton';
+import { IconDisk } from './GameIcon';
 
 interface Props<T> {
   game: string;
   name: string;
-  icon: string;
+  icon: ReactNode;
   intro: string;
   /** "Come si gioca", shown folded. */
   rules: ReactNode;
@@ -48,7 +49,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
       href={c.errors.length ? undefined : `#/${game}/${c.slug}/setup`}
       style={c.errors.length ? undefined : ({ ['--hue' as string]: hue } as CSSProperties)}
     >
-      <span className="quiz-icon">{icon}</span>
+      <IconDisk className="quiz-icon" icon={icon} />
       <h2>{title(c.data) || c.slug}</h2>
       {description(c.data) && <p className="muted">{description(c.data)}</p>}
       {c.errors.length > 0 ? (
@@ -85,7 +86,8 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
       <BackButton label="Tutti i giochi" />
       <header className="home-header">
         <h1 className="logo">
-          {icon} {name.toUpperCase()}
+          <IconDisk className="logo-icon" icon={icon} />
+          {name.toUpperCase()}
         </h1>
         <p className="muted">{intro}</p>
         <div className="home-actions">

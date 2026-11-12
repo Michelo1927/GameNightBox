@@ -1,4 +1,5 @@
 import { BUZZ_KEYS, BUZZ_MODES } from '../../hub/buzzer';
+import icon from './icon';
 import { library } from '../../hub/content';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -128,7 +129,7 @@ function Setup({ slug, data }: { slug: string; data: Playlist }) {
 const musichiere: Game = {
   id: 'musichiere',
   name: 'Musichiere',
-  icon: '🎵',
+  icon,
   tagline: 'Canzoni da YouTube da indovinare: a prenotazione, o a turno con una lista e un cronometro per squadra.',
   tags: ['A squadre', 'Prenotazione o a turno', 'Serve internet'],
   href: '#/musichiere',
@@ -167,7 +168,7 @@ const musichiere: Game = {
         <ContentHome<Playlist>
           game="musichiere"
           name="Musichiere"
-          icon="🎵"
+          icon={icon}
           hue={330}
           intro="Indovinate titolo e artista: prenotandovi sulla stessa canzone, o a turno ognuno con la sua lista."
           rules={RULES}
