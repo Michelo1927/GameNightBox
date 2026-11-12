@@ -133,12 +133,26 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - Finale facoltativo: parola misteriosa con 5 indizi, prenotazione, 250 → 50 punti; chi sbaglia è fuori per quella parola.
 
 **Musichiere** (`#/musichiere`)
-- Colonne di caselle per squadra (5/7/10) che si riempiono solo con le risposte giuste: vince la prima squadra
-  che riempie la colonna (se finiscono le canzoni, chi ne ha di più). Sbagliata = nessuna casella, la squadra
-  salta il turno per quella canzone e la musica riparte per le altre.
-- Lettore YouTube nascosto (solo audio), clip di 10-30 s che si ferma da sola.
-- Prenotazione (`hub/buzzer.ts`): un tasto per squadra (A, L, G, P, Z…) oppure decide l'host
-  (numero della squadra o clic sulla colonna). Si sceglie nel setup.
+- Due modalità, scelte nel setup (cambiarla a partita iniziata la fa ricominciare, con conferma).
+- **A prenotazione** (`Play.tsx`): tutte le squadre sulla stessa canzone. Colonne di caselle per squadra (5/7/10)
+  che si riempiono solo con le risposte giuste: vince la prima squadra che riempie la colonna (se finiscono
+  le canzoni, chi ne ha di più). Sbagliata = nessuna casella, la squadra salta il turno per quella canzone e la
+  musica riparte per le altre. Clip di 10-30 s che si ferma da sola. Niente ruota: chi parte non conta.
+  - Prenotazione (`hub/buzzer.ts`): un tasto per squadra (A, L, G, P, Z…) oppure decide l'host
+    (numero della squadra o clic sulla colonna). Si sceglie nel setup.
+- **A turno** (`TurnPlay.tsx`, stile Sarabanda): la playlist si divide alternando le canzoni (1ª alla prima squadra,
+  2ª alla seconda…; quelle che avanzano da una divisione non esatta restano fuori). La ruota decide chi parte.
+  - Ogni squadra ha un cronometro suo (1-4 min per tutta la lista) che scorre solo nel suo turno, mentre la
+    canzone suona; la canzone non si ferma da sola.
+  - Giusta (1 punto) o sbagliata: si svela il titolo, la musica può continuare, poi tocca all'altra squadra.
+    Passa: la canzone torna dopo, senza svelarla, e tocca all'altra squadra. Nessuno ruba.
+  - Finita la lista si riprendono le passate, in ordine, girando finché ne restano (si possono ripassare).
+  - Svela (S) mostra il titolo e ferma il cronometro, per controllare la risposta (dopo non si può più passare).
+  - Tempo scaduto: le canzoni ancora aperte valgono come sbagliate; le altre squadre continuano da sole.
+  - Video che non parte: Salta, la squadra passa alla sua canzone successiva senza perdere tempo né turno.
+  - La torre di ogni squadra mostra la sua lista (giusta, sbagliata, passata, in corso); oltre 10 canzoni
+    va su due colonne, sul telefono in righe da quattro.
+- Lettore YouTube nascosto (solo audio).
 - I link YouTube sono il punto debole dei contenuti generati da Claude: la pagina "Crea con Claude" li
   controlla uno per uno (oEmbed di YouTube) e mostra il titolo vero del video, con il link modificabile.
 

@@ -19,14 +19,16 @@ interface Props {
   onRestart: () => void;
   /** Why the game can't start yet (e.g. not enough wheels for the teams). */
   blocked?: string;
+  /** Whether the order wheel decides who starts (not where every team plays the same thing at once). Default: yes. */
+  wheel?: boolean;
   /** The game's own options. */
   children?: ReactNode;
 }
 
 /** Teams + options + start, shared by the games. A new game with several teams starts with the order wheel. */
-export default function SetupPage({ back, backLabel, title, description, teams, setTeams, maxTeams, started, onPlay, onRestart, blocked, children }: Props) {
+export default function SetupPage({ back, backLabel, title, description, teams, setTeams, maxTeams, started, onPlay, onRestart, blocked, wheel: withWheel = true, children }: Props) {
   const [wheel, setWheel] = useState(false);
-  const start = () => (!started && teams.length > 1 ? setWheel(true) : onPlay());
+  const start = () => (withWheel && !started && teams.length > 1 ? setWheel(true) : onPlay());
 
   return (
     <div className={`page setup theme-${back.replace(/^#\//, '').split('/')[0]}`}>
@@ -35,7 +37,7 @@ export default function SetupPage({ back, backLabel, title, description, teams, 
       {description && <p className="muted">{description}</p>}
 
       <h2>Squadre</h2>
-      <p className="muted">L'ordine lo decide la ruota quando inizi la partita.</p>
+      {withWheel && <p className="muted">L'ordine lo decide la ruota quando inizi la partita.</p>}
       <TeamList teams={teams} onChange={setTeams} max={maxTeams} />
 
       {children && (

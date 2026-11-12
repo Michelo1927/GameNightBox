@@ -12,9 +12,16 @@ import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import { usePlayer } from './player';
 import type { Playlist } from './schema';
-import { rightsOf, scoreOf, useMusichiere, winnerOf, type MGame } from './state';
+import { loadGame, rightsOf, scoreOf, useMusichiere, winnerOf, type MGame } from './state';
+import TurnPlay from './TurnPlay';
 
+/** The mode is chosen in the setup, so it can't change while this page is open. */
 export default function Play({ loaded }: { loaded: Loaded<Playlist> }) {
+  return loadGame(loaded.slug)?.mode === 'turni' ? <TurnPlay loaded={loaded} /> : <BuzzPlay loaded={loaded} />;
+}
+
+/** "A prenotazione": every team on the same song, the first to book answers. */
+function BuzzPlay({ loaded }: { loaded: Loaded<Playlist> }) {
   const { slug, data } = loaded;
   const { game, setGame, undo, canUndo } = useMusichiere(slug);
   const [ranking, setRanking] = useState<null | 'normal' | 'celebrate'>(null);

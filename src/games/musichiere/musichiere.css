@@ -94,3 +94,44 @@
 .mu-edit-tools { display: flex; gap: 4px; }
 .mu-edit-tools .btn { padding: 6px 10px; }
 .mu-link .btn { padding: 8px 12px; }
+
+/* "A turno": each tower is the team's own list of songs, with its clock. */
+.mu-turn { cursor: default; }
+.mu-turn.wait { opacity: 0.6; filter: saturate(0.7); }
+.mu-clock {
+  min-width: 100%; box-sizing: border-box; padding: 0 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.5); text-align: center;
+  font-family: var(--font-display); font-size: clamp(1.6rem, 4vh, 2.4rem); letter-spacing: 1px; font-variant-numeric: tabular-nums;
+}
+.mu-turn.on .mu-clock { color: var(--gold-hi); text-shadow: 0 0 14px rgba(255, 201, 40, 0.7); }
+.mu-clock.hurry { color: var(--ko) !important; text-shadow: 0 0 14px rgba(255, 77, 94, 0.7) !important; animation: mu-hurry 1s ease-in-out infinite; }
+@keyframes mu-hurry { 50% { transform: scale(1.08); } }
+/* Up to ten boxes per column, then a second column of narrower boxes. */
+.mu-list { display: grid; grid-template-rows: repeat(var(--rows), auto); grid-auto-flow: column; }
+.mu-list.wide .mu-slot { width: clamp(38px, 3.8vw, 58px); }
+.mu-list .mu-slot {
+  display: grid; place-items: center; color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-display); font-size: clamp(0.8rem, 2vh, 1.15rem); letter-spacing: 1px;
+}
+.mu-list .mu-slot.right { color: #0b5c3a; }
+.mu-slot.wrong { background: #2b0d1c; color: var(--ko); box-shadow: inset 0 0 0 2px var(--ko); }
+.mu-list .mu-slot.wrong { color: var(--ko); }
+.mu-list .mu-slot.pass { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: #5a3a00; text-transform: uppercase; font-size: clamp(0.7rem, 1.6vh, 0.95rem); }
+.mu-list .mu-slot.skip { background: rgba(255, 255, 255, 0.06); box-shadow: none; }
+.mu-list .mu-slot.cur { background: var(--bg-2); color: var(--gold-hi); box-shadow: 0 0 0 2px var(--gold), 0 0 16px rgba(255, 201, 40, 0.6); animation: mu-cur 1.4s ease-in-out infinite; }
+@keyframes mu-cur { 50% { box-shadow: 0 0 0 2px var(--gold), 0 0 26px rgba(255, 201, 40, 0.95); } }
+.mu-verdict {
+  padding: 4px 20px; border-radius: 12px; font-family: var(--font-display); letter-spacing: 1px; font-size: clamp(1.4rem, 3.4vh, 2.2rem);
+  animation: pop-in 0.45s var(--ease-spring) backwards;
+}
+.mu-verdict.right { background: var(--ok); color: #05351d; box-shadow: 0 0 30px rgba(46, 230, 138, 0.5); }
+.mu-verdict.wrong { background: var(--ko); color: #fff; box-shadow: 0 0 30px rgba(255, 77, 94, 0.5); }
+.mu-sub { font-weight: 800; color: var(--muted); font-size: clamp(0.95rem, 2vh, 1.25rem); }
+/* Upright phone: the songs in rows of four, so the towers stay short and the buttons near the top. */
+@media (max-width: 700px) {
+  .mu-list, .mu-list.wide { grid-template-rows: none; grid-auto-flow: row; grid-template-columns: repeat(4, auto); }
+  .mu-list { gap: 4px; padding: 6px; }
+  .mu-list .mu-slot, .mu-list.wide .mu-slot { width: 28px; height: 24px; font-size: 0.8rem; }
+  .mu-turn { padding: 10px 8px; }
+  .mu-list .mu-slot.pass { font-size: 0.6rem; letter-spacing: 0; }
+  .mu-clock { font-size: 1.5rem; }
+}
