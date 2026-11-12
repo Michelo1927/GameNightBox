@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { GameTag } from './components/GameTags';
 
 /** Name shown on the hub's home page. */
 export const HUB_NAME = { main: 'GAME NIGHT', accent: 'BOX' };
@@ -10,8 +11,8 @@ export interface Game {
   icon: ReactNode;
   /** One line on the home card. */
   tagline: string;
-  /** Short facts shown as tags on the home card (e.g. "2-10 squadre"). */
-  tags: string[];
+  /** Short facts shown as icons in the corner of the home card (see components/GameTags.tsx). */
+  tags: GameTag[];
   /** Where the home card leads (the game's own first page). */
   href: string;
   /**

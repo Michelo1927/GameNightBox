@@ -91,7 +91,7 @@ const sbagliato: Game = {
   name: 'Sbagliato!',
   icon,
   tagline: 'Domande facilissime a raffica: bisogna dire la risposta sbagliata, tante volte di fila, contro il tempo.',
-  tags: ['A squadre', 'A tempo', 'Da creare'],
+  tags: ['tempo'],
   href: '#/sbagliato',
   route(parts) {
     const [section, slug, view] = parts;

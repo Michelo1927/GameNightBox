@@ -82,7 +82,7 @@ const passaparola: Game = {
   name: 'Passaparola',
   icon,
   tagline: 'Una ruota di 21 lettere per squadra: una definizione per lettera, contro il tempo.',
-  tags: ['A squadre', 'Serve un host', 'Da creare'],
+  tags: ['host'],
   href: '#/passaparola',
   route(parts) {
     const [section, slug, view] = parts;

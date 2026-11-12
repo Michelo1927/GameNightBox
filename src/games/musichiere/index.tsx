@@ -131,7 +131,7 @@ const musichiere: Game = {
   name: 'Musichiere',
   icon,
   tagline: 'Canzoni da YouTube da indovinare: a prenotazione, o a turno con una lista e un cronometro per squadra.',
-  tags: ['A squadre', 'Prenotazione o a turno', 'Serve internet'],
+  tags: ['prenotazione', 'turno', 'internet'],
   href: '#/musichiere',
   route(parts) {
     const [section, slug, view] = parts;

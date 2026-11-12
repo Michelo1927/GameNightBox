@@ -67,7 +67,7 @@ const catena: Game = {
   name: 'Catena',
   icon,
   tagline: 'Parole legate a due a due: si scoprono una alla volta, lettera dopo lettera. Con finale a prenotazione.',
-  tags: ['A squadre', 'Serve un host', 'Da creare'],
+  tags: ['host'],
   href: '#/catena',
   route(parts) {
     const [section, slug, view] = parts;

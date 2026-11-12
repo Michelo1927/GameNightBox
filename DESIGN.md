@@ -99,6 +99,11 @@ Regole dell'hub:
   e `gnb:<gioco>:draft` (bozza del creatore).
 - Icone dei giochi: un disegno SVG per gioco in `src/games/<id>/icon.tsx` (bianco con dettagli scuri, classe `d`),
   messo sul disco lucido del colore del gioco (`IconDisk` in `src/hub/components/GameIcon.tsx`). Niente emoji.
+- Tag dei giochi in home: niente testo, solo iconcine a linea in alto a destra della scheda, con la spiegazione al
+  passaggio del mouse (`GAME_TAGS` in `src/hub/components/GameTags.tsx`; ogni gioco sceglie le sue in `tags`).
+  Il titolo lascia loro lo spazio, così la scheda non si allunga. Si mostrano solo quelle che distinguono un gioco
+  dagli altri: "A squadre" e "Da creare" ce li hanno tutti, quindi restano definiti ma nascosti (il primo servirà
+  quando arriverà un gioco tutti contro tutti).
 - Mini tutorial (`src/hub/components/Tutorial.tsx`): il pulsante "?" in home, nella pagina di ogni gioco e nelle
   pagine del creatore (crea, Claude, codice, carica) mostra i passi di quella pagina, illuminando i pulsanti di cui
   parlano. La prima volta l'app chiede una sola volta se si vogliono i tutorial; con "sì" ogni sezione mostra il suo

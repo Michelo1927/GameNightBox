@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 import { HUB_NAME, type Game } from './games';
+import GameTags from './components/GameTags';
 import TutorialButton from './components/Tutorial';
 import { HUB_TUTORIAL } from './tutorials';
 
@@ -49,15 +50,11 @@ export default function HubHome({ games }: { games: Game[] }) {
         {games.map((g) => (
           <a key={g.id} className={`game-card theme-${g.id}`} href={g.href}>
             <span className="game-icon" aria-hidden>{g.icon}</span>
-            <span className="game-text">
+            <span className="game-text" style={{ '--tag-count': g.tags.length } as CSSProperties}>
               <h2>{g.name}</h2>
               <p>{g.tagline}</p>
-              <span className="tags">
-                {g.tags.map((t) => (
-                  <span key={t}>{t}</span>
-                ))}
-              </span>
             </span>
+            <GameTags tags={g.tags} />
           </a>
         ))}
       </div>
