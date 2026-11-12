@@ -7,6 +7,8 @@ import { go } from '../nav';
 import { ask } from '../ask';
 import BackButton from './BackButton';
 import { IconDisk } from './GameIcon';
+import TutorialButton from './Tutorial';
+import { GAME_TUTORIAL } from '../tutorials';
 
 interface Props<T> {
   game: string;
@@ -84,6 +86,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
   return (
     <div className={`page home theme-${game}`}>
       <BackButton label="Tutti i giochi" />
+      <TutorialButton tutorial={GAME_TUTORIAL} look="fab" />
       <header className="home-header">
         <h1 className="logo">
           <IconDisk className="logo-icon" icon={icon} />

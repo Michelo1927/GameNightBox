@@ -70,3 +70,69 @@ button.link { background: none; border: 0; padding: 0; color: var(--gold); font:
 .ask { width: min(420px, 100%); padding: 22px; border-radius: 16px; background: var(--bg-2, #141a4a); border: 1px solid var(--line); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
 .ask p { margin: 0 0 18px; font-size: 1.1rem; font-weight: 600; line-height: 1.4; }
 .ask-buttons { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+
+/* ---------- Mini tutorial (hub/components/Tutorial.tsx) ---------- */
+/* The "?" button: in the top right corner of the pages without a bar, or at the end of a creator's header. */
+.help-fab, .help-pill {
+  flex: none; display: grid; place-items: center; aspect-ratio: 1; padding: 0; border-radius: 50%; cursor: pointer;
+  font: 800 1.15rem/1 var(--font-body); color: #fff;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.16); backdrop-filter: blur(8px);
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--ease-out);
+}
+.help-fab { position: fixed; right: 20px; top: 20px; z-index: 5; width: 48px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); animation: fade-in 0.4s ease-out 0.15s backwards; }
+.help-pill { width: 38px; font-size: 1.05rem; }
+.help-fab:is(:hover, :focus-visible), .help-pill:is(:hover, :focus-visible) {
+  color: var(--gold-hi); background: rgba(255, 201, 40, 0.1); border-color: color-mix(in srgb, var(--gold) 60%, transparent);
+  box-shadow: 0 0 22px rgba(255, 201, 40, 0.25), 0 6px 20px rgba(0, 0, 0, 0.35); transform: scale(1.06);
+}
+body:has(.overlay, .zoom, .ask-backdrop, .app-intro) .help-fab { display: none; }
+/* A "?" written in the text, like the button. */
+.tour-q {
+  display: inline-grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 50%; vertical-align: 0.05em;
+  font-size: 0.8em; line-height: 1; color: #fff; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.ask .tour-ask-note { margin: -8px 0 18px; font-size: 0.95rem; font-weight: 400; color: var(--muted); }
+.ask .tour-ask-note b { color: var(--text); }
+
+.tour { position: fixed; inset: 0; z-index: 200; }
+.tour-catch { position: absolute; inset: 0; }
+.tour-dim .tour-catch { background: rgba(5, 3, 25, 0.72); backdrop-filter: blur(2px); animation: fade-in 0.25s ease-out; }
+/* The lit part: a hole in the dark, with a gold ring; it glides from one part to the next. */
+.tour-spot {
+  position: fixed; border-radius: 14px; pointer-events: none;
+  box-shadow: 0 0 0 200vmax rgba(5, 3, 25, 0.72), 0 0 0 3px var(--gold), 0 0 34px 8px rgba(255, 201, 40, 0.45);
+  transition: top 0.35s var(--ease-out), left 0.35s var(--ease-out), width 0.35s var(--ease-out), height 0.35s var(--ease-out);
+  animation: tour-ring 1.6s ease-in-out infinite alternate;
+}
+@keyframes tour-ring { to { box-shadow: 0 0 0 200vmax rgba(5, 3, 25, 0.72), 0 0 0 4px var(--gold-hi), 0 0 48px 12px rgba(255, 201, 40, 0.6); } }
+.tour-card {
+  position: fixed; left: 50%; translate: -50% 0; width: min(460px, calc(100% - 32px)); box-sizing: border-box;
+  max-height: calc(100% - 32px); overflow-y: auto;
+  padding: 18px 20px 16px; border-radius: 18px; color: var(--text);
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  box-shadow: 0 0 40px rgba(255, 201, 40, 0.18), 0 20px 60px rgba(0, 0, 0, 0.55);
+  animation: tour-in 0.35s var(--ease-spring) backwards;
+}
+.tour-bottom { bottom: 16px; }
+.tour-top { top: 16px; }
+.tour-middle { top: 50%; translate: -50% -50%; }
+@keyframes tour-in { from { opacity: 0; transform: translateY(14px) scale(0.96); } }
+.tour-count { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+.tour-card h2 { margin: 4px 0 8px; font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; letter-spacing: 0.5px; color: var(--gold-hi); }
+.tour-text { line-height: 1.5; }
+.tour-text p { margin: 0 0 8px; }
+.tour-text ul { margin: 0 0 8px; padding-left: 20px; }
+.tour-text li { margin: 4px 0; }
+.tour-dots { display: flex; gap: 6px; margin: 12px 0 14px; }
+.tour-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); transition: width 0.25s var(--ease-out), background 0.25s; }
+.tour-dots .done { background: color-mix(in srgb, var(--gold) 55%, transparent); }
+.tour-dots .on { width: 22px; border-radius: 99px; background: var(--gold); }
+.tour-buttons { display: flex; gap: 8px; align-items: center; }
+.tour-buttons .tour-skip { margin-right: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .tour-spot { transition: none; animation: none; }
+  .tour-card { animation: none; }
+}
+/* Phone: the sign on the home page fills the width, so it starts below the "?" button. */
+@media (max-width: 560px) { body:has(.help-fab) .hub-home { padding-top: 76px; } }

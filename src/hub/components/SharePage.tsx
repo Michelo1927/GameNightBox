@@ -5,6 +5,8 @@ import { go } from '../nav';
 import { encode, MESSAGE_LIMIT } from '../share';
 import { copyText } from '../text';
 import { BackPill } from './BackButton';
+import TutorialButton from './Tutorial';
+import { SHARE_TUTORIAL } from '../tutorials';
 
 interface Props<T> {
   game: string;
@@ -42,6 +44,7 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
     <header className="cr-header">
       <BackPill label="Indietro" />
       <h1>{errors.length ? 'Quasi pronto' : 'Pronto! 🎉'}</h1>
+      {!errors.length && <TutorialButton tutorial={SHARE_TUTORIAL} />}
     </header>
   );
   if (!draft || errors.length)

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { HUB_NAME, type Game } from './games';
+import TutorialButton from './components/Tutorial';
+import { HUB_TUTORIAL } from './tutorials';
 
 /** Games that fit on a TV in three rows of three; from the tenth on, rows of four. */
 const ROW_OF_THREE_MAX = 9;
@@ -34,6 +36,7 @@ export default function HubHome({ games }: { games: Game[] }) {
 
   return (
     <div className="page home hub-home">
+      <TutorialButton tutorial={HUB_TUTORIAL} look="fab" />
       <header className="hub-hero">
         <h1 className="marquee">
           <span>{HUB_NAME.main}</span>

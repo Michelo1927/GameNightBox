@@ -9,6 +9,9 @@ import { blankQuiz, clearDraft, copyText, lastSavedSlug, loadDraft, markDraftDon
 import MediaPicker from './MediaPicker';
 import { ask } from '../../../hub/ask';
 import { BackPill } from '../../../hub/components/BackButton';
+import TutorialButton from '../../../hub/components/Tutorial';
+import { SHARE_TUTORIAL } from '../../../hub/tutorials';
+import { BOARD_TUTORIAL, QUESTION_TUTORIAL } from './tutorials';
 
 const DIFFICULTY: Record<number, string> = { 100: 'facilissima', 200: 'facile', 300: 'media', 400: 'difficile', 500: 'da esperti' };
 
@@ -89,6 +92,7 @@ function BoardStep({ quiz, setQuiz }: { quiz: Quiz; setQuiz: SetQuiz }) {
       <header className="cr-header">
         <BackPill label="Esci" />
         <h1>Crea un quiz</h1>
+        <TutorialButton tutorial={BOARD_TUTORIAL} />
       </header>
 
       <p className="cr-tip">
@@ -180,6 +184,7 @@ function QuestionStep({ quiz, setQuiz, c, q }: { quiz: Quiz; setQuiz: SetQuiz; c
           {cat.name || `Categoria ${c + 1}`} <span className="gold">{question.points}</span>
         </h1>
         <span className="cr-count">{idx + 1}/{flat.length}</span>
+        <TutorialButton tutorial={QUESTION_TUTORIAL} />
       </header>
       <p className="cr-tip small">Difficoltà: <b>{DIFFICULTY[question.points] ?? 'a scelta'}</b></p>
 
@@ -392,6 +397,7 @@ function ShareStep({ quiz }: { quiz: Quiz }) {
       <header className="cr-header">
         <BackPill label="Indietro" />
         <h1>Quiz pronto! 🎉</h1>
+        <TutorialButton tutorial={SHARE_TUTORIAL} />
       </header>
       <p className="cr-tip">
         Manda il <b>link</b> o il <b>codice</b> a chi farà da host. Per giocare: apri il sito, tocca <b>📥 Carica un quiz</b> e incolla il

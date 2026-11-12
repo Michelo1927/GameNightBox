@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 import type { Validation } from '../content';
 import { ask } from '../ask';
 import { BackPill } from './BackButton';
+import TutorialButton from './Tutorial';
+import { CREATOR_TUTORIAL } from '../tutorials';
 
 interface Props {
   game: string;
@@ -23,6 +25,7 @@ export default function CreatorPage({ game, title, tip, validation, progress, fu
       <header className="cr-header">
         <BackPill label="Esci" />
         <h1>{title}</h1>
+        <TutorialButton tutorial={CREATOR_TUTORIAL} />
       </header>
       <p className="cr-tip">{tip}</p>
       {full && <p className="cr-warning">Spazio esaurito su questo dispositivo: le ultime modifiche non sono salvate.</p>}

@@ -5,6 +5,8 @@ import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
 import { copyText, replaceDraft } from './draft';
 import { BackPill } from '../../../hub/components/BackButton';
+import TutorialButton from '../../../hub/components/Tutorial';
+import { CLAUDE_TUTORIAL } from '../../../hub/tutorials';
 
 // #/claude: builds a ready prompt for claude.ai; the JSON it answers with is pasted back here and played.
 
@@ -99,6 +101,7 @@ export default function ClaudePage() {
       <header className="cr-header">
         <BackPill label="Esci" />
         <h1>🤖 Crea con Claude</h1>
+        <TutorialButton tutorial={CLAUDE_TUTORIAL} />
       </header>
       <p className="cr-tip">
         Descrivi il quiz, copia il prompt e incollalo su <b>claude.ai</b>. Poi copia la risposta di Claude e incollala qui sotto: puoi

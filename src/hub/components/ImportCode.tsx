@@ -4,6 +4,8 @@ import { startDraft } from '../draft';
 import { go, redirect } from '../nav';
 import { decode } from '../share';
 import { BackPill } from './BackButton';
+import TutorialButton from './Tutorial';
+import { IMPORT_TUTORIAL } from '../tutorials';
 
 interface Props<T> {
   game: string;
@@ -80,6 +82,7 @@ export default function ImportCode<T extends { title: string; author?: string }>
       <header className="cr-header">
         <BackPill label="Esci" />
         <h1>Carica {what}</h1>
+        <TutorialButton tutorial={IMPORT_TUTORIAL} />
       </header>
       <p className="cr-tip">Incolla il codice (inizia con <b>{prefix}</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>
       <textarea

@@ -97,6 +97,13 @@ Regole dell'hub:
 - Le chiavi del `localStorage` non sono cambiate (`jeopardy-quiz:…`): partite, bozze e quiz caricati restano.
   I giochi nuovi usano `gnb:<gioco>:game:<slug>` (partita), `gnb:<gioco>:local` (creati sul dispositivo)
   e `gnb:<gioco>:draft` (bozza del creatore).
+- Icone dei giochi: un disegno SVG per gioco in `src/games/<id>/icon.tsx` (bianco con dettagli scuri, classe `d`),
+  messo sul disco lucido del colore del gioco (`IconDisk` in `src/hub/components/GameIcon.tsx`). Niente emoji.
+- Mini tutorial (`src/hub/components/Tutorial.tsx`): il pulsante "?" in home, nella pagina di ogni gioco e nelle
+  pagine del creatore (crea, Claude, codice, carica) mostra i passi di quella pagina, illuminando i pulsanti di cui
+  parlano. La prima volta l'app chiede una sola volta se si vogliono i tutorial; con "sì" ogni sezione mostra il suo
+  da sola la prima volta che la si apre. Scelta e tutorial già visti stanno in `game-night:tutorial`.
+  I testi sono in `src/hub/tutorials.tsx` (quelli del creatore Jeopardy in `src/games/jeopardy/creator/tutorials.tsx`).
 
 ## Gli altri giochi
 

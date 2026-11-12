@@ -5,6 +5,8 @@ import type { Quiz } from '../quiz/schema';
 import { decodeQuiz } from '../quiz/share';
 import { replaceDraft } from './draft';
 import { BackPill } from '../../../hub/components/BackButton';
+import TutorialButton from '../../../hub/components/Tutorial';
+import { IMPORT_TUTORIAL } from '../../../hub/tutorials';
 
 // #/jeopardy/carica          paste a code / open a file
 // #/jeopardy/carica/<code>   opened from a shared link: load and go straight to the game
@@ -74,6 +76,7 @@ export default function ImportPage({ code }: { code?: string }) {
       <header className="cr-header">
         <BackPill label="Esci" />
         <h1>Carica un quiz</h1>
+        <TutorialButton tutorial={IMPORT_TUTORIAL} />
       </header>
       <p className="cr-tip">Incolla il codice (inizia con <b>JQ1.</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>
       <textarea
