@@ -1,9 +1,12 @@
-import { LETTERS } from './schema';
+import { lang } from '../../hub/i18n';
+import { LETTERS_EN, LETTERS_IT } from './schema';
 
 type Form = Record<string, string | number | boolean>;
 
 /** Prompt for any AI chat: ChatGPT, Claude, Gemini… (also the reference for the Claude Code skill). */
 export function prompt(f: Form): string {
+  if (lang === 'en') return promptEn(f);
+  const LETTERS = LETTERS_IT;
   const n = Number(f.teams) || 2;
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
@@ -47,6 +50,57 @@ Rispondi SOLO con un blocco di codice JSON valido, senza altro testo:
       ]
     }
     // … ${n} ruote in tutto
+  ]
+}`;
+}
+
+function promptEn(f: Form): string {
+  const LETTERS = LETTERS_EN;
+  const n = Number(f.teams) || 2;
+  const topic = String(f.topic ?? '').trim();
+  const audience = String(f.audience ?? '').trim();
+  return `Create an "Alphabet Wheel" game in English for a team game night with friends.
+
+Theme: ${topic || 'mixed general knowledge (movies, music, geography, history, food, sport, science, everyday words)'}.
+Players: ${audience || 'friends between 20 and 40'}.
+
+HOW IT WORKS
+Each team has its own wheel with the ${LETTERS.length} letters of the English alphabet, in this order:
+${LETTERS.join(' ')}
+For each letter there is a clue and the answer must START with that letter ("type": "inizia", which means "starts with"),
+or, only for the hard letters, CONTAIN that letter ("type": "contiene", which means "contains").
+Keep these two Italian values exactly as written: they are the file format.
+
+RULES
+- Create ${n} wheels, one per team. Each wheel has all ${LETTERS.length} letters, in the order above.
+- The wheels must be equally hard: at the same letter, similar difficulty but different answers.
+- No answer repeated between the wheels.
+- Answer: preferably ONE word (common noun, proper name, verb), without an article.
+  The answer must really start with the letter (or contain it if "contiene"): check it letter by letter.
+- Use "contiene" only when needed (typically Q, X, Z and sometimes J, K, Y). In the clue don't say whether it starts with or contains the letter: the game shows it.
+- Clue: clear, only one possible answer, 200 characters at most, TV quiz style.
+  Examples: N, inizia → "The great river of Egypt" → "Nile"; X, contiene → "The opposite of the minimum" → "Most" NO
+  (it doesn't contain the X!), better X, contiene → "The opposite of the minimum" → "Maximum".
+- The clue must not contain the answer or words of the same family.
+- Level: easy/medium, fit for the whole table. Vary the topics within the same wheel.
+- "accept": optional, other valid answers (synonyms, other spellings), that also respect the letter.
+
+FORMAT
+Answer ONLY with a valid JSON code block, with no other text:
+{
+  "lang": "en",
+  "title": "Game title",
+  "description": "A one-line description",
+  "ruote": [
+    {
+      "items": [
+        { "letter": "A", "type": "inizia", "question": "…", "answer": "…" },
+        { "letter": "B", "type": "inizia", "question": "…", "answer": "…", "accept": ["…"] },
+        { "letter": "X", "type": "contiene", "question": "…", "answer": "…" }
+        // … all ${LETTERS.length} letters, up to Z
+      ]
+    }
+    // … ${n} wheels in all
   ]
 }`;
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { youtubeId } from '../../hub/media';
 import { checkYouTube } from '../../hub/youtube';
 import type { Playlist } from './schema';
+import { tr } from '../../hub/i18n';
 
 export type Check = { title?: string; error?: string } | 'loading';
 
@@ -15,11 +16,11 @@ export function useYouTubeChecks(links: string[]) {
     for (const id of ids)
       checkYouTube(id)
         .then((r) => setChecks((c) => ({ ...c, [id]: r })))
-        .catch(() => setChecks((c) => ({ ...c, [id]: { error: 'non riesco a controllarlo (sei offline?)' } })));
+        .catch(() => setChecks((c) => ({ ...c, [id]: { error: tr('non riesco a controllarlo (sei offline?)', "can't check it (are you offline?)") } })));
   }, [links, checks]);
   return (link: string): Check | undefined => {
     const id = youtubeId(link.trim());
-    return id ? checks[id] : { error: 'link non valido' };
+    return id ? checks[id] : { error: tr('link non valido', 'link not valid') };
   };
 }
 
@@ -27,7 +28,7 @@ export function useYouTubeChecks(links: string[]) {
 export function CheckLine({ check }: { check: Check | undefined }) {
   return (
     <div className="cr-hint">
-      {check === 'loading' || !check ? 'controllo…' : check.error ? <span className="flash-ko">✗ {check.error}</span> : <span>▶ {check.title}</span>}
+      {check === 'loading' || !check ? tr('controllo…', 'checking…') : check.error ? <span className="flash-ko">✗ {check.error}</span> : <span>▶ {check.title}</span>}
     </div>
   );
 }
@@ -51,10 +52,12 @@ export default function Preview({ data, update }: { data: Playlist; update: (d: 
     <div className="mu-preview">
       <b>{data.title}</b>
       <p className="cr-hint">
-        Controlla che il video trovato sia la canzone giusta. Se un link non va, cerca la canzone su YouTube, copia il link e incollalo,
-        oppure togli la canzone.
+        {tr(
+          'Controlla che il video trovato sia la canzone giusta. Se un link non va, cerca la canzone su YouTube, copia il link e incollalo, oppure togli la canzone.',
+          "Check that the video found is the right song. If a link doesn't work, search for the song on YouTube, copy the link and paste it, or remove the song.",
+        )}
       </p>
-      {bad > 0 && <p className="cr-error">{bad === 1 ? '1 link non funziona' : `${bad} link non funzionano`}</p>}
+      {bad > 0 && <p className="cr-error">{bad === 1 ? tr('1 link non funziona', "1 link doesn't work") : tr(`${bad} link non funzionano`, `${bad} links don't work`)}</p>}
       <ol>
         {songs.map((s, i) => (
           <li key={i}>
@@ -62,8 +65,8 @@ export default function Preview({ data, update }: { data: Playlist; update: (d: 
               <b>{s?.title}</b> · {s?.artist}
             </div>
             <div className="mu-link">
-              <input value={String(s?.youtube ?? '')} onChange={(e) => setLink(i, e.target.value)} placeholder="Link YouTube" />
-              <button className="btn ghost" onClick={() => remove(i)} title="Togli questa canzone">🗑</button>
+              <input value={String(s?.youtube ?? '')} onChange={(e) => setLink(i, e.target.value)} placeholder={tr('Link YouTube', 'YouTube link')} />
+              <button className="btn ghost" onClick={() => remove(i)} title={tr('Togli questa canzone', 'Remove this song')}>🗑</button>
             </div>
             <CheckLine check={check(String(s?.youtube ?? ''))} />
           </li>

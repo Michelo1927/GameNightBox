@@ -6,6 +6,8 @@
   --size: min(68vh, 70vw);
   position: relative; width: var(--size); height: var(--size); flex: none; border-radius: 50%;
 }
+/* 26 letters (English): smaller letters, so they don't touch. */
+.pp-wheel.many .pp-letter { width: calc(var(--size) * 0.084); height: calc(var(--size) * 0.084); font-size: calc(var(--size) * 0.043); }
 .pp-wheel::before {
   /* Neon ring the letters sit on, and a dark lit disc in the middle. */
   content: ''; position: absolute; inset: 5%; border-radius: 50%;

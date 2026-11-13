@@ -9,6 +9,7 @@ import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import type { TopTenSet } from './schema';
 import { endList, findAnswer, scoreOf, startList, useTopTen, VALUE, type TGame } from './state';
+import { KEY, tr } from '../../hub/i18n';
 
 type Flash = { ok: boolean; text: string } | null;
 
@@ -70,11 +71,12 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
       }
       return full ? endList(next, id) : next;
     });
-    if (game.phase === 'rubata') say({ ok: true, text: `${answering.name} ruba ${game.pot + VALUE} punti!` });
-    else if (game.phase === 'sfida') say({ ok: true, text: `Sul tabellone! +${VALUE} in palio` });
-    else say({ ok: true, text: `+${VALUE} in palio` });
+    if (game.phase === 'rubata') say({ ok: true, text: tr(`${answering.name} ruba ${game.pot + VALUE} punti!`, `${answering.name} steals ${game.pot + VALUE} points!`) });
+    else if (game.phase === 'sfida') say({ ok: true, text: tr(`Sul tabellone! +${VALUE} in palio`, `On the board! +${VALUE} in the pot`) });
+    else say({ ok: true, text: tr(`+${VALUE} in palio`, `+${VALUE} in the pot`) });
   };
 
+  const notThere = (what?: string) => (what ? tr(`«${what}» non c'è. `, `“${what}” isn't there. `) : '');
   const wrong = (what?: string) => {
     if (!answering) return;
     const id = answering.id;
@@ -83,12 +85,14 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
     if (game.phase === 'sfida') {
       const locked = [...game.locked, id];
       const nobody = locked.length >= game.teams.length;
-      say({ ok: false, text: nobody ? 'Nessuno ci ha preso: prenotatevi di nuovo' : `${what ? `«${what}» non c'è. ` : ''}${answering.name} è fuori dalla sfida` });
+      say({ ok: false, text: nobody
+          ? tr('Nessuno ci ha preso: prenotatevi di nuovo', 'Nobody got it: buzz in again')
+          : `${notThere(what)}${tr(`${answering.name} è fuori dalla sfida`, `${answering.name} is out of the face-off`)}` });
       save((g) => ({ ...g, buzzed: undefined, locked: nobody ? [] : locked }));
     } else if (game.phase === 'gioco') {
       const strikes = game.strikes + 1;
       const out = strikes >= game.maxStrikes;
-      say({ ok: false, text: `${what ? `«${what}» non c'è. ` : ''}${out ? (others.length ? 'Errori finiti: si può rubare!' : 'Errori finiti') : `Errore ${strikes} di ${game.maxStrikes}`}` });
+      say({ ok: false, text: `${notThere(what)}${out ? (others.length ? tr('Errori finiti: si può rubare!', 'Out of mistakes: time to steal!') : tr('Errori finiti', 'Out of mistakes')) : tr(`Errore ${strikes} di ${game.maxStrikes}`, `Mistake ${strikes} of ${game.maxStrikes}`)}` });
       save((g) => {
         const next = { ...g, strikes };
         if (!out) return next;
@@ -97,7 +101,7 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
     } else if (game.phase === 'rubata') {
       const locked = [...game.locked, id];
       const allOut = others.every((t) => locked.includes(t.id));
-      say({ ok: false, text: `${what ? `«${what}» non c'è. ` : ''}${allOut ? `I punti restano a ${control?.name ?? ''}` : `${answering.name} non ruba`}` });
+      say({ ok: false, text: `${notThere(what)}${allOut ? tr(`I punti restano a ${control?.name ?? ''}`, `The points stay with ${control?.name ?? ''}`) : tr(`${answering.name} non ruba`, `${answering.name} doesn't steal`)}` });
       save((g) => (allOut ? endList({ ...g, locked }, g.control) : { ...g, locked, buzzed: undefined }));
     }
   };
@@ -107,7 +111,7 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
     if (!text || !list || !answering) return;
     const i = findAnswer(list, text);
     setGuess('');
-    if (i >= 0 && shown[i]) say({ ok: false, text: `«${answers[i].text}» è già sul tabellone: un'altra!` });
+    if (i >= 0 && shown[i]) say({ ok: false, text: tr(`«${answers[i].text}» è già sul tabellone: un'altra!`, `“${answers[i].text}” is already on the board: another one!`) });
     else if (i >= 0) right(i);
     else wrong(text);
   };
@@ -149,17 +153,17 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
   const lockedNames = game.teams.filter((t) => game.locked.includes(t.id) && t.id !== game.control).map((t) => t.name);
   const keysLine = game.teams
     .filter((t) => !game.locked.includes(t.id))
-    .map((t) => `${t.name}: tasto ${buzzKeyOf(game.teams, t.id)}`)
+    .map((t) => `${t.name}: ${tr('tasto', 'key')} ${buzzKeyOf(game.teams, t.id)}`)
     .join(' · ');
   const phaseLabel = !list
-    ? 'Fine'
+    ? tr('Fine', 'The end')
     : game.phase === 'sfida'
-      ? 'Sfida: prenotatevi'
+      ? tr('Sfida: prenotatevi', 'Face-off: buzz in')
       : game.phase === 'gioco'
-        ? `Gioca ${control?.name ?? ''}`
+        ? tr(`Gioca ${control?.name ?? ''}`, `${control?.name ?? ''} plays`)
         : game.phase === 'rubata'
-          ? 'Si può rubare'
-          : 'Lista finita';
+          ? tr('Si può rubare', 'Steal time')
+          : tr('Lista finita', 'List over');
 
   return (
     <div className="board-page tt-page">
@@ -170,7 +174,9 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
         onRanking={() => setRanking(game.over ? 'celebrate' : 'normal')}
         onSetup={() => go(`/topten/${slug}/setup`)}
       >
-        <span className="pill" key={game.index}>Lista {Math.min(game.index + 1, data.liste.length)} di {data.liste.length}</span>
+        <span className="pill" key={game.index}>
+          {tr(`Lista ${Math.min(game.index + 1, data.liste.length)} di ${data.liste.length}`, `List ${Math.min(game.index + 1, data.liste.length)} of ${data.liste.length}`)}
+        </span>
         {list && (
           <span className="pill" key={phaseLabel} style={game.phase === 'gioco' ? { color: control?.color } : undefined}>{phaseLabel}</span>
         )}
@@ -181,7 +187,7 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
           <>
             <div className="tt-question" key={`q${game.index}`}>
               <h2>{list.question}</h2>
-              {list.source && <small>Fonte: {list.source}</small>}
+              {list.source && <small>{tr('Fonte', 'Source')}: {list.source}</small>}
             </div>
 
             <div className="tt-main">
@@ -196,8 +202,8 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
                       style={{ ['--i' as string]: i, ['--team' as string]: by?.color ?? 'transparent', ...(late >= 0 ? { ['--late' as string]: late } : {}) }}
                       disabled={game.phase !== 'fine' || shown[i]}
                       onClick={() => revealOne(i)}
-                      title={game.phase === 'fine' && !shown[i] ? 'Svela questa risposta' : undefined}
-                      aria-label={shown[i] ? `${i + 1}: ${a.text}` : `${i + 1}: coperta`}
+                      title={game.phase === 'fine' && !shown[i] ? tr('Svela questa risposta', 'Reveal this answer') : undefined}
+                      aria-label={shown[i] ? `${i + 1}: ${a.text}` : `${i + 1}: ${tr('coperta', 'covered')}`}
                     >
                       <span className="tt-num">{i + 1}</span>
                       <span className="tt-face">
@@ -215,11 +221,11 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
 
               <div className="tt-side">
                 <div className="tt-pot">
-                  <small>{game.phase === 'fine' ? (winner ? `a ${winner.name}` : 'nessuno') : 'In palio'}</small>
+                  <small>{game.phase === 'fine' ? (winner ? tr(`a ${winner.name}`, `to ${winner.name}`) : tr('nessuno', 'nobody')) : tr('In palio', 'In the pot')}</small>
                   <AnimatedNumber value={game.pot} />
                 </div>
                 {game.phase !== 'sfida' && (
-                  <div className="tt-strikes" aria-label={`Errori: ${game.strikes} di ${game.maxStrikes}`}>
+                  <div className="tt-strikes" aria-label={tr(`Errori: ${game.strikes} di ${game.maxStrikes}`, `Mistakes: ${game.strikes} of ${game.maxStrikes}`)}>
                     {Array.from({ length: game.maxStrikes }, (_, i) => (
                       <span key={i} className={i < game.strikes ? 'on' : ''}>✕</span>
                     ))}
@@ -231,31 +237,48 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
             <div className="tt-guide">
               {game.phase === 'fine' ? (
                 <>
-                  <b>{winner ? `🎉 ${winner.name} prende ${game.pot} punti` : 'Nessuno prende punti'}</b>
+                  <b>{winner ? tr(`🎉 ${winner.name} prende ${game.pot} punti`, `🎉 ${winner.name} takes ${game.pot} points`) : tr('Nessuno prende punti', 'Nobody takes points')}</b>
                   <span className="muted">
-                    {hidden ? `Mancano ${hidden} risposte: Invio per svelarle tutte, o tocca quelle da svelare.` : lastList ? 'Era l\'ultima lista.' : 'Pronti per la prossima lista.'}
+                    {hidden
+                      ? tr(
+                          `Mancano ${hidden} risposte: Invio per svelarle tutte, o tocca quelle da svelare.`,
+                          `${hidden} answers missing: Enter to reveal them all, or tap the ones to reveal.`,
+                        )
+                      : lastList
+                        ? tr("Era l'ultima lista.", 'That was the last list.')
+                        : tr('Pronti per la prossima lista.', 'Ready for the next list.')}
                   </span>
                 </>
               ) : game.phase === 'gioco' && control ? (
                 <>
-                  <b style={{ color: control.color }}>{control.name} gioca la lista</b>
-                  <span>Una risposta alla volta. Con {game.maxStrikes} errori le altre squadre possono rubare i punti in palio.</span>
+                  <b style={{ color: control.color }}>{tr(`${control.name} gioca la lista`, `${control.name} plays the list`)}</b>
+                  <span>
+                    {tr(
+                      `Una risposta alla volta. Con ${game.maxStrikes} errori le altre squadre possono rubare i punti in palio.`,
+                      `One answer at a time. With ${game.maxStrikes} mistakes the other teams can steal the pot.`,
+                    )}
+                  </span>
                 </>
               ) : buzzed ? (
                 <>
-                  <b style={{ color: buzzed.color }}>🔔 Risponde {buzzed.name}</b>
+                  <b style={{ color: buzzed.color }}>🔔 {tr('Risponde', 'Answering:')} {buzzed.name}</b>
                   <span>
                     {game.phase === 'rubata'
-                      ? `Una sola risposta: se è sul tabellone, ${buzzed.name} ruba tutti i punti in palio.`
-                      : `Se la risposta è sul tabellone, ${buzzed.name} gioca la lista.`}{' '}
-                    Host: scrivi la risposta e premi Invio.
+                      ? tr(
+                          `Una sola risposta: se è sul tabellone, ${buzzed.name} ruba tutti i punti in palio.`,
+                          `One answer only: if it's on the board, ${buzzed.name} steals the whole pot.`,
+                        )
+                      : tr(`Se la risposta è sul tabellone, ${buzzed.name} gioca la lista.`, `If the answer is on the board, ${buzzed.name} plays the list.`)}{' '}
+                    {tr('Host: scrivi la risposta e premi Invio.', 'Host: type the answer and press Enter.')}
                   </span>
                 </>
               ) : (
                 <>
-                  <b>{game.phase === 'rubata' ? `${control?.name ?? ''} ha finito gli errori: chi ruba?` : 'Chi ne sa una? Prenotatevi!'}</b>
-                  <span>{game.buzz === 'keys' ? keysLine : "Alzate la mano: l'host tocca la squadra più veloce (o preme il suo numero)."}</span>
-                  {lockedNames.length > 0 && <span className="muted">{lockedNames.join(', ')}: già sbagliato, fuori da questo turno.</span>}
+                  <b>{game.phase === 'rubata'
+                      ? tr(`${control?.name ?? ''} ha finito gli errori: chi ruba?`, `${control?.name ?? ''} is out of mistakes: who steals?`)
+                      : tr('Chi ne sa una? Prenotatevi!', 'Who knows one? Buzz in!')}</b>
+                  <span>{game.buzz === 'keys' ? keysLine : tr("Alzate la mano: l'host tocca la squadra più veloce (o preme il suo numero).", 'Raise your hands: the host taps the fastest team (or presses its number).')}</span>
+                  {lockedNames.length > 0 && <span className="muted">{lockedNames.join(', ')}: {tr('già sbagliato, fuori da questo turno.', 'already wrong, out of this round.')}</span>}
                 </>
               )}
             </div>
@@ -269,32 +292,34 @@ export default function Play({ loaded }: { loaded: Loaded<TopTenSet> }) {
                     ref={input}
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
-                    placeholder={`Risposta di ${answering.name}`}
-                    aria-label="Risposta della squadra"
+                    placeholder={tr(`Risposta di ${answering.name}`, `${answering.name}'s answer`)}
+                    aria-label={tr('Risposta della squadra', "The team's answer")}
                   />
-                  <button className="btn primary" onClick={check} disabled={!guess.trim()}>Controlla <kbd>Invio</kbd></button>
+                  <button className="btn primary" onClick={check} disabled={!guess.trim()}>{tr('Controlla', 'Check')} <kbd>{KEY.enter}</kbd></button>
                 </div>
-                <button className="btn ko" onClick={() => wrong()} title="Non rispondono o la risposta non c'è">✗ Sbagliata</button>
+                <button className="btn ko" onClick={() => wrong()} title={tr("Non rispondono o la risposta non c'è", "No answer, or the answer isn't there")}>✗ {tr('Sbagliata', 'Wrong')}</button>
               </div>
             ) : game.phase === 'fine' ? (
               <div className="host-bar">
-                {hidden > 0 && <button className="btn primary" onClick={revealAll}>👁 Svela le altre {!!hidden && <kbd>Invio</kbd>}</button>}
+                {hidden > 0 && <button className="btn primary" onClick={revealAll}>👁 {tr('Svela le altre', 'Reveal the rest')} {!!hidden && <kbd>{KEY.enter}</kbd>}</button>}
                 <button className={`btn ${hidden ? 'ghost' : 'primary'}`} onClick={next}>
-                  {lastList ? '🏆 Classifica finale' : 'Prossima lista'} {!hidden && <kbd>Invio</kbd>}
+                  {lastList ? tr('🏆 Classifica finale', '🏆 Final scores') : tr('Prossima lista', 'Next list')} {!hidden && <kbd>{KEY.enter}</kbd>}
                 </button>
               </div>
             ) : (
               <div className="host-bar">
                 {game.phase === 'sfida' ? (
-                  <button className="btn ghost" onClick={giveUp} title="Nessuno ne sa una: svela la lista senza punti">⏭ Nessuno la sa: salta</button>
+                  <button className="btn ghost" onClick={giveUp} title={tr('Nessuno ne sa una: svela la lista senza punti', 'Nobody knows one: reveal the list with no points')}>
+                    ⏭ {tr('Nessuno la sa: salta', 'Nobody knows: skip')}
+                  </button>
                 ) : (
-                  <button className="btn ghost" onClick={noSteal}>⏭ Nessuno ruba: punti a {control?.name}</button>
+                  <button className="btn ghost" onClick={noSteal}>⏭ {tr('Nessuno ruba: punti a', 'Nobody steals: points to')} {control?.name}</button>
                 )}
               </div>
             )}
           </>
         ) : (
-          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale</button>
+          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 {tr('Classifica finale', 'Final scores')}</button>
         )}
 
         <div className="team-strip">

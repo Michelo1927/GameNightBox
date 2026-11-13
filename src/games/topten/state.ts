@@ -80,8 +80,8 @@ export function startList(g: TGame, list: Lista | undefined, index: number): TGa
   };
 }
 
-/** Typed guesses: a leading article doesn't count ("la Francia" = "Francia"); one typo allowed from 6 letters up. */
-const ARTICLE = /^\s*(?:(?:il|lo|la|i|gli|le|un|uno|una|the)\s+|l['’]\s*)/i;
+/** Typed guesses: a leading article doesn't count ("la Francia" = "Francia", "the Nile" = "Nile"); one typo allowed from 6 letters up. */
+const ARTICLE = /^\s*(?:(?:il|lo|la|i|gli|le|un|uno|una|the|an|a)\s+|l['’]\s*)/i;
 const bare = (s: string) => s.replace(ARTICLE, '');
 
 /** The answer of the list the guess names, or -1. Exact names win over the ones with a typo. */

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { loadYouTubeApi, type YTPlayer } from '../../hub/youtube';
+import { tr } from '../../hub/i18n';
 
 const ERRORS: Record<number, string> = {
-  2: 'link del video non valido',
-  5: 'il browser non riesce a riprodurlo',
-  100: 'video inesistente o privato',
-  101: "l'autore non permette di riprodurlo fuori da YouTube",
-  150: "l'autore non permette di riprodurlo fuori da YouTube",
+  2: tr('link del video non valido', 'video link not valid'),
+  5: tr('il browser non riesce a riprodurlo', "the browser can't play it"),
+  100: tr('video inesistente o privato', 'video missing or private'),
+  101: tr("l'autore non permette di riprodurlo fuori da YouTube", "the author doesn't allow playing it outside YouTube"),
+  150: tr("l'autore non permette di riprodurlo fuori da YouTube", "the author doesn't allow playing it outside YouTube"),
 };
 
 /** A hidden YouTube player driven by the game: only the sound is heard. */
@@ -31,7 +32,7 @@ export function usePlayer() {
         events: {
           onReady: () => !cancelled && setReady(true),
           onStateChange: (e: { data: number }) => setPlaying(e.data === window.YT!.PlayerState.PLAYING),
-          onError: (e: { data: number }) => setError(ERRORS[e.data] ?? 'video non riproducibile'),
+          onError: (e: { data: number }) => setError(ERRORS[e.data] ?? tr('video non riproducibile', "video can't be played")),
         },
       });
     });

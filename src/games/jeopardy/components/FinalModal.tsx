@@ -4,6 +4,7 @@ import type { FinalState, Result, Team } from '../state';
 import { findCorrectChoice, type FinalQuestion } from '../quiz/schema';
 import MediaView, { MaybeSplit } from '../../../hub/components/Media';
 import Timer from '../../../hub/components/Timer';
+import { KEY, tr } from '../../../hub/i18n';
 
 interface Props {
   final: FinalQuestion;
@@ -51,7 +52,7 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
 
   const answerBox = (
     <div className="answer">
-      <div className="answer-label">Risposta</div>
+      <div className="answer-label">{tr('Risposta', 'Answer')}</div>
       <div className={`answer-text ${split ? 'md' : 'lg'}`}>{final.answer}</div>
       {final.answerMedia && <MediaView media={final.answerMedia} url={resolveUrl(final.answerMedia.src)} />}
       {final.hostNote && <p className="host-note">📝 {final.hostNote}</p>}
@@ -78,17 +79,20 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
     <div className="overlay question-overlay final">
       <div className="question">
         <header className="q-header">
-          <span>🏆 Domanda finale</span>
+          <span>🏆 {tr('Domanda finale', 'Final question')}</span>
           <span className="q-points">{final.category}</span>
         </header>
 
         {state.stage === 'bets' ? (
           <div className="q-body">
             <p className="q-text lg">
-              Categoria: <span className="gold">{final.category}</span>
+              {tr('Categoria', 'Category')}: <span className="gold">{final.category}</span>
             </p>
             <p className="final-help">
-              Ogni squadra scrive su un foglio quanti punti scommette, da 0 al proprio punteggio. Poi l'host inserisce le puntate.
+              {tr(
+                "Ogni squadra scrive su un foglio quanti punti scommette, da 0 al proprio punteggio. Poi l'host inserisce le puntate.",
+                'Each team writes on a piece of paper how many points it bets, from 0 to its own score. Then the host types in the bets.',
+              )}
             </p>
             <div className="final-bets">
               {teams.map((t) => (
@@ -101,7 +105,7 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
                     placeholder="0"
                     onChange={(e) => setBet(t.id, e.target.value.replace(/[^\d]/g, ''))}
                   />
-                  {(state.bets[t.id] ?? 0) > maxBet(t) && <span className="cr-error">troppo alta</span>}
+                  {(state.bets[t.id] ?? 0) > maxBet(t) && <span className="cr-error">{tr('troppo alta', 'too high')}</span>}
                 </label>
               ))}
             </div>
@@ -149,21 +153,21 @@ export default function FinalModal({ final, state, teams, scores, timer, resolve
                 disabled={!betsOk}
                 onClick={() => onChange({ ...state, bets: Object.fromEntries(teams.map((t) => [t.id, betOf(t) ?? 0])), stage: 'question' })}
               >
-                Mostra la domanda
+                {tr('Mostra la domanda', 'Show the question')}
               </button>
             ) : (
               <>
                 <Timer seconds={timer} />
                 <button className="btn primary" onClick={() => setRevealed((r) => !r)}>
-                  {revealed ? 'Nascondi risposta' : 'Mostra risposta'} <kbd>Spazio</kbd>
+                  {revealed ? tr('Nascondi risposta', 'Hide answer') : tr('Mostra risposta', 'Show answer')} <kbd>{KEY.space}</kbd>
                 </button>
                 <button className="btn primary" onClick={() => onChange({ ...state, stage: 'done' })}>
-                  🏁 Fine partita
+                  🏁 {tr('Fine partita', 'End of game')}
                 </button>
               </>
             )}
             <button className="btn ghost" onClick={onClose}>
-              Tabellone <kbd>Esc</kbd>
+              {tr('Tabellone', 'Board')} <kbd>Esc</kbd>
             </button>
           </div>
         </footer>

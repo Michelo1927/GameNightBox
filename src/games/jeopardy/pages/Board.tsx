@@ -26,6 +26,7 @@ import AnimatedNumber from '../../../hub/components/AnimatedNumber';
 import Timer from '../../../hub/components/Timer';
 import { ask } from '../../../hub/ask';
 import { BackPill } from '../../../hub/components/BackButton';
+import { tr } from '../../../hub/i18n';
 
 const SCORE_STEP = 50;
 const NEW_FINAL: FinalState = { stage: 'bets', bets: {}, results: {} };
@@ -134,7 +135,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
     setGame((g) => ({ ...g, teams: g.teams.map((t) => (t.id === teamId ? { ...t, adjust: t.adjust + delta } : t)) }));
 
   const restart = async () => {
-    if (await ask('Azzerare punteggi e caselle giocate? Le squadre restano.', 'Azzera')) setGame((g) => resetGame(g, quiz));
+    if (await ask(tr('Azzerare punteggi e caselle giocate? Le squadre restano.', 'Reset scores and played squares? The teams stay.'), tr('Azzera', 'Reset'))) setGame((g) => resetGame(g, quiz));
   };
 
   // The open cell's special rule, active only if it was found by a team on its turn.
@@ -158,7 +159,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
   return (
     <div className="board-page">
       <header className="board-header">
-        <BackPill label="Esci" />
+        <BackPill label={tr('Esci', 'Exit')} />
         <h1 className="title">{quiz.title}</h1>
         <span className="muted progress">
           {turn.played}/{turn.total}
@@ -176,17 +177,17 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
         <div className="header-actions">
           {/* Always available on the board; T starts it only while no question is open (that one has its own). */}
           <Timer seconds={settings.timer} hotkey={!open && !showFinal} />
-          <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title="Annulla l'ultima azione (Ctrl+Z)">
-            ↶ Annulla
+          <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title={tr("Annulla l'ultima azione (Ctrl+Z)", 'Undo the last action (Ctrl+Z)')}>
+            ↶ {tr('Annulla', 'Undo')}
           </button>
-          <button className="btn primary" onClick={() => setRanking(over ? 'celebrate' : 'normal')}>Classifica</button>
+          <button className="btn primary" onClick={() => setRanking(over ? 'celebrate' : 'normal')}>{tr('Classifica', 'Scores')}</button>
           <MoreMenu
             items={[
-              { label: music ? '🎵 Spegni la musica' : '🎵 Accendi la musica', onClick: () => setMusic(!music) },
-              { label: muted ? '🔊 Attiva gli effetti sonori' : '🔇 Disattiva gli effetti sonori', onClick: () => setMuted(!muted) },
-              { label: '⛶ Schermo intero', key: 'F', onClick: toggleFullscreen },
-              { label: '👥 Squadre e opzioni', onClick: () => go(`/jeopardy/${slug}/setup`) },
-              { label: '🔄 Ricomincia', onClick: restart },
+              { label: music ? tr('🎵 Spegni la musica', '🎵 Turn the music off') : tr('🎵 Accendi la musica', '🎵 Turn the music on'), onClick: () => setMusic(!music) },
+              { label: muted ? tr('🔊 Attiva gli effetti sonori', '🔊 Turn sound effects on') : tr('🔇 Disattiva gli effetti sonori', '🔇 Turn sound effects off'), onClick: () => setMuted(!muted) },
+              { label: tr('⛶ Schermo intero', '⛶ Full screen'), key: 'F', onClick: toggleFullscreen },
+              { label: tr('👥 Squadre e opzioni', '👥 Teams and options'), onClick: () => go(`/jeopardy/${slug}/setup`) },
+              { label: tr('🔄 Ricomincia', '🔄 Start over'), onClick: restart },
             ]}
           />
         </div>
@@ -236,7 +237,7 @@ export default function Board({ loaded }: { loaded: LoadedQuiz }) {
                     {shownSpecial.icon}
                   </span>
                 )}
-                {isFinalCell && <span className="double-mark" title="Domanda finale">🏆</span>}
+                {isFinalCell && <span className="double-mark" title={tr('Domanda finale', 'Final question')}>🏆</span>}
                 <span className="dots">
                   {game.teams
                     .filter((t) => results[t.id])
@@ -351,7 +352,7 @@ function MoreMenu({ items }: { items: { label: string; key?: string; onClick: ()
   }, [open]);
   return (
     <div className="more" ref={wrap}>
-      <button className="btn ghost icon" onClick={() => setOpen((o) => !o)} aria-label="Altre azioni" title="Altre azioni">
+      <button className="btn ghost icon" onClick={() => setOpen((o) => !o)} aria-label={tr('Altre azioni', 'More actions')} title={tr('Altre azioni', 'More actions')}>
         ⋯
       </button>
       {open && (
@@ -391,22 +392,22 @@ function TurnBadge({ turn, over, hasFinal, onRanking, onFinal }: BadgeProps) {
   if (turn.finished && hasFinal && !over)
     return (
       <button className="turn-badge final" onClick={onFinal}>
-        🏆 Domanda finale!
+        🏆 {tr('Domanda finale!', 'Final question!')}
       </button>
     );
   if (turn.finished)
     return (
       <button className="turn-badge finished" onClick={onRanking}>
-        🏁 Partita finita: vedi la classifica
+        🏁 {tr('Partita finita: vedi la classifica', 'Game over: see the scores')}
       </button>
     );
-  if (turn.lastCell) return <span className="turn-badge final">🏆 Ultima casella: domanda finale con le puntate!</span>;
-  if (turn.shared) return <span className="turn-badge shared">🔥 Domanda per tutti!</span>;
+  if (turn.lastCell) return <span className="turn-badge final">🏆 {tr('Ultima casella: domanda finale con le puntate!', 'Last square: final question with bets!')}</span>;
+  if (turn.shared) return <span className="turn-badge shared">🔥 {tr('Domanda per tutti!', 'Question for everyone!')}</span>;
   if (!turn.team) return null;
   return (
     // The key makes the badge pop in again at every change of turn.
     <span key={turn.team.id} className="turn-badge" style={{ ['--team' as string]: turn.team.color }}>
-      Tocca a <b>{turn.team.name}</b>
+      {tr('Tocca a', 'Your turn,')} <b>{turn.team.name}</b>
     </span>
   );
 }
@@ -439,7 +440,7 @@ function ScoreEdit({ score, onChange }: { score: number; onChange: (delta: numbe
 
   if (text === null)
     return (
-      <button className={`team-points ${score < 0 ? 'neg' : ''}`} title="Clicca per modificare il punteggio" onClick={open}>
+      <button className={`team-points ${score < 0 ? 'neg' : ''}`} title={tr('Clicca per modificare il punteggio', 'Click to change the score')} onClick={open}>
         <AnimatedNumber value={score} />
       </button>
     );

@@ -1,11 +1,12 @@
 import { useEffect, type CSSProperties } from 'react';
 import { sounds } from '../../../hub/sounds';
 import type { Special, SpecialKind, Team } from '../state';
+import { tr } from '../../../hub/i18n';
 
 export const SPECIAL_INFO: Record<SpecialKind, { icon: string; name: string }> = {
-  steal: { icon: '🥷', name: 'Furto' },
-  pass: { icon: '🎯', name: 'Passa la mano' },
-  gift: { icon: '🎁', name: 'Imprevisto' },
+  steal: { icon: '🥷', name: tr('Furto', 'Heist') },
+  pass: { icon: '🎯', name: tr('Passa la mano', 'Pass It On') },
+  gift: { icon: '🎁', name: tr('Imprevisto', 'Wild Card') },
 };
 
 interface Props {
@@ -56,13 +57,28 @@ export default function SpecialIntro({ special, team, category, points, onContin
         </p>
         {special.kind === 'steal' && (
           <p className="double-team">
-            <b>{team.name}</b>: se rispondete giusto, i {points} punti li <b>rubate</b> a una squadra a vostra scelta. Se sbagliate li perdete, come sempre.
+            {tr(
+              <>
+                <b>{team.name}</b>: se rispondete giusto, i {points} punti li <b>rubate</b> a una squadra a vostra scelta. Se sbagliate li perdete, come sempre.
+              </>,
+              <>
+                <b>{team.name}</b>: if you answer right, you <b>steal</b> the {points} points from a team of your choice. If you get it wrong you lose them, as usual.
+              </>,
+            )}
           </p>
         )}
         {special.kind === 'pass' && (
           <p className="double-team">
-            <b>{team.name}</b>: leggete la domanda e decidete se rispondere voi o <b>passarla</b> a un'altra squadra. Se quella sbaglia, i {points} punti
-            vanno a voi; se indovina, li prende lei.
+            {tr(
+              <>
+                <b>{team.name}</b>: leggete la domanda e decidete se rispondere voi o <b>passarla</b> a un'altra squadra. Se quella sbaglia, i {points} punti
+                vanno a voi; se indovina, li prende lei.
+              </>,
+              <>
+                <b>{team.name}</b>: read the question and decide whether to answer yourselves or <b>pass it</b> to another team. If they get it wrong, the{' '}
+                {points} points go to you; if they get it right, they take them.
+              </>,
+            )}
           </p>
         )}
         {gift && (
@@ -74,15 +90,22 @@ export default function SpecialIntro({ special, team, category, points, onContin
         )}
         {gift && (
           <p className="double-team">
-            E adesso <b>{team.name}</b> risponde comunque alla domanda da {points} punti.
+            {tr(
+              <>
+                E adesso <b>{team.name}</b> risponde comunque alla domanda da {points} punti.
+              </>,
+              <>
+                And now <b>{team.name}</b> still answers the {points}-point question.
+              </>,
+            )}
           </p>
         )}
         <div className="double-actions">
           <button className="btn primary big" onClick={onContinue}>
-            Mostra la domanda
+            {tr('Mostra la domanda', 'Show the question')}
           </button>
           <button className="btn ghost" onClick={onClose}>
-            Tabellone <kbd>Esc</kbd>
+            {tr('Tabellone', 'Board')} <kbd>Esc</kbd>
           </button>
         </div>
       </div>

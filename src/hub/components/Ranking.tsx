@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { sounds } from '../sounds';
 import type { Team } from '../teams';
+import { ordinal, tr } from '../i18n';
 
 interface Props {
   teams: (Team & { score: number })[];
@@ -32,7 +33,7 @@ export default function Ranking({ teams, onClose, celebrate }: Props) {
       <div className={`ranking ${celebrate ? 'celebrate' : ''}`} onClick={(e) => e.stopPropagation()}>
         {celebrate && winners.length > 0 && (
           <div className="winner">
-            <div className="winner-label">{winners.length > 1 ? '🏆 Pareggio!' : '🏆 Vince'}</div>
+            <div className="winner-label">{winners.length > 1 ? tr('🏆 Pareggio!', "🏆 It's a tie!") : tr('🏆 Vince', '🏆 The winner is')}</div>
             <div className="winner-name">
               {winners.map((w, i) => (
                 <span key={w.id} style={{ color: w.color }}>
@@ -43,17 +44,17 @@ export default function Ranking({ teams, onClose, celebrate }: Props) {
             </div>
           </div>
         )}
-        <h2>Classifica</h2>
+        <h2>{tr('Classifica', 'Scores')}</h2>
         <ol>
           {sorted.map((t) => (
             <li key={t.id} style={{ borderColor: t.color }}>
-              <span className="pos">{medals[position(t.score)] ?? `${position(t.score) + 1}°`}</span>
+              <span className="pos">{medals[position(t.score)] ?? tr(`${position(t.score) + 1}°`, ordinal(position(t.score) + 1))}</span>
               <span className="name">{t.name}</span>
               <span className="score">{t.score}</span>
             </li>
           ))}
         </ol>
-        <button className="btn primary" onClick={onClose}>Chiudi</button>
+        <button className="btn primary" onClick={onClose}>{tr('Chiudi', 'Close')}</button>
       </div>
     </div>
   );

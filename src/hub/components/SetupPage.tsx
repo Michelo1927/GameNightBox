@@ -4,6 +4,7 @@ import OrderWheel from './OrderWheel';
 import TeamList from './TeamList';
 import BackButton from './BackButton';
 import { ask } from '../ask';
+import { tr } from '../i18n';
 
 interface Props {
   back: string;
@@ -36,13 +37,13 @@ export default function SetupPage({ back, backLabel, title, description, teams, 
       <h1 className="title">{title}</h1>
       {description && <p className="muted">{description}</p>}
 
-      <h2>Squadre</h2>
-      {withWheel && <p className="muted">L'ordine lo decide la ruota quando inizi la partita.</p>}
+      <h2>{tr('Squadre', 'Teams')}</h2>
+      {withWheel && <p className="muted">{tr("L'ordine lo decide la ruota quando inizi la partita.", 'The wheel decides the order when you start the game.')}</p>}
       <TeamList teams={teams} onChange={setTeams} max={maxTeams} />
 
       {children && (
         <>
-          <h2>Opzioni</h2>
+          <h2>{tr('Opzioni', 'Options')}</h2>
           <div className="options">{children}</div>
         </>
       )}
@@ -50,11 +51,11 @@ export default function SetupPage({ back, backLabel, title, description, teams, 
       {blocked && <p className="cr-error">{blocked}</p>}
       <div className="setup-actions">
         <button className="btn primary big" onClick={start} disabled={teams.length === 0 || !!blocked}>
-          {started ? 'Continua la partita' : 'Inizia la partita'}
+          {started ? tr('Continua la partita', 'Continue the game') : tr('Inizia la partita', 'Start the game')}
         </button>
         {started && (
-          <button className="btn ghost" onClick={async () => (await ask('Ricominciare da capo? I punti si azzerano.', 'Ricomincia')) && onRestart()}>
-            Nuova partita (azzera punti)
+          <button className="btn ghost" onClick={async () => (await ask(tr('Ricominciare da capo? I punti si azzerano.', 'Start over? The points go back to zero.'), tr('Ricomincia', 'Start over'))) && onRestart()}>
+            {tr('Nuova partita (azzera punti)', 'New game (reset points)')}
           </button>
         )}
       </div>

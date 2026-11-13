@@ -10,6 +10,7 @@ import Ranking from '../../hub/components/Ranking';
 import Timer from '../../hub/components/Timer';
 import type { InFilaSet } from './schema';
 import { endSequence, fullValue, playedCount, rightIn, scoreOf, startSequence, useInFila, valueOf, type FGame } from './state';
+import { KEY, ordinal, tr } from '../../hub/i18n';
 
 type Flash = { ok: boolean; text: string } | null;
 
@@ -75,17 +76,19 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
     if (right === n) {
       sounds.right();
       const stolen = game.phase === 'rubata';
-      say({ ok: true, text: stolen ? `${ordering.name} ruba ${fullValue(n)} punti!` : `Tutto giusto! +${fullValue(n)} a ${team.name}` });
+      say({ ok: true, text: stolen
+          ? tr(`${ordering.name} ruba ${fullValue(n)} punti!`, `${ordering.name} steals ${fullValue(n)} points!`)
+          : tr(`Tutto giusto! +${fullValue(n)} a ${team.name}`, `All right! +${fullValue(n)} to ${team.name}`), });
       save((g) => endSequence(stolen ? g : { ...g, teamOrder: order }, ordering.id, fullValue(n), stolen));
       return;
     }
     sounds.wrong();
     if (game.phase === 'ordine') {
       if (!others.length) {
-        say({ ok: false, text: `${right} su ${n} al posto giusto` });
+        say({ ok: false, text: tr(`${right} su ${n} al posto giusto`, `${right} of ${n} in the right place`) });
         save((g) => endSequence({ ...g, teamOrder: order }, team.id, valueOf(right, n)));
       } else {
-        say({ ok: false, text: `${right} su ${n} al posto giusto: si può rubare!` });
+        say({ ok: false, text: tr(`${right} su ${n} al posto giusto: si può rubare!`, `${right} of ${n} in the right place: time to steal!`) });
         save((g) => ({ ...g, phase: 'rubata', teamOrder: order, right, lastBy: team.id, locked: [team.id], buzzed: undefined }));
       }
       return;
@@ -97,10 +100,10 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
     say({
       ok: false,
       text: !allOut
-        ? `${right} su ${n} al posto giusto: ${ordering.name} non ruba`
+        ? tr(`${right} su ${n} al posto giusto: ${ordering.name} non ruba`, `${right} of ${n} in the right place: ${ordering.name} doesn't steal`)
         : kept
-          ? `${right} su ${n}: nessuno ruba, ${kept} punti a ${team.name}`
-          : `${right} su ${n}: nessuno ruba, niente punti`,
+          ? tr(`${right} su ${n}: nessuno ruba, ${kept} punti a ${team.name}`, `${right} of ${n}: nobody steals, ${kept} points to ${team.name}`)
+          : tr(`${right} su ${n}: nessuno ruba, niente punti`, `${right} of ${n}: nobody steals, no points`),
     });
     save((g) =>
       allOut
@@ -131,10 +134,16 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
   const winner = teamOf(game.winner);
   const keysLine = game.teams
     .filter((t) => !game.locked.includes(t.id))
-    .map((t) => `${t.name}: tasto ${buzzKeyOf(game.teams, t.id)}`)
+    .map((t) => `${t.name}: ${tr('tasto', 'key')} ${buzzKeyOf(game.teams, t.id)}`)
     .join(' · ');
   const lockedNames = game.teams.filter((t) => game.locked.includes(t.id) && t.id !== team?.id).map((t) => t.name);
-  const phaseLabel = !seq ? 'Fine' : game.phase === 'ordine' ? `Gioca ${team?.name ?? ''}` : game.phase === 'rubata' ? 'Si può rubare' : 'Sequenza finita';
+  const phaseLabel = !seq
+    ? tr('Fine', 'The end')
+    : game.phase === 'ordine'
+      ? tr(`Gioca ${team?.name ?? ''}`, `${team?.name ?? ''} plays`)
+      : game.phase === 'rubata'
+        ? tr('Si può rubare', 'Steal time')
+        : tr('Sequenza finita', 'Sequence over');
   const reveal = game.phase === 'fine';
 
   return (
@@ -146,7 +155,9 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
         onRanking={() => setRanking(game.over ? 'celebrate' : 'normal')}
         onSetup={() => go(`/infila/${slug}/setup`)}
       >
-        <span className="pill" key={game.index}>Sequenza {Math.min(game.index + 1, total)} di {total}</span>
+        <span className="pill" key={game.index}>
+          {tr(`Sequenza ${Math.min(game.index + 1, total)} di ${total}`, `Sequence ${Math.min(game.index + 1, total)} of ${total}`)}
+        </span>
         {seq && (
           <span className="pill" key={phaseLabel} style={game.phase === 'ordine' ? { color: team?.color } : undefined}>{phaseLabel}</span>
         )}
@@ -158,7 +169,7 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
           <>
             <div className="if-question" key={`q${game.index}`}>
               <h2>{seq.question}</h2>
-              {seq.source && <small>Fonte: {seq.source}</small>}
+              {seq.source && <small>{tr('Fonte', 'Source')}: {seq.source}</small>}
             </div>
 
             <div className="if-line" style={{ ['--n' as string]: n }} key={`l${game.index}`}>
@@ -173,17 +184,17 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
                     const ok = game.stolen || said === k;
                     return (
                       <div key={k} className={`if-slot if-card shown ${ok ? 'ok' : 'ko'}`} style={{ ['--i' as string]: k }}>
-                        <span className="if-num">{k + 1}°</span>
+                        <span className="if-num">{tr(`${k + 1}°`, ordinal(k + 1))}</span>
                         <b>{cards[k].text}</b>
                         <span className="if-value">{cards[k].value}</span>
-                        {!ok && said >= 0 && <small>detto {said + 1}°</small>}
+                        {!ok && said >= 0 && <small>{tr(`detto ${said + 1}°`, `said ${ordinal(said + 1)}`)}</small>}
                       </div>
                     );
                   }
                   const c = game.placed[k];
                   return c === null || c === undefined ? (
                     <div key={k} className="if-slot empty">
-                      <span className="if-num">{k + 1}°</span>
+                      <span className="if-num">{tr(`${k + 1}°`, ordinal(k + 1))}</span>
                     </div>
                   ) : (
                     <button
@@ -191,9 +202,9 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
                       className="if-slot if-card"
                       disabled={!editing}
                       onClick={() => unplace(k)}
-                      title={editing ? 'Togli dalla fila' : undefined}
+                      title={editing ? tr('Togli dalla fila', 'Take out of the row') : undefined}
                     >
-                      <span className="if-num">{k + 1}°</span>
+                      <span className="if-num">{tr(`${k + 1}°`, ordinal(k + 1))}</span>
                       <b>{cards[c]?.text}</b>
                     </button>
                   );
@@ -205,7 +216,7 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
                     game.placed.includes(c) ? (
                       <span key={c} className="if-ghost" />
                     ) : (
-                      <button key={c} className="if-card" onClick={() => place(c)} title="Metti al prossimo posto libero">
+                      <button key={c} className="if-card" onClick={() => place(c)} title={tr('Metti al prossimo posto libero', 'Put in the next free place')}>
                         <b>{cards[c]?.text}</b>
                       </button>
                     ),
@@ -220,40 +231,45 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
                   <b>
                     {winner
                       ? game.stolen
-                        ? `🎉 ${winner.name} ruba ${game.won} punti`
-                        : `${game.won === fullValue(n) ? '🎉 Tutto giusto! ' : ''}${winner.name} prende ${game.won} punti`
-                      : 'Nessuno prende punti'}
+                        ? tr(`🎉 ${winner.name} ruba ${game.won} punti`, `🎉 ${winner.name} steals ${game.won} points`)
+                        : `${game.won === fullValue(n) ? tr('🎉 Tutto giusto! ', '🎉 All right! ') : ''}${tr(`${winner.name} prende ${game.won} punti`, `${winner.name} takes ${game.won} points`)}`
+                      : tr('Nessuno prende punti', 'Nobody takes points')}
                   </b>
                   <span className="muted">
-                    {game.stolen || teamRight === n ? 'Ecco i valori.' : `${team?.name} aveva ${teamRight} carte su ${n} al posto giusto.`}{' '}
-                    {lastSeq ? "Era l'ultima sequenza." : 'Invio per la prossima.'}
+                    {game.stolen || teamRight === n
+                      ? tr('Ecco i valori.', 'Here are the values.')
+                      : tr(`${team?.name} aveva ${teamRight} carte su ${n} al posto giusto.`, `${team?.name} had ${teamRight} of ${n} cards in the right place.`)}{' '}
+                    {lastSeq ? tr("Era l'ultima sequenza.", 'That was the last sequence.') : tr('Invio per la prossima.', 'Enter for the next one.')}
                   </span>
                 </>
               ) : game.phase === 'ordine' && team ? (
                 <>
-                  <b style={{ color: team.color }}>{team.name}: in che ordine?</b>
+                  <b style={{ color: team.color }}>{team.name}: {tr('in che ordine?', 'in what order?')}</b>
                   <span>
                     {full
-                      ? 'Fila completa: Invio per controllare.'
-                      : 'Host: tocca le carte nell\'ordine che dicono. Tocca una carta nella fila per toglierla.'}{' '}
-                    <span className="muted">Tutto giusto: {fullValue(n)} punti.</span>
+                      ? tr('Fila completa: Invio per controllare.', 'Row complete: Enter to check.')
+                      : tr("Host: tocca le carte nell'ordine che dicono. Tocca una carta nella fila per toglierla.", 'Host: tap the cards in the order they say. Tap a card in the row to take it out.')}{' '}
+                    <span className="muted">{tr(`Tutto giusto: ${fullValue(n)} punti.`, `All right: ${fullValue(n)} points.`)}</span>
                   </span>
                 </>
               ) : buzzed ? (
                 <>
-                  <b style={{ color: buzzed.color }}>🔔 Ruba {buzzed.name}</b>
+                  <b style={{ color: buzzed.color }}>🔔 {tr('Ruba', 'Stealing:')} {buzzed.name}</b>
                   <span>
-                    Cambiate l'ordine come volete: tocca una carta nella fila per toglierla e rimetterla. Se è tutto giusto, {buzzed.name} prende{' '}
-                    {fullValue(n)} punti.
+                    {tr(
+                      `Cambiate l'ordine come volete: tocca una carta nella fila per toglierla e rimetterla. Se è tutto giusto, ${buzzed.name} prende ${fullValue(n)} punti.`,
+                      `Change the order as you like: tap a card in the row to take it out and put it back. If it's all right, ${buzzed.name} takes ${fullValue(n)} points.`,
+                    )}
                   </span>
                 </>
               ) : (
                 <>
                   <b>
-                    {lastBy?.name}: <span className="if-count">{game.right} su {n}</span> al posto giusto. Chi ruba?
+                    {lastBy?.name}: <span className="if-count">{tr(`${game.right} su ${n}`, `${game.right} of ${n}`)}</span>{' '}
+                    {tr('al posto giusto. Chi ruba?', 'in the right place. Who steals?')}
                   </b>
-                  <span>{game.buzz === 'keys' ? keysLine : "Alzate la mano: l'host tocca la squadra più veloce (o preme il suo numero)."}</span>
-                  {lockedNames.length > 0 && <span className="muted">{lockedNames.join(', ')}: già provato, fuori da questa rubata.</span>}
+                  <span>{game.buzz === 'keys' ? keysLine : tr("Alzate la mano: l'host tocca la squadra più veloce (o preme il suo numero).", 'Raise your hands: the host taps the fastest team (or presses its number).')}</span>
+                  {lockedNames.length > 0 && <span className="muted">{lockedNames.join(', ')}: {tr('già provato, fuori da questa rubata.', 'already tried, out of this steal.')}</span>}
                 </>
               )}
             </div>
@@ -263,22 +279,23 @@ export default function Play({ loaded }: { loaded: Loaded<InFilaSet> }) {
             <div className="host-bar">
               {editing ? (
                 <>
-                  <button className="btn ghost" onClick={clear} disabled={game.placed.every((c) => c === null)}>Svuota la fila</button>
-                  <button className="btn primary" onClick={check} disabled={!full}>✓ Controlla {full && <kbd>Invio</kbd>}</button>
+                  <button className="btn ghost" onClick={clear} disabled={game.placed.every((c) => c === null)}>{tr('Svuota la fila', 'Clear the row')}</button>
+                  <button className="btn primary" onClick={check} disabled={!full}>✓ {tr('Controlla', 'Check')} {full && <kbd>{KEY.enter}</kbd>}</button>
                 </>
               ) : reveal ? (
                 <button className="btn primary" onClick={next}>
-                  {lastSeq ? '🏆 Classifica finale' : 'Prossima sequenza'} <kbd>Invio</kbd>
+                  {lastSeq ? tr('🏆 Classifica finale', '🏆 Final scores') : tr('Prossima sequenza', 'Next sequence')} <kbd>{KEY.enter}</kbd>
                 </button>
               ) : (
                 <button className="btn ghost" onClick={noSteal}>
-                  ⏭ Nessuno ruba{teamRight ? `: ${valueOf(teamRight, n)} punti a ${team?.name}` : ''}
+                  ⏭ {tr('Nessuno ruba', 'Nobody steals')}
+                  {teamRight ? tr(`: ${valueOf(teamRight, n)} punti a ${team?.name}`, `: ${valueOf(teamRight, n)} points to ${team?.name}`) : ''}
                 </button>
               )}
             </div>
           </>
         ) : (
-          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale</button>
+          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 {tr('Classifica finale', 'Final scores')}</button>
         )}
 
         <div className="team-strip">

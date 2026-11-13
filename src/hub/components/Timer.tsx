@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { sounds } from '../sounds';
+import { tr } from '../i18n';
 
 export const TIMER_CHOICES = [10, 20, 30, 45, 60, 90];
 
@@ -71,20 +72,20 @@ export default function Timer({ seconds, hotkey = true }: Props) {
     <span className="timer-wrap" ref={wrap}>
       {left === null ? (
         <span className="timer-idle">
-          <button className="btn ghost timer-btn" onClick={() => start()} title="Avvia il timer (T)">
+          <button className="btn ghost timer-btn" onClick={() => start()} title={tr('Avvia il timer (T)', 'Start the timer (T)')}>
             ⏱ {duration}s {hotkey && <kbd>T</kbd>}
           </button>
-          <button className="btn ghost timer-more" onClick={() => setMenu((m) => !m)} aria-label="Scegli la durata">
+          <button className="btn ghost timer-more" onClick={() => setMenu((m) => !m)} aria-label={tr('Scegli la durata', 'Choose the duration')}>
             ▾
           </button>
         </span>
       ) : (
         <span className="timer-idle">
-          <button className={`timer ${left === 0 ? 'over' : left <= 5 ? 'hurry' : ''}`} onClick={() => start()} title="Ricomincia (T)">
+          <button className={`timer ${left === 0 ? 'over' : left <= 5 ? 'hurry' : ''}`} onClick={() => start()} title={tr('Ricomincia (T)', 'Restart (T)')}>
             <span className="timer-bar" style={{ width: `${(left / duration) * 100}%` }} />
-            <span className="timer-text">{left === 0 ? '⏰ Tempo!' : `⏱ ${left}`}</span>
+            <span className="timer-text">{left === 0 ? tr('⏰ Tempo!', '⏰ Time!') : `⏱ ${left}`}</span>
           </button>
-          <button className="btn ghost timer-more" onClick={() => setLeft(null)} aria-label="Ferma il timer" title="Ferma">
+          <button className="btn ghost timer-more" onClick={() => setLeft(null)} aria-label={tr('Ferma il timer', 'Stop the timer')} title={tr('Ferma', 'Stop')}>
             ✕
           </button>
         </span>

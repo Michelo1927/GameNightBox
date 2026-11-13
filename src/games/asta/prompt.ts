@@ -1,7 +1,10 @@
+import { lang } from '../../hub/i18n';
+
 type Form = Record<string, string | number | boolean>;
 
 /** Prompt for any AI chat: ChatGPT, Claude, Gemini… (also the reference for the Claude Code skill). */
 export function prompt(f: Form): string {
+  if (lang === 'en') return promptEn(f);
   const n = Number(f.themes) || 40;
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
@@ -36,3 +39,42 @@ Rispondi SOLO con un blocco di codice JSON valido, senza altro testo:
   ]
 }`;
 }
+
+function promptEn(f: Form): string {
+  const n = Number(f.themes) || 40;
+  const topic = String(f.topic ?? '').trim();
+  const audience = String(f.audience ?? '').trim();
+  return `Prepare the themes for a team game "Going Once!" in English, for a night in with friends.
+
+Overall theme: ${topic || 'mixed: animals, food, geography, sport, music, movies, TV, household things, jobs'}.
+Players: ${audience || 'friends between 20 and 40'}.
+
+HOW IT WORKS
+A theme appears on the screen (e.g. "Animals of the savannah"). The teams hold an auction: "we'll name 8", "10", "12"…
+The highest bidder must say, within a fixed time (usually 60 seconds), at least as many answers as they promised.
+The host counts them out loud, on trust: there is no list of answers to check against.
+
+RULES
+- Create ${n} themes, all different and not overlapping (not "Fruit" and "Tropical fruit" together).
+- Each theme must have MANY possible answers that an ordinary person knows: at least 15-20, more is better.
+  That way the auction climbs and the challenge is saying all the promised ones in time.
+- The answers must be easy to judge on the spot (right or not is obvious straight away), short to say (one or two words).
+- Short themes, readable at a glance on the TV: 6-7 words at most.
+- Mix closed themes (e.g. "US states", "European capitals") and open ones (e.g. "Things you find in a bathroom", "Things that are red"),
+  easy ones and slightly harder ones.
+- No themes that are too niche or depend on personal taste.
+
+FORMAT
+Answer ONLY with a valid JSON code block, with no other text.
+Keep the keys exactly as written ("temi"…):
+{
+  "lang": "en",
+  "title": "Game title",
+  "description": "A one-line description",
+  "temi": [
+    "Animals of the savannah",
+    "Things you find in a bathroom"
+  ]
+}`;
+}
+

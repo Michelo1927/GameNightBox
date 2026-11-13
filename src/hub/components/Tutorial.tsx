@@ -3,6 +3,7 @@
 // the answer is kept on the device. The "?" button shows the page's tutorial again at any time.
 import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { tr } from '../i18n';
 
 export interface TutorialStep {
   title: string;
@@ -90,7 +91,7 @@ export default function TutorialButton({ tutorial, look = 'pill' }: ButtonProps)
   };
 
   const button = (
-    <button className={`help-${look}`} onClick={start} title="Come funziona (tutorial)" aria-label="Come funziona: mostra il tutorial">
+    <button className={`help-${look}`} onClick={start} title={tr('Come funziona (tutorial)', 'How it works (tutorial)')} aria-label={tr('Come funziona: mostra il tutorial', 'How it works: show the tutorial')}>
       ?
     </button>
   );
@@ -118,14 +119,22 @@ function FirstQuestion({ onAnswer }: { onAnswer: (yes: boolean) => void }) {
   return (
     <div className="ask-backdrop tour-ask">
       <div className="ask" role="dialog" aria-modal aria-labelledby="tour-ask-title">
-        <p id="tour-ask-title">Prima volta qui? Vuoi un mini tutorial che ti mostra come funziona?</p>
+        <p id="tour-ask-title">{tr('Prima volta qui? Vuoi un mini tutorial che ti mostra come funziona?', 'First time here? Would you like a short tutorial that shows you how it works?')}</p>
         <p className="tour-ask-note">
-          Se dici sì, la prima volta che apri ogni sezione (i giochi, il creatore, "Crea con l'IA"…) ti mostro a cosa servono i
-          pulsanti. Puoi rivederlo quando vuoi con il pulsante <b className="tour-q">?</b>
+          {tr(
+            <>
+              Se dici sì, la prima volta che apri ogni sezione (i giochi, il creatore, "Crea con l'IA"…) ti mostro a cosa servono i
+              pulsanti. Puoi rivederlo quando vuoi con il pulsante <b className="tour-q">?</b>
+            </>,
+            <>
+              If you say yes, the first time you open each section (the games, the creator, "Create with AI"…) I'll show you what the
+              buttons are for. You can see it again any time with the <b className="tour-q">?</b> button.
+            </>,
+          )}
         </p>
         <div className="ask-buttons">
-          <button className="btn ghost" onClick={() => onAnswer(false)}>No, grazie</button>
-          <button className="btn primary" autoFocus onClick={() => onAnswer(true)}>Sì, mostramelo</button>
+          <button className="btn ghost" onClick={() => onAnswer(false)}>{tr('No, grazie', 'No, thanks')}</button>
+          <button className="btn primary" autoFocus onClick={() => onAnswer(true)}>{tr('Sì, mostramelo', 'Yes, show me')}</button>
         </div>
       </div>
     </div>
@@ -199,7 +208,7 @@ function Tour({ steps, onClose }: { steps: TutorialStep[]; onClose: () => void }
       )}
       <div className={`tour-card tour-${place}`} key={i}>
         <div className="tour-count">
-          {i + 1} di {steps.length}
+          {i + 1} {tr('di', 'of')} {steps.length}
         </div>
         <h2 id="tour-title">{step.title}</h2>
         <div className="tour-text">{step.text}</div>
@@ -210,15 +219,15 @@ function Tour({ steps, onClose }: { steps: TutorialStep[]; onClose: () => void }
         </div>
         <div className="tour-buttons">
           <button className="btn ghost tour-skip" onClick={onClose}>
-            {last ? 'Chiudi' : 'Salta'}
+            {last ? tr('Chiudi', 'Close') : tr('Salta', 'Skip')}
           </button>
           {i > 0 && (
             <button className="btn ghost" onClick={prev}>
-              ‹ Indietro
+              ‹ {tr('Indietro', 'Back')}
             </button>
           )}
           <button className="btn primary" autoFocus onClick={next}>
-            {last ? 'Fatto ✓' : 'Avanti ›'}
+            {last ? tr('Fatto ✓', 'Done ✓') : tr('Avanti ›', 'Next ›')}
           </button>
         </div>
       </div>

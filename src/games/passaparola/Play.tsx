@@ -6,8 +6,9 @@ import { sounds } from '../../hub/sounds';
 import AnimatedNumber from '../../hub/components/AnimatedNumber';
 import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
-import { LETTERS, type Passaparola } from './schema';
+import { lettersOf, type Passaparola } from './schema';
 import { nextOpen, rights, usePassaparola, withRuns, wrongs, type Mark, type PGame, type Run } from './state';
+import { KEY, tr } from '../../hub/i18n';
 
 const fmt = (ms: number) => {
   const s = Math.max(0, Math.ceil(ms / 1000));
@@ -16,6 +17,7 @@ const fmt = (ms: number) => {
 
 export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
   const { slug, data } = loaded;
+  const LETTERS = lettersOf(data);
   const { game, setGame, undo, canUndo } = usePassaparola(slug);
   const [running, setRunning] = useState(false);
   const since = useRef(0);
@@ -73,7 +75,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
 
   const via = () => {
     if (!run) return;
-    update((r) => ({ ...r, pos: nextOpen(r, r.pos, false) }), 'play');
+    update((r) => ({ ...r, pos: nextOpen(LETTERS, r, r.pos, false) }), 'play');
     startClock();
   };
   const reveal = () => {
@@ -85,7 +87,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
     if (!run) return;
     const letter = LETTERS[run.pos];
     const marked = { ...run, marks: { ...run.marks, [letter]: m } };
-    const next = nextOpen(marked, run.pos);
+    const next = nextOpen(LETTERS, marked, run.pos);
     if (m === 'right') {
       sounds.right();
       if (next < 0) {
@@ -103,14 +105,14 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
   };
   const afterWrong = () => {
     if (!run) return;
-    const next = nextOpen(run, run.pos);
+    const next = nextOpen(LETTERS, run, run.pos);
     if (next < 0) return update((r) => r, 'teamDone');
     update((r) => ({ ...r, pos: next }), 'play');
     startClock();
   };
   const pass = () => {
     if (!run) return;
-    const next = nextOpen(run, run.pos);
+    const next = nextOpen(LETTERS, run, run.pos);
     if (next >= 0) update((r) => ({ ...r, pos: next }), 'play');
   };
   const pause = () => (running ? stopClock('play') : startClock());
@@ -163,7 +165,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
       >
         {team && !game.over && (
           <span className="pill" key={team.id} style={{ color: team.color }}>
-            {team.name} ({game.current + 1} di {game.teams.length})
+            {team.name} ({game.current + 1} {tr('di', 'of')} {game.teams.length})
           </span>
         )}
       </PlayHeader>
@@ -172,7 +174,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
         {run && ruota && team ? (
           <div className="pp-arena" style={{ ['--team' as string]: team.color } as CSSProperties}>
           {/* Keys here and below replay the entrance animations: the wheel per team, the definition per letter. */}
-          <div className="pp-wheel" key={team.id}>
+          <div className={`pp-wheel ${LETTERS.length > 21 ? 'many' : ''}`} key={team.id}>
             {LETTERS.map((l, i) => {
               const a = (i / LETTERS.length) * 2 * Math.PI - Math.PI / 2;
               const m = run.marks[l];
@@ -183,7 +185,7 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
                   className={`pp-letter ${m ?? ''} ${on ? 'on' : ''}`}
                   style={{ left: `${50 + 45 * Math.cos(a)}%`, top: `${50 + 45 * Math.sin(a)}%` }}
                   onClick={() => cycle(l)}
-                  title="Correggi: nessuna → giusta → sbagliata"
+                  title={tr('Correggi: nessuna → giusta → sbagliata', 'Correct: none → right → wrong')}
                 >
                   {l}
                 </button>
@@ -194,43 +196,43 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
                 <>
                   <div className="pp-team" style={{ color: team.color }}>{team.name}</div>
                   <p className="muted">
-                    {LETTERS.length} lettere · {fmt(run.timeLeft)} di tempo
+                    {tr(`${LETTERS.length} lettere · ${fmt(run.timeLeft)} di tempo`, `${LETTERS.length} letters · ${fmt(run.timeLeft)} of time`)}
                   </p>
                   <button className="btn primary big" onClick={via}>
-                    Via! <kbd>Spazio</kbd>
+                    {tr('Via!', 'Go!')} <kbd>{KEY.space}</kbd>
                   </button>
                 </>
               )}
               {item && (phase === 'play' || phase === 'revealed' || phase === 'wrong') && (
                 <>
                   <div className="pp-kind" key={`kind-${run.pos}`}>
-                    {item.type === 'inizia' ? 'Inizia con la' : 'Contiene la'} <b>{item.letter}</b>
+                    {item.type === 'inizia' ? tr('Inizia con la', 'Starts with') : tr('Contiene la', 'Contains')} <b>{item.letter}</b>
                   </div>
                   <p className="pp-question" key={run.pos}>{item.question}</p>
                   {(phase === 'revealed' || phase === 'wrong') && (
                     <div className={`pp-answer ${phase === 'wrong' ? 'ko' : ''}`}>
                       {item.answer}
-                      {item.accept?.length ? <small> (anche: {item.accept.join(', ')})</small> : null}
+                      {item.accept?.length ? <small> ({tr('anche', 'also')}: {item.accept.join(', ')})</small> : null}
                     </div>
                   )}
-                  {paused && <div className="pp-paused">⏸ In pausa</div>}
+                  {paused && <div className="pp-paused">⏸ {tr('In pausa', 'Paused')}</div>}
                 </>
               )}
               {phase === 'teamDone' && (
                 <>
                   <div className="pp-team" style={{ color: team.color }}>{team.name}</div>
                   <p className="pp-summary">
-                    <span className="flash-ok">{rights(run)} giuste</span> · <span className="flash-ko">{wrongs(run)} sbagliate</span>
-                    {run.timeLeft <= 0 && ' · tempo scaduto'}
+                    <span className="flash-ok">{rights(run)} {tr('giuste', 'right')}</span> · <span className="flash-ko">{wrongs(run)} {tr('sbagliate', 'wrong')}</span>
+                    {run.timeLeft <= 0 && tr(' · tempo scaduto', ' · time is up')}
                   </p>
                   <button className="btn primary big" onClick={nextTeam}>
-                    {game.current + 1 < game.teams.length ? 'Prossima squadra' : 'Classifica finale'} <kbd>Invio</kbd>
+                    {game.current + 1 < game.teams.length ? tr('Prossima squadra', 'Next team') : tr('Classifica finale', 'Final scores')} <kbd>{KEY.enter}</kbd>
                   </button>
                 </>
               )}
               {phase === 'over' && (
                 <button className="btn primary big" onClick={() => setRanking('celebrate')}>
-                  🏆 Classifica finale
+                  🏆 {tr('Classifica finale', 'Final scores')}
                 </button>
               )}
             </div>
@@ -239,41 +241,41 @@ export default function Play({ loaded }: { loaded: Loaded<Passaparola> }) {
             <div className="pp-dial-team">{team.name}</div>
             <div className="pp-count">
               <b key={rights(run)}>{rights(run)}</b>
-              <small>giuste</small>
+              <small>{tr('giuste', 'right')}</small>
             </div>
             <div className={`pp-time ${running && left <= 10000 ? 'hurry' : ''}`}>
               <b>{fmt(left)}</b>
-              <small>{paused && phase === 'play' ? 'in pausa' : running ? 'tempo' : 'tempo fermo'}</small>
+              <small>{paused && phase === 'play' ? tr('in pausa', 'paused') : running ? tr('tempo', 'time') : tr('tempo fermo', 'clock stopped')}</small>
             </div>
           </div>
           </div>
         ) : (
-          <p className="muted">Servono più ruote per tutte le squadre: aprine meno dalle opzioni.</p>
+          <p className="muted">{tr('Servono più ruote per tutte le squadre: aprine meno dalle opzioni.', 'There are not enough wheels for all the teams: remove some teams in the options.')}</p>
         )}
 
         {(phase === 'play' || phase === 'revealed' || phase === 'wrong') && (
           <div className="host-bar">
             {phase === 'play' && (
               <button className="btn" onClick={paused ? startClock : reveal}>
-                {paused ? '▶ Riprendi' : '👁 Svela'} <kbd>Spazio</kbd>
+                {paused ? tr('▶ Riprendi', '▶ Resume') : tr('👁 Svela', '👁 Reveal')} <kbd>{KEY.space}</kbd>
               </button>
             )}
             {phase !== 'wrong' && (
               <>
-                <button className="btn ok" onClick={() => mark('right')}>✓ Giusta <kbd>Invio</kbd></button>
-                <button className="btn ko" onClick={() => mark('wrong')}>✗ Sbagliata <kbd>X</kbd></button>
+                <button className="btn ok" onClick={() => mark('right')}>✓ {tr('Giusta', 'Right')} <kbd>{KEY.enter}</kbd></button>
+                <button className="btn ko" onClick={() => mark('wrong')}>✗ {tr('Sbagliata', 'Wrong')} <kbd>X</kbd></button>
               </>
             )}
             {phase === 'play' && (
               <button className="btn primary" onClick={pass} disabled={paused}>
-                Passaparola <kbd>P</kbd>
+                {tr('Passaparola', 'Pass')} <kbd>P</kbd>
               </button>
             )}
             {phase === 'play' && !paused && (
-              <button className="btn ghost" onClick={pause}>⏸ Pausa <kbd>Esc</kbd></button>
+              <button className="btn ghost" onClick={pause}>⏸ {tr('Pausa', 'Pause')} <kbd>Esc</kbd></button>
             )}
             {phase === 'wrong' && (
-              <button className="btn primary" onClick={afterWrong}>Avanti <kbd>Invio</kbd></button>
+              <button className="btn primary" onClick={afterWrong}>{tr('Avanti', 'Next')} <kbd>{KEY.enter}</kbd></button>
             )}
           </div>
         )}

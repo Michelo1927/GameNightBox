@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { ask } from './ask';
 import { hash } from './text';
+import { tr } from './i18n';
 
 export interface Draft<T> {
   data: T;
@@ -46,7 +47,7 @@ const written = (v: unknown, key = ''): boolean =>
  */
 export async function startDraft<T>(game: string, data: T, slug?: string): Promise<boolean> {
   const current = loadDraft(game);
-  if (current && !isShared(current) && written(current.data) && !(await ask('Stai già creando qualcosa su questo dispositivo: sostituirlo con questo?', 'Sostituisci')))
+  if (current && !isShared(current) && written(current.data) && !(await ask(tr('Stai già creando qualcosa su questo dispositivo: sostituirlo con questo?', "You're already creating something on this device: replace it with this one?"), tr('Sostituisci', 'Replace'))))
     return false;
   return saveDraft(game, { data: structuredClone(data), slug });
 }

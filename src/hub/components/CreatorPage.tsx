@@ -4,6 +4,7 @@ import { ask } from '../ask';
 import { BackPill } from './BackButton';
 import TutorialButton from './Tutorial';
 import { CREATOR_TUTORIAL } from '../tutorials';
+import { tr } from '../i18n';
 
 interface Props {
   game: string;
@@ -23,18 +24,18 @@ export default function CreatorPage({ game, title, tip, validation, progress, fu
   return (
     <div className={`creator theme-${game}`}>
       <header className="cr-header">
-        <BackPill label="Esci" />
+        <BackPill label={tr('Esci', 'Exit')} />
         <h1>{title}</h1>
         <TutorialButton tutorial={CREATOR_TUTORIAL} />
       </header>
       <p className="cr-tip">{tip}</p>
-      {full && <p className="cr-warning">Spazio esaurito su questo dispositivo: le ultime modifiche non sono salvate.</p>}
+      {full && <p className="cr-warning">{tr('Spazio esaurito su questo dispositivo: le ultime modifiche non sono salvate.', 'This device is out of space: the latest changes are not saved.')}</p>}
 
       {children}
 
       <div className="cr-secondary">
-        <a className="btn ghost" href={`#/${game}/carica`}>📥 Modifica da un codice</a>
-        <button className="btn ghost" onClick={async () => (await ask('Cancellare tutto e ricominciare da zero?', 'Cancella tutto')) && onReset()}>🗑 Ricomincia da zero</button>
+        <a className="btn ghost" href={`#/${game}/carica`}>📥 {tr('Modifica da un codice', 'Edit from a code')}</a>
+        <button className="btn ghost" onClick={async () => (await ask(tr('Cancellare tutto e ricominciare da zero?', 'Delete everything and start from scratch?'), tr('Cancella tutto', 'Delete everything'))) && onReset()}>🗑 {tr('Ricomincia da zero', 'Start from scratch')}</button>
       </div>
 
       <div className="cr-bar">
@@ -44,7 +45,7 @@ export default function CreatorPage({ game, title, tip, validation, progress, fu
           </div>
         )}
         {ok ? (
-          <a className="btn primary big" href={`#/${game}/crea/codice`}>✨ Genera il codice</a>
+          <a className="btn primary big" href={`#/${game}/crea/codice`}>✨ {tr('Genera il codice', 'Make the code')}</a>
         ) : (
           <>
             {progress && (
@@ -53,12 +54,16 @@ export default function CreatorPage({ game, title, tip, validation, progress, fu
               </p>
             )}
             <details className="cr-errors">
-              <summary>Mancano ancora {validation.errors.length === 1 ? '1 cosa' : `${validation.errors.length} cose`}</summary>
+              <summary>
+                {validation.errors.length === 1
+                  ? tr('Manca ancora 1 cosa', 'Still missing: 1 thing')
+                  : tr(`Mancano ancora ${validation.errors.length} cose`, `Still missing: ${validation.errors.length} things`)}
+              </summary>
               <ul>
                 {validation.errors.slice(0, 12).map((e) => (
                   <li key={e}>{e}</li>
                 ))}
-                {validation.errors.length > 12 && <li>…e altre {validation.errors.length - 12}</li>}
+                {validation.errors.length > 12 && <li>{tr(`…e altre ${validation.errors.length - 12}`, `…and ${validation.errors.length - 12} more`)}</li>}
               </ul>
             </details>
           </>

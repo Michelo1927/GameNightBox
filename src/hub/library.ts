@@ -4,6 +4,7 @@ import siteDates from 'virtual:content-dates';
 import { gameKey, type Library, type Loaded, type Validation } from './content';
 import { movePlayed } from './played';
 import { hash, slugify } from './text';
+import { tr } from './i18n';
 
 /**
  * `modules` comes from the game's own `import.meta.glob('/content/<game>/*.json', { eager: true, import: 'default' })`
@@ -33,7 +34,7 @@ export function library<T>(game: string, modules: Record<string, unknown>, valid
     try {
       localStorage.setItem(k, JSON.stringify(store));
     } catch {
-      alert('Spazio esaurito su questo dispositivo: togli qualcosa che non usi più.');
+      alert(tr('Spazio esaurito su questo dispositivo: togli qualcosa che non usi più.', "This device is out of space: remove something you don't use any more."));
     }
   };
   const local = (): Loaded<T>[] => {

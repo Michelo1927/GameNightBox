@@ -15,6 +15,7 @@ e creazione dei quiz tramite Claude.
 | Editor manuale | Editor visuale **locale** (`npm run dev`), che salva i file nel repo |
 | Media | Immagini, audio, video / YouTube |
 | Import da JeopardyLabs | Non previsto per ora |
+| Lingue | Italiano (predefinito) e inglese: interfaccia, prompt dell'IA e controlli. Vedi "Lingue" |
 
 ## Regole di gioco
 
@@ -48,6 +49,7 @@ GameNightBox/
 │  ├─ App.tsx                  smista gli indirizzi: home dell'hub o pagine di un gioco
 │  ├─ hub/                     ← motore comune a tutti i giochi
 │  │  ├─ HubHome.tsx           home con l'elenco dei giochi
+│  │  ├─ i18n.ts               lingua del sito (it/en) e tr(it, en)
 │  │  ├─ games.ts              cosa deve dichiarare un gioco (nome, icona, indirizzi)
 │  │  ├─ teams.ts              squadre e colori
 │  │  ├─ useSaved.ts           stato salvato nel browser + Annulla
@@ -114,6 +116,36 @@ Regole dell'hub:
   da sola la prima volta che la si apre. Scelta e tutorial già visti stanno in `game-night:tutorial`.
   I testi sono in `src/hub/tutorials.tsx` (quelli del creatore Jeopardy in `src/games/jeopardy/creator/tutorials.tsx`).
 
+## Lingue
+
+Il sito è in **italiano** (predefinito) e in **inglese**.
+
+- Scelta della lingua: la prima volta dalla lingua del browser (`it…` → italiano, tutto il resto → inglese); poi
+  con l'interruttore IT/EN in alto a sinistra della home (il "?" è a destra) (`src/hub/components/LangSwitch.tsx`). La scelta sta in
+  `gnb:lang`; cambiarla ricarica la pagina, perché la lingua si legge una volta sola all'avvio.
+- Modulo `src/hub/i18n.ts`: `lang`, `tr(it, en)`, `ordinal`, `KEY` (Invio/Enter, Spazio/Space), `locale` per date e
+  numeri, `setLang`. I testi stanno **accanto al codice**, in coppia: `tr('Avanti', 'Next')`. `tr` accetta qualsiasi
+  valore (testo, JSX, liste), quindi regole e tutorial lunghi sono due blocchi `RULES_IT` / `RULES_EN`. TypeScript
+  vuole sempre tutte e due le versioni: una traduzione mancante è un errore di compilazione, non un buco nel sito.
+  Fuori dal browser (script, CI) la lingua è sempre l'italiano.
+- Nomi dei giochi in inglese: Jeopardy, Alphabet Wheel (Passaparola), Word Chain (Catena), Name the Song (Musichiere),
+  Top Ten, Wrong Answer! (Sbagliato!), In Order! (In fila!), Going Once! (All'asta!). Gli id, gli indirizzi e i
+  prefissi dei codici restano quelli italiani.
+- **Lingua dei contenuti**: campo facoltativo `"lang"` in ogni quiz/contenuto, `"it"` o `"en"`; se manca è italiano,
+  quindi si scrive solo `"lang": "en"` (`contentLang`, `langField`, `checkLang`). Le chiavi del formato restano
+  italiane anche nei contenuti inglesi (`ruote`, `catene`, `liste`, `"inizia"`/`"contiene"`…).
+  - Nelle pagine dei giochi si vedono tutti i contenuti: quelli nella lingua del sito vengono prima, gli altri
+    hanno l'etichetta IT/EN.
+  - Il creatore a mano dà a un contenuto nuovo la lingua del sito (`newLangField`) e la tiene quando lo riscrive.
+  - "Crea con l'IA" in inglese usa un prompt inglese (`promptEn` in ogni `prompt.ts`, `buildPromptEn` per il
+    Jeopardy) che chiede contenuti in inglese con `"lang": "en"`; se l'IA lo dimentica, lo aggiunge l'app.
+- Cosa cambia con la lingua del contenuto (non del sito):
+  - Passaparola: ruota di **26 lettere** A–Z per l'inglese (`LETTERS_EN`, `lettersOf`), 21 per l'italiano.
+  - In fila!: i valori si leggono all'inglese ("8,849 m", "2.7 million", "44 BC") per controllare l'ordine.
+  - Top Ten: oltre agli articoli italiani, anche "the/a/an" iniziali non contano nelle risposte.
+- Restano solo in italiano: l'editor locale (`editor.html`, `src/games/jeopardy/editor/`), gli script
+  (`npm run validate`, `npm run import`) e le skill di Claude Code.
+
 ## Gli altri giochi
 
 Tutti si giocano su **un solo schermo** (portatile collegato alla TV, anche duplicato): l'host non deve
@@ -141,7 +173,8 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 
 **Passaparola** (`#/passaparola`)
 - Ogni squadra gioca la sua ruota intera, una dopo l'altra, con un suo tempo (90 s - 5 min).
-- 21 lettere italiane (niente J K W X Y). Per ogni lettera la risposta "inizia" o "contiene" la lettera:
+- 21 lettere italiane (niente J K W X Y); i Passaparola in inglese (`"lang": "en"`) hanno tutte le 26 lettere.
+  Per ogni lettera la risposta "inizia" o "contiene" la lettera:
   l'app controlla da sola che sia vero, l'errore tipico di Claude.
 - "Svela e giudica": la squadra risponde, l'host preme Svela (il tempo si ferma), poi ✓/✗.
   Passaparola salta la lettera senza svelarla; l'errore la chiude.

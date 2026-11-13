@@ -14,6 +14,7 @@ import { usePlayer } from './player';
 import type { Playlist } from './schema';
 import { loadGame, rightsOf, scoreOf, useMusichiere, winnerOf, type MGame } from './state';
 import TurnPlay from './TurnPlay';
+import { KEY, tr } from '../../hub/i18n';
 
 /** The mode is chosen in the setup, so it can't change while this page is open. */
 export default function Play({ loaded }: { loaded: Loaded<Playlist> }) {
@@ -154,7 +155,7 @@ function BuzzPlay({ loaded }: { loaded: Loaded<Playlist> }) {
         onSetup={() => go(`/musichiere/${slug}/setup`)}
       >
         <span className="pill" key={game.index}>
-          Canzone {Math.min(game.index + 1, data.songs.length)} di {data.songs.length}
+          {tr(`Canzone ${Math.min(game.index + 1, data.songs.length)} di ${data.songs.length}`, `Song ${Math.min(game.index + 1, data.songs.length)} of ${data.songs.length}`)}
         </span>
       </PlayHeader>
       <div ref={p.host} className="yt-hidden" aria-hidden />
@@ -165,12 +166,12 @@ function BuzzPlay({ loaded }: { loaded: Loaded<Playlist> }) {
 
           <div className="mu-center">
             {game.over ? (
-              <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale</button>
+              <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 {tr('Classifica finale', 'Final scores')}</button>
             ) : game.done && song ? (
               <div className="mu-reveal">
                 {winner && (
                   <div className="buzzed" style={{ background: winner.color, marginBottom: 16 }}>
-                    🏆 {winner.name} ha riempito la colonna!
+                    🏆 {winner.name} {tr('ha riempito la colonna!', 'filled the column!')}
                   </div>
                 )}
                 <div className="mu-title">{song.title}</div>
@@ -204,10 +205,13 @@ function BuzzPlay({ loaded }: { loaded: Loaded<Playlist> }) {
             )}
             {p.error && !game.done && (
               <p className="cr-error">
-                ⚠️ Questo video non parte: {p.error}. Premi <b>Salta</b> e passa alla prossima.
+                {tr(
+                  <>⚠️ Questo video non parte: {p.error}. Premi <b>Salta</b> e passa alla prossima.</>,
+                  <>⚠️ This video won't start: {p.error}. Press <b>Skip</b> and go to the next one.</>,
+                )}
               </p>
             )}
-            {!p.ready && <p className="muted">Carico il lettore YouTube…</p>}
+            {!p.ready && <p className="muted">{tr('Carico il lettore YouTube…', 'Loading the YouTube player…')}</p>}
           </div>
 
           <div className="mu-side">{game.teams.slice(half).map((t, i) => column(t, i + half))}</div>
@@ -217,26 +221,26 @@ function BuzzPlay({ loaded }: { loaded: Loaded<Playlist> }) {
           <div className="host-bar">
             {buzzedTeam ? (
               <>
-                <button className="btn ok" onClick={() => judge(true)}>✓ Giusta <kbd>Invio</kbd></button>
-                <button className="btn ko" onClick={() => judge(false)}>✗ Sbagliata <kbd>X</kbd></button>
+                <button className="btn ok" onClick={() => judge(true)}>✓ {tr('Giusta', 'Right')} <kbd>{KEY.enter}</kbd></button>
+                <button className="btn ko" onClick={() => judge(false)}>✗ {tr('Sbagliata', 'Wrong')} <kbd>X</kbd></button>
                 {!peek && (
-                  <button className="btn ghost" onClick={() => (sounds.reveal(), setPeek(true))}>👁 Svela <kbd>S</kbd></button>
+                  <button className="btn ghost" onClick={() => (sounds.reveal(), setPeek(true))}>👁 {tr('Svela', 'Reveal')} <kbd>S</kbd></button>
                 )}
               </>
             ) : game.done ? (
               <>
-                <button className="btn" onClick={toggle}>{p.playing ? '⏸ Ferma' : '▶ Ascolta'} <kbd>Spazio</kbd></button>
+                <button className="btn" onClick={toggle}>{p.playing ? tr('⏸ Ferma', '⏸ Stop') : tr('▶ Ascolta', '▶ Listen')} <kbd>{KEY.space}</kbd></button>
                 <button className="btn primary" onClick={next}>
-                  {winner || game.index + 1 >= data.songs.length ? 'Classifica finale' : 'Prossima canzone'} <kbd>Invio</kbd>
+                  {winner || game.index + 1 >= data.songs.length ? tr('Classifica finale', 'Final scores') : tr('Prossima canzone', 'Next song')} <kbd>{KEY.enter}</kbd>
                 </button>
               </>
             ) : (
               <>
                 <button className="btn primary" onClick={toggle} disabled={!p.ready}>
-                  {p.playing ? '⏸ Pausa' : clipOver ? '▶ Riparti' : '▶ Play'} <kbd>Spazio</kbd>
+                  {p.playing ? tr('⏸ Pausa', '⏸ Pause') : clipOver ? tr('▶ Riparti', '▶ Play again') : '▶ Play'} <kbd>{KEY.space}</kbd>
                 </button>
-                <button className="btn" onClick={again} disabled={!p.ready}>↺ Da capo <kbd>R</kbd></button>
-                <button className="btn ghost" onClick={reveal} title="Nessuno la sa: svela titolo e artista">⏭ Salta</button>
+                <button className="btn" onClick={again} disabled={!p.ready}>↺ {tr('Da capo', 'From the start')} <kbd>R</kbd></button>
+                <button className="btn ghost" onClick={reveal} title={tr('Nessuno la sa: svela titolo e artista', 'Nobody knows: reveal title and artist')}>⏭ {tr('Salta', 'Skip')}</button>
               </>
             )}
           </div>
@@ -244,15 +248,15 @@ function BuzzPlay({ loaded }: { loaded: Loaded<Playlist> }) {
         {buzzedTeam && !game.over && (
           <p className="muted mu-help">
             {peek
-              ? 'Canzone svelata: se è sbagliata, la canzone finisce anche per le altre squadre.'
-              : 'Sentita la risposta, premi Svela per vedere titolo e artista, poi Giusta o Sbagliata.'}
+              ? tr('Canzone svelata: se è sbagliata, la canzone finisce anche per le altre squadre.', "Song revealed: if it's wrong, the song is over for the other teams too.")
+              : tr('Sentita la risposta, premi Svela per vedere titolo e artista, poi Giusta o Sbagliata.', 'Once you hear the answer, press Reveal to see title and artist, then Right or Wrong.')}
           </p>
         )}
         {!game.over && !game.done && !buzzedTeam && (
           <p className="muted mu-help">
             {game.buzz === 'keys'
-              ? 'Prenotatevi premendo il tasto della vostra squadra.'
-              : "Chi si prenota per primo? L'host preme il numero della squadra o clicca la sua colonna."}
+              ? tr('Prenotatevi premendo il tasto della vostra squadra.', "Buzz in by pressing your team's key.")
+              : tr("Chi si prenota per primo? L'host preme il numero della squadra o clicca la sua colonna.", "Who buzzes in first? The host presses the team's number or clicks its column.")}
           </p>
         )}
       </div>

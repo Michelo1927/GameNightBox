@@ -6,6 +6,7 @@ import { decode } from '../share';
 import { BackPill } from './BackButton';
 import TutorialButton from './Tutorial';
 import { IMPORT_TUTORIAL } from '../tutorials';
+import { tr } from '../i18n';
 
 interface Props<T> {
   game: string;
@@ -29,7 +30,7 @@ export default function ImportCode<T extends { title: string; author?: string }>
   const read = async (input: string): Promise<T | null> => {
     const d = await decode(input, prefix);
     const { errors } = validate(d);
-    if (errors.length) throw new Error(`Ci sono errori: ${errors.slice(0, 3).join('; ')}`);
+    if (errors.length) throw new Error(`${tr('Ci sono errori', 'There are errors')}: ${errors.slice(0, 3).join('; ')}`);
     return d as T;
   };
 
@@ -66,12 +67,12 @@ export default function ImportCode<T extends { title: string; author?: string }>
   if (code)
     return (
       <div className="import-page">
-        <h1 className="title">Carico {what}…</h1>
-        {busy && <p className="muted">Un attimo…</p>}
+        <h1 className="title">{tr(`Carico ${what}…`, `Loading ${what}…`)}</h1>
+        {busy && <p className="muted">{tr('Un attimo…', 'Just a moment…')}</p>}
         {error && (
           <>
             <p className="cr-error">{error}</p>
-            <a className="btn ghost" href={`#/${game}/carica`}>Prova a incollare il codice</a>
+            <a className="btn ghost" href={`#/${game}/carica`}>{tr('Prova a incollare il codice', 'Try pasting the code')}</a>
           </>
         )}
       </div>
@@ -80,11 +81,16 @@ export default function ImportCode<T extends { title: string; author?: string }>
   return (
     <div className="import-page">
       <header className="cr-header">
-        <BackPill label="Esci" />
-        <h1>Carica {what}</h1>
+        <BackPill label={tr('Esci', 'Exit')} />
+        <h1>{tr(`Carica ${what}`, `Load ${what}`)}</h1>
         <TutorialButton tutorial={IMPORT_TUTORIAL} />
       </header>
-      <p className="cr-tip">Incolla il codice (inizia con <b>{prefix}</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</p>
+      <p className="cr-tip">
+        {tr(
+          <>Incolla il codice (inizia con <b>{prefix}</b>) o il link che ti hanno mandato, oppure apri il file scaricato.</>,
+          <>Paste the code (it starts with <b>{prefix}</b>) or the link you were sent, or open the downloaded file.</>,
+        )}
+      </p>
       <textarea
         rows={6}
         value={text}
@@ -92,21 +98,21 @@ export default function ImportCode<T extends { title: string; author?: string }>
           setText(e.target.value);
           onText(e.target.value);
         }}
-        placeholder="Incolla qui il codice…"
+        placeholder={tr('Incolla qui il codice…', 'Paste the code here…')}
       />
       <label className="cr-file">
-        📂 Apri un file
+        📂 {tr('Apri un file', 'Open a file')}
         <input type="file" accept=".txt,.json,text/plain,application/json" hidden onChange={(e) => openFile(e.target.files?.[0])} />
       </label>
-      {busy && <p className="muted">Lettura…</p>}
+      {busy && <p className="muted">{tr('Lettura…', 'Reading…')}</p>}
       {error && <p className="cr-error">{error}</p>}
       {data && (
         <div className="cr-cat">
           <h2 style={{ margin: 0 }}>{data.title}</h2>
-          {data.author && <p className="muted" style={{ margin: 0 }}>di {data.author}</p>}
+          {data.author && <p className="muted" style={{ margin: 0 }}>{tr('di', 'by')} {data.author}</p>}
           <p className="muted" style={{ margin: 0 }}>{summary(data)}</p>
-          <button className="btn primary big" onClick={() => go(`/${game}/${lib.saveLocal(data)}/setup`)}>▶ Gioca</button>
-          <button className="btn ghost" onClick={async () => (await startDraft(game, data)) && go(`/${game}/crea`)}>✏️ Modifica</button>
+          <button className="btn primary big" onClick={() => go(`/${game}/${lib.saveLocal(data)}/setup`)}>▶ {tr('Gioca', 'Play')}</button>
+          <button className="btn ghost" onClick={async () => (await startDraft(game, data)) && go(`/${game}/crea`)}>✏️ {tr('Modifica', 'Edit')}</button>
         </div>
       )}
     </div>

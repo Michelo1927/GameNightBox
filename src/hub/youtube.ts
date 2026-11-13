@@ -1,5 +1,7 @@
 // YouTube IFrame API: loaded once, used for audio-only clips (Media) and the Musichiere player.
 
+import { tr } from './i18n';
+
 export interface YTPlayer {
   playVideo(): void;
   pauseVideo(): void;
@@ -32,8 +34,8 @@ export function loadYouTubeApi() {
 /** Looks a video up via YouTube oEmbed: its title, or why it can't be played here. */
 export async function checkYouTube(id: string): Promise<{ title?: string; error?: string }> {
   const res = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`);
-  if (res.status === 401 || res.status === 403) return { error: 'non si può incorporare in altri siti' };
-  if (!res.ok) return { error: 'video inesistente o privato' };
+  if (res.status === 401 || res.status === 403) return { error: tr('non si può incorporare in altri siti', "can't be embedded in other sites") };
+  if (!res.ok) return { error: tr('video inesistente o privato', 'video missing or private') };
   const data = (await res.json()) as { title: string; author_name: string };
   return { title: `${data.title} (${data.author_name})` };
 }

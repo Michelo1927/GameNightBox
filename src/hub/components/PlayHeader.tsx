@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { toggleFullscreen } from '../keys';
 import SoundButtons from './SoundButtons';
 import { BackPill } from './BackButton';
+import { tr } from '../i18n';
 
 interface Props {
   title: string;
@@ -31,17 +32,17 @@ export default function PlayHeader({ title, children, undo, canUndo, onRanking, 
 
   return (
     <header className="board-header play-header">
-      <BackPill label="Esci" />
+      <BackPill label={tr('Esci', 'Exit')} />
       <h1 className="title">{title}</h1>
       <div className="play-info">{children}</div>
       <div className="header-actions">
-        <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title="Annulla l'ultima azione (Ctrl+Z)">
-          ↶ Annulla
+        <button className="btn ghost icon" onClick={undo} disabled={!canUndo} title={tr("Annulla l'ultima azione (Ctrl+Z)", 'Undo the last action (Ctrl+Z)')}>
+          ↶ {tr('Annulla', 'Undo')}
         </button>
         <SoundButtons />
-        <button className="btn ghost icon" onClick={toggleFullscreen} title="Schermo intero (F)">⛶</button>
-        <button className="btn ghost icon" onClick={onSetup} title="Squadre e opzioni">👥</button>
-        <button className="btn primary" onClick={onRanking}>Classifica</button>
+        <button className="btn ghost icon" onClick={toggleFullscreen} title={tr('Schermo intero (F)', 'Full screen (F)')}>⛶</button>
+        <button className="btn ghost icon" onClick={onSetup} title={tr('Squadre e opzioni', 'Teams and options')}>👥</button>
+        <button className="btn primary" onClick={onRanking}>{tr('Classifica', 'Scores')}</button>
       </div>
     </header>
   );

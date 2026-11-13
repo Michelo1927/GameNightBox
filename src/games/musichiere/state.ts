@@ -2,6 +2,7 @@ import type { BuzzMode } from '../../hub/buzzer';
 import { gameKey } from '../../hub/content';
 import { newTeam, type Team } from '../../hub/teams';
 import { loadSaved, useSaved } from '../../hub/useSaved';
+import { tr } from '../../hub/i18n';
 
 export type Mark = 'right' | 'wrong';
 
@@ -60,8 +61,8 @@ export const SLOTS = [5, 7, 10];
 export const CLIPS = [10, 15, 20, 30];
 export const TURN_SECONDS = [60, 120, 180, 240];
 export const MODES: { value: Mode; label: string }[] = [
-  { value: 'buzz', label: 'A prenotazione' },
-  { value: 'turni', label: 'A turno' },
+  { value: 'buzz', label: tr('A prenotazione', 'Buzz in') },
+  { value: 'turni', label: tr('A turno', 'Take turns') },
 ];
 
 export const newGame = (teams: Team[] = [newTeam(0), newTeam(1)], opts: Partial<MGame> = {}): MGame => ({

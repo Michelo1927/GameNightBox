@@ -1,8 +1,10 @@
+import { tr } from '../i18n';
+
 /** What a home card says about a game, as a small line icon (24×24); the words show on hover. */
 export const GAME_TAGS = {
   // Every game so far is played in teams, so no card shows it yet: it's for when an all-against-all game arrives.
   squadre: {
-    label: 'A squadre',
+    label: tr('A squadre', 'Teams'),
     d: (
       <>
         <circle cx="9" cy="8" r="3.2" />
@@ -14,7 +16,7 @@ export const GAME_TAGS = {
   },
   // Every game has a host at the computer, so no card shows it.
   host: {
-    label: 'Serve un host',
+    label: tr('Serve un host', 'Needs a host'),
     d: (
       <>
         <rect x="9" y="2.5" width="6" height="11.5" rx="3" />
@@ -23,7 +25,7 @@ export const GAME_TAGS = {
     ),
   },
   prenotazione: {
-    label: 'Si prenota col pulsante',
+    label: tr('Si prenota col pulsante', 'Buzz in to answer'),
     d: (
       <>
         <path d="M5 14a7 7 0 0 1 14 0z" />
@@ -33,11 +35,11 @@ export const GAME_TAGS = {
     ),
   },
   turno: {
-    label: 'A turno',
+    label: tr('A turno', 'Take turns'),
     d: <path d="M19.5 10A8 8 0 0 0 5.6 6.8M4.5 3.5v3.8h3.8M4.5 14a8 8 0 0 0 13.9 3.2M19.5 20.5v-3.8h-3.8" />,
   },
   tempo: {
-    label: 'Contro il tempo',
+    label: tr('Contro il tempo', 'Against the clock'),
     d: (
       <>
         <circle cx="12" cy="13.5" r="7.5" />
@@ -46,13 +48,13 @@ export const GAME_TAGS = {
     ),
   },
   rubata: {
-    label: 'Si può rubare',
+    label: tr('Si può rubare', 'Steals allowed'),
     d: (
       <path d="M2.5 9.5c3.2-1.6 6.3-1.1 9.5 1 3.2-2.1 6.3-2.6 9.5-1-.3 4.1-2.4 6.5-5.5 6.5-2 0-3.1-1.2-4-2.6-.9 1.4-2 2.6-4 2.6-3.1 0-5.2-2.4-5.5-6.5zM6.5 11.6h2.6M14.9 11.6h2.6" />
     ),
   },
   internet: {
-    label: 'Serve internet',
+    label: tr('Serve internet', 'Needs internet'),
     d: (
       <>
         <path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.5 16a5 5 0 0 1 7 0" />
@@ -62,7 +64,7 @@ export const GAME_TAGS = {
   },
   // Every game has a creator, so no card shows it: kept for a game that only plays ready-made content.
   crea: {
-    label: 'Contenuti da creare',
+    label: tr('Contenuti da creare', 'Make your own content'),
     d: <path d="M4 20l1-4.6L15.6 4.8a2.1 2.1 0 0 1 3 3L8 18.4zM13.6 6.8l3 3" />,
   },
 };

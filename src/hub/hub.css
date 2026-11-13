@@ -86,6 +86,19 @@ button.link { background: none; border: 0; padding: 0; color: var(--gold); font:
   box-shadow: 0 0 22px rgba(255, 201, 40, 0.25), 0 6px 20px rgba(0, 0, 0, 0.35); transform: scale(1.06);
 }
 body:has(.overlay, .zoom, .ask-backdrop, .app-intro) .help-fab { display: none; }
+/* IT / EN in the home, top left (the "?" button is top right). */
+.lang-switch {
+  position: fixed; left: 20px; top: 24px; z-index: 5; display: flex; padding: 3px; gap: 2px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.16); backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); animation: fade-in 0.4s ease-out 0.15s backwards;
+}
+.lang-switch button {
+  padding: 7px 11px; border: 0; border-radius: 999px; cursor: pointer; background: none;
+  font: 800 0.85rem/1 var(--font-body); letter-spacing: 0.06em; color: var(--muted); transition: background 0.2s, color 0.2s;
+}
+.lang-switch button:is(:hover, :focus-visible) { color: var(--gold-hi); }
+.lang-switch button.on { color: #1a1030; background: var(--gold); cursor: default; }
+body:has(.overlay, .zoom, .ask-backdrop, .app-intro) .lang-switch { display: none; }
 /* A "?" written in the text, like the button. */
 .tour-q {
   display: inline-grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 50%; vertical-align: 0.05em;
@@ -135,7 +148,8 @@ body:has(.overlay, .zoom, .ask-backdrop, .app-intro) .help-fab { display: none; 
   .tour-card { animation: none; }
 }
 /* Phone: the sign on the home page fills the width, so it starts below the "?" button. */
-@media (max-width: 560px) { body:has(.help-fab) .hub-home { padding-top: 76px; } }
+/* Narrow screens: the "?" button and the IT/EN switch would cover the logo, so the home starts below them. */
+@media (max-width: 720px) { body:has(.help-fab, .lang-switch) .hub-home { padding-top: 76px; } }
 
 /* "Crea con l'IA": links to the best known AI chats. */
 .ai-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }

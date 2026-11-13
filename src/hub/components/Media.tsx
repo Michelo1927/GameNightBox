@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { youtubeId, type Media } from '../media';
 import { useQuietMusic } from '../music';
 import { loadYouTubeApi, type YTPlayer } from '../youtube';
+import { tr } from '../i18n';
 
 /** Image + multiple choice: picture on the left, options on the right (stacked on narrow screens). */
 export function MaybeSplit({ split, media, children }: { split: boolean; media: ReactNode; children: ReactNode }) {
@@ -18,7 +19,7 @@ export function MaybeSplit({ split, media, children }: { split: boolean; media: 
 export default function MediaView({ media, url }: { media: Media; url: string }) {
   // Songs and videos are heard without the background music.
   useQuietMusic(media.type !== 'image');
-  if (!url && media.type !== 'youtube') return <div className="media-missing">File non trovato: {media.src}</div>;
+  if (!url && media.type !== 'youtube') return <div className="media-missing">{tr('File non trovato', 'File not found')}: {media.src}</div>;
 
   let content;
   if (media.type === 'image') content = <ZoomImage src={url} alt={media.caption ?? ''} />;
@@ -38,7 +39,7 @@ function ZoomImage({ src, alt }: { src: string; alt: string }) {
   const [zoom, setZoom] = useState(false);
   return (
     <>
-      <img src={src} alt={alt} onClick={() => setZoom(true)} title="Clicca per ingrandire" />
+      <img src={src} alt={alt} onClick={() => setZoom(true)} title={tr('Clicca per ingrandire', 'Click to enlarge')} />
       {zoom && (
         <div className="zoom" onClick={() => setZoom(false)}>
           <img src={src} alt={alt} />
@@ -97,7 +98,7 @@ function AudioClip({ src, start = 0, end }: { src: string; start?: number; end?:
       <button className="play" onClick={() => (playing ? el().pause() : el().play())}>
         {playing ? '❚❚' : '▶'}
       </button>
-      <button className="btn ghost" onClick={() => { el().currentTime = start; el().play(); }}>↺ Da capo</button>
+      <button className="btn ghost" onClick={() => { el().currentTime = start; el().play(); }}>↺ {tr('Da capo', 'From the start')}</button>
       <div className="bar"><div style={{ width: `${progress * 100}%` }} /></div>
       <span className="muted">{fmt(Math.max(0, time - start))}</span>
     </div>
@@ -190,7 +191,7 @@ function YouTubeAudio({ media }: { media: Media }) {
       <button className="play" disabled={!ready} onClick={() => (playing ? p().pauseVideo() : p().playVideo())}>
         {!ready ? '…' : playing ? '❚❚' : '▶'}
       </button>
-      <button className="btn ghost" disabled={!ready} onClick={() => { p().seekTo(start, true); p().playVideo(); }}>↺ Da capo</button>
+      <button className="btn ghost" disabled={!ready} onClick={() => { p().seekTo(start, true); p().playVideo(); }}>↺ {tr('Da capo', 'From the start')}</button>
       <div className="bar"><div style={{ width: `${progress * 100}%` }} /></div>
       <span className="muted">{fmt(Math.max(0, time - start))}</span>
     </div>

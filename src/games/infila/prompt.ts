@@ -1,9 +1,11 @@
 import { MAX_CARDS, MIN_CARDS } from './schema';
+import { lang } from '../../hub/i18n';
 
 type Form = Record<string, string | number | boolean>;
 
 /** Prompt for any AI chat: ChatGPT, Claude, Gemini… (also the reference for the Claude Code skill). */
 export function prompt(f: Form): string {
+  if (lang === 'en') return promptEn(f);
   const sequences = Number(f.sequences) || 8;
   const cards = Math.min(MAX_CARDS, Math.max(MIN_CARDS, Number(f.cards) || 5));
   const topic = String(f.topic ?? '').trim();
@@ -56,3 +58,60 @@ Rispondi SOLO con un blocco di codice JSON valido, senza altro testo:
   ]
 }`;
 }
+
+function promptEn(f: Form): string {
+  const sequences = Number(f.sequences) || 8;
+  const cards = Math.min(MAX_CARDS, Math.max(MIN_CARDS, Number(f.cards) || 5));
+  const topic = String(f.topic ?? '').trim();
+  const audience = String(f.audience ?? '').trim();
+  return `Prepare the sequences for a team game "In Order!" in English, for a night in with friends.
+
+Theme: ${topic || 'mixed: history, inventions, films and songs, geography, nature, sport, records'}.
+Players: ${audience || 'friends between 20 and 40'}.
+
+HOW IT WORKS
+The screen shows a question (e.g. "When did these things happen?") with some shuffled cards
+(e.g. "The Berlin Wall falls", "Google is founded", "The first iPhone comes out"...). The team whose turn it is must say
+the right order, from one end of the row to the other (e.g. from the oldest to the most recent). It scores points for each
+card in the right place; if it's wrong, the other teams can steal by putting all the cards in order.
+At the end each card shows its value (e.g. "1989"), which proves the order.
+
+RULES
+- Create ${sequences} sequences, each with ${cards} cards (anything from ${MIN_CARDS} to ${MAX_CARDS} is fine).
+- Each sequence has a CLEAR, MEASURABLE criterion: year, date, height, length, area, population,
+  speed, weight, age, duration, price, distance... No criteria of taste or opinion ("the most beautiful").
+- Values must be TRUE and verifiable. In "source" write where they come from (e.g. "Wikipedia", "UN, 2024").
+  If you have web search, check every value. Prefer stable, well-known data.
+- No ties, and values not too close to each other: the order must be beyond dispute.
+- Vary the criteria between sequences (not all dates), and mix easy and hard cards:
+  the fun is that some are known and some need reasoning.
+- Write the cards ALREADY IN THE RIGHT ORDER, from the first in the row to the last.
+- "first" and "last" are the labels of the two ends of the row (e.g. "Oldest" / "Most recent",
+  "Smallest" / "Largest", "Furthest north" / "Furthest south").
+- "text": the card, short (2-6 words), without the value in it (not "Google is founded in 1998").
+- "value": the value that puts it in its place, short, with the unit, the same for every card in the
+  sequence (e.g. "1998", "8,849 m", "2.7 million", "44 BC").
+
+FORMAT
+Answer ONLY with a valid JSON code block, with no other text.
+Keep the keys exactly as written ("sequenze", "question", "first", "last", "cards"…):
+{
+  "lang": "en",
+  "title": "Game title",
+  "description": "A one-line description",
+  "sequenze": [
+    {
+      "question": "When did these things happen?",
+      "first": "Oldest",
+      "last": "Most recent",
+      "source": "Wikipedia",
+      "cards": [
+        { "text": "The Berlin Wall falls", "value": "1989" },
+        { "text": "Google is founded", "value": "1998" },
+        { "text": "The first iPhone comes out", "value": "2007" }
+      ]
+    }
+  ]
+}`;
+}
+

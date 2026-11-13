@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Team } from './teams';
+import { tr } from './i18n';
 
 /**
  * How a team books the answer:
@@ -13,8 +14,8 @@ export type BuzzMode = 'keys' | 'host';
 export const BUZZ_KEYS = ['A', 'L', 'G', 'P', 'Z', 'M', 'Q', 'O', 'C', 'K'];
 
 export const BUZZ_MODES: { value: BuzzMode; label: string }[] = [
-  { value: 'keys', label: '⌨️ Un tasto per squadra' },
-  { value: 'host', label: "🙋 Decide l'host" },
+  { value: 'keys', label: tr('⌨️ Un tasto per squadra', '⌨️ One key per team') },
+  { value: 'host', label: tr("🙋 Decide l'host", '🙋 The host decides') },
 ];
 
 export const buzzKeyOf = (teams: Team[], id: string) => BUZZ_KEYS[teams.findIndex((t) => t.id === id)];

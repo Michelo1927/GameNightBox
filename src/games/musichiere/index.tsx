@@ -16,21 +16,46 @@ import { validatePlaylist, type Playlist } from './schema';
 import { CLIPS, MODES, newGame, perTeam, SLOTS, TURN_SECONDS, useMusichiere, type MGame, type Mode, type TurnRun } from './state';
 import { ask } from '../../hub/ask';
 import './musichiere.css';
+import { tr } from '../../hub/i18n';
 
 const lib = library<Playlist>('musichiere', import.meta.glob('/content/musichiere/*.json', { eager: true, import: 'default' }), validatePlaylist);
 
 const creation: Creation<Playlist> = {
   game: 'musichiere',
-  a: 'una playlist',
+  a: tr('una playlist', 'a playlist'),
   prefix: 'MU1.',
   lib,
   validate: validatePlaylist,
-  summary: (d) => `${d.songs.length} canzoni`,
+  summary: (d) => tr(`${d.songs.length} canzoni`, `${d.songs.length} songs`),
   clean,
   Editor,
 };
 
-const RULES = (
+const RULES_EN = (
+  <>
+    <p><b>Buzz in</b>: every team on the same song.</p>
+    <ul>
+      <li>A song starts (audio only). The first team to buzz in stops the music and says title and artist.</li>
+      <li>Buzzing: each team has a key on the laptop (e.g. {BUZZ_KEYS.slice(0, 2).join(' and ')}), or the host decides who was fastest and presses the team's number (or clicks its column).</li>
+      <li>After a team buzzes the host can press <b>Reveal</b> (S) to see title and artist before judging: if it's then wrong, the song is over for everyone. Without revealing, whoever is wrong is out and the music starts again for the others.</li>
+      <li>Right (Enter): the team fills a box of its column. Wrong (X): no box, the team sits out this song and the music starts again for the others.</li>
+      <li><b>The first team to fill its whole column wins.</b> If the songs run out first, the team with the most boxes filled wins.</li>
+      <li>The host also has: Space (play/pause), R (from the start) and <b>Skip</b>, which reveals the song when nobody knows it.</li>
+    </ul>
+    <p><b>Take turns</b>: each team has its own list of songs, nobody steals.</p>
+    <ul>
+      <li>The playlist is split between the teams (1st song to the first team, 2nd to the second…). The wheel decides who starts.</li>
+      <li>Each team has its own clock, which runs only while it plays. The song keeps going until the team answers.</li>
+      <li>Right (Enter) = 1 point. Wrong (X) = the song is lost. <b>Pass</b> (P) = the song comes back later. In all three cases it's the other team's turn.</li>
+      <li>At the end of the list, each team goes back to its passed songs, in order, until only right and wrong ones are left.</li>
+      <li>When time is up, the songs still to guess count as wrong. <b>The team that guesses the most wins.</b></li>
+    </ul>
+  </>
+);
+
+const NAME = tr('Musichiere', 'Name the Song');
+
+const RULES_IT = (
   <>
     <p><b>A prenotazione</b>: tutte le squadre sulla stessa canzone.</p>
     <ul>
@@ -52,6 +77,8 @@ const RULES = (
   </>
 );
 
+const RULES = tr(RULES_IT, RULES_EN);
+
 function Setup({ slug, data }: { slug: string; data: Playlist }) {
   const { game, setGame } = useMusichiere(slug);
   const turni = game.mode === 'turni';
@@ -63,12 +90,12 @@ function Setup({ slug, data }: { slug: string; data: Playlist }) {
   const changeMode = async (mode: Mode) => {
     if (mode === game.mode) return;
     if (!game.started) return setGame((g) => ({ ...g, mode }));
-    if (await ask('Cambiare modalità fa ricominciare la partita da capo: i punti si azzerano.', 'Cambia e ricomincia')) setGame((g) => restart(g, { mode }));
+    if (await ask(tr('Cambiare modalità fa ricominciare la partita da capo: i punti si azzerano.', 'Changing mode starts the game over: the points go back to zero.'), tr('Cambia e ricomincia', 'Change and start over'))) setGame((g) => restart(g, { mode }));
   };
   return (
     <SetupPage
       back="#/musichiere"
-      backLabel="← Tutte le playlist"
+      backLabel={tr('← Tutte le playlist', '← All playlists')}
       title={data.title}
       description={data.description}
       teams={game.teams}
@@ -76,20 +103,23 @@ function Setup({ slug, data }: { slug: string; data: Playlist }) {
       started={game.started}
       // Booking: every team plays the same song, so who starts doesn't matter.
       wheel={turni}
-      blocked={turni && each < 1 ? `Servono almeno ${game.teams.length} canzoni, una per squadra.` : undefined}
+      blocked={turni && each < 1 ? tr(`Servono almeno ${game.teams.length} canzoni, una per squadra.`, `At least ${game.teams.length} songs are needed, one per team.`) : undefined}
       onPlay={() => go(`/musichiere/${slug}/play`)}
       onRestart={() => setGame((g) => restart(g))}
     >
-      <Choice label="🎲 Modalità" value={game.mode} options={MODES} onChange={changeMode} />
+      <Choice label={tr('🎲 Modalità', '🎲 Mode')} value={game.mode} options={MODES} onChange={changeMode} />
       <p className="muted">
         {turni
-          ? "Ogni squadra ha la sua lista di canzoni e un cronometro: giusta, sbagliata o passa, poi tocca all'altra. Niente rubate."
-          : 'Tutte le squadre sulla stessa canzone: risponde chi si prenota per primo.'}
+          ? tr(
+              "Ogni squadra ha la sua lista di canzoni e un cronometro: giusta, sbagliata o passa, poi tocca all'altra. Niente rubate.",
+              "Each team has its own list of songs and a clock: right, wrong or pass, then it's the other team's turn. No steals.",
+            )
+          : tr('Tutte le squadre sulla stessa canzone: risponde chi si prenota per primo.', 'Every team on the same song: whoever buzzes in first answers.')}
       </p>
       {turni ? (
         <>
           <Choice
-            label="⏱ Tempo per squadra"
+            label={tr('⏱ Tempo per squadra', '⏱ Time per team')}
             value={game.seconds}
             options={TURN_SECONDS.map((n) => ({ value: n, label: `${n / 60} min` }))}
             onChange={(seconds) =>
@@ -102,24 +132,35 @@ function Setup({ slug, data }: { slug: string; data: Playlist }) {
             }
           />
           <p className="muted">
-            🎵 {data.songs.length} canzoni: {each} a testa{left ? ` (${left === 1 ? "l'ultima resta fuori" : `le ultime ${left} restano fuori`})` : ''}. Serve
-            internet (le canzoni arrivano da YouTube).
+            🎵{' '}
+            {tr(
+              `${data.songs.length} canzoni: ${each} a testa${left ? ` (${left === 1 ? "l'ultima resta fuori" : `le ultime ${left} restano fuori`})` : ''}. Serve internet (le canzoni arrivano da YouTube).`,
+              `${data.songs.length} songs: ${each} each${left ? ` (${left === 1 ? 'the last one is left out' : `the last ${left} are left out`})` : ''}. Needs internet (the songs come from YouTube).`,
+            )}
           </p>
         </>
       ) : (
         <>
-          <Choice label="🔔 Prenotazione" value={game.buzz} options={BUZZ_MODES} onChange={(buzz) => setGame((g) => ({ ...g, buzz }))} />
+          <Choice label={tr('🔔 Prenotazione', '🔔 Buzzing in')} value={game.buzz} options={BUZZ_MODES} onChange={(buzz) => setGame((g) => ({ ...g, buzz }))} />
           {game.buzz === 'keys' && (
             <p className="muted">
-              Tasti: {game.teams.map((t, i) => `${t.name} → ${BUZZ_KEYS[i]}`).join(' · ')}
+              {tr('Tasti', 'Keys')}: {game.teams.map((t, i) => `${t.name} → ${BUZZ_KEYS[i]}`).join(' · ')}
             </p>
           )}
-          <Choice label="🟥 Canzoni da indovinare per vincere" value={game.slots} options={SLOTS.map((n) => ({ value: n, label: String(n) }))} onChange={(slots) => setGame((g) => ({ ...g, slots }))} />
-          <Choice label="⏱ Secondi di ascolto" value={game.clip} options={CLIPS.map((n) => ({ value: n, label: `${n}s` }))} onChange={(clip) => setGame((g) => ({ ...g, clip }))} />
+          <Choice label={tr('🟥 Canzoni da indovinare per vincere', '🟥 Songs to guess to win')} value={game.slots} options={SLOTS.map((n) => ({ value: n, label: String(n) }))} onChange={(slots) => setGame((g) => ({ ...g, slots }))} />
+          <Choice label={tr('⏱ Secondi di ascolto', '⏱ Seconds of listening')} value={game.clip} options={CLIPS.map((n) => ({ value: n, label: `${n}s` }))} onChange={(clip) => setGame((g) => ({ ...g, clip }))} />
           {data.songs.length < game.slots * game.teams.length && (
-            <p className="muted">⚠️ Con {data.songs.length} canzoni la partita potrebbe finire prima che una squadra riempia la colonna: vincerebbe chi ne ha di più.</p>
+            <p className="muted">
+              ⚠️{' '}
+              {tr(
+                `Con ${data.songs.length} canzoni la partita potrebbe finire prima che una squadra riempia la colonna: vincerebbe chi ne ha di più.`,
+                `With ${data.songs.length} songs the game might end before a team fills its column: the team with the most would win.`,
+              )}
+            </p>
           )}
-          <p className="muted">🎵 {data.songs.length} canzoni. Serve internet (le canzoni arrivano da YouTube).</p>
+          <p className="muted">
+            🎵 {tr(`${data.songs.length} canzoni. Serve internet (le canzoni arrivano da YouTube).`, `${data.songs.length} songs. Needs internet (the songs come from YouTube).`)}
+          </p>
         </>
       )}
     </SetupPage>
@@ -128,9 +169,12 @@ function Setup({ slug, data }: { slug: string; data: Playlist }) {
 
 const musichiere: Game = {
   id: 'musichiere',
-  name: 'Musichiere',
+  name: NAME,
   icon,
-  tagline: 'Canzoni da YouTube da indovinare: a prenotazione, o a turno con una lista e un cronometro per squadra.',
+  tagline: tr(
+    'Canzoni da YouTube da indovinare: a prenotazione, o a turno con una lista e un cronometro per squadra.',
+    'Songs from YouTube to guess: buzzing in, or taking turns with a list and a clock per team.',
+  ),
   tags: ['prenotazione', 'turno', 'internet'],
   href: '#/musichiere',
   route(parts) {
@@ -142,17 +186,23 @@ const musichiere: Game = {
       return (
         <ClaudeCreate<Playlist>
           back="#/musichiere"
-          title="Playlist con l'IA"
+          title={tr("Playlist con l'IA", 'Playlist with AI')}
           intro={
-            <>
-              Scegli tema e numero di canzoni, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta: l'app
-              controlla ogni link YouTube e ti mostra il titolo vero del video, così sistemi quelli sbagliati prima di giocare.
-            </>
+            tr(
+              <>
+                Scegli tema e numero di canzoni, copia il prompt e incollalo nella tua IA (<b>ChatGPT, Claude, Gemini…</b>). Poi incolla qui la risposta:
+                l'app controlla ogni link YouTube e ti mostra il titolo vero del video, così sistemi quelli sbagliati prima di giocare.
+              </>,
+              <>
+                Choose a theme and the number of songs, copy the prompt and paste it into your AI (<b>ChatGPT, Claude, Gemini…</b>). Then paste the
+                answer here: the app checks every YouTube link and shows you the video's real title, so you can fix the wrong ones before playing.
+              </>,
+            )
           }
           fields={[
-            { key: 'topic', label: 'Tema', placeholder: 'Es. Sanremo, anni 2000, cartoni animati, rock…' },
-            { key: 'songs', label: 'Quante canzoni', type: 'number', options: [10, 15, 20, 30, 40] },
-            { key: 'audience', label: 'Chi gioca (facoltativo)', placeholder: 'Es. amici sui 30 anni' },
+            { key: 'topic', label: tr('Tema', 'Theme'), placeholder: tr('Es. Sanremo, anni 2000, cartoni animati, rock…', 'E.g. Eurovision, the 2000s, cartoons, rock…') },
+            { key: 'songs', label: tr('Quante canzoni', 'How many songs'), type: 'number', options: [10, 15, 20, 30, 40] },
+            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. amici sui 30 anni', 'E.g. friends around 30') },
           ]}
           initial={{ topic: '', songs: 20, audience: '' }}
           prompt={prompt}
@@ -167,15 +217,15 @@ const musichiere: Game = {
       return (
         <ContentHome<Playlist>
           game="musichiere"
-          name="Musichiere"
+          name={NAME}
           icon={icon}
-          intro="Indovinate titolo e artista: prenotandovi sulla stessa canzone, o a turno ognuno con la sua lista."
+          intro={tr('Indovinate titolo e artista: prenotandovi sulla stessa canzone, o a turno ognuno con la sua lista.', 'Guess title and artist: buzzing in on the same song, or taking turns, each with its own list.')}
           rules={RULES}
           items={lib.all}
           onRemove={lib.removeLocal}
           title={(d) => d.title}
           description={(d) => d.description}
-          tags={(d) => [`${d.songs?.length ?? 0} canzoni`]}
+          tags={(d) => [tr(`${d.songs?.length ?? 0} canzoni`, `${d.songs?.length ?? 0} songs`)]}
         />
       );
     if (view === 'play') return <Play key={loaded.slug} loaded={loaded} />;

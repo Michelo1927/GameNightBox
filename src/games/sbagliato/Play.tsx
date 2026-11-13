@@ -8,6 +8,7 @@ import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import type { SbagliatoSet } from './schema';
 import { deal, newRun, scoreOf, trueOnLeft, useSbagliato, type Run, type SGame } from './state';
+import { KEY, tr } from '../../hub/i18n';
 
 type Flash = { ok: boolean; text: string } | null;
 
@@ -101,7 +102,7 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
   /** The host pressed the answer the team said. */
   const answer = (saidTrue: boolean) => {
     if (!playing || !running || !run || !q) return;
-    if (saidTrue) return slip(`Era vera: ${q.answer}! Si riparte dalla prima`);
+    if (saidTrue) return slip(tr(`Era vera: ${q.answer}! Si riparte dalla prima`, `That was true: ${q.answer}! Back to the first`));
     const step = run.step + 1;
     if (step >= game.steps) {
       sounds.right();
@@ -118,7 +119,7 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
     say({ ok: false, text });
     update((r) => ({ ...r, step: 0, asked: r.asked + 1, slips: r.slips + 1 }), 'play');
   };
-  const slow = () => running && slip('Troppo lento! Si riparte dalla prima');
+  const slow = () => running && slip(tr('Troppo lento! Si riparte dalla prima', 'Too slow! Back to the first'));
 
   const nextTeam = () => {
     setRunning(false);
@@ -155,27 +156,41 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
       >
         {team && !game.over && (
           <span className="pill" key={team.id} style={{ color: team.color }}>
-            Tocca a {team.name} · {game.current + 1} di {game.teams.length}
+            {tr(`Tocca a ${team.name} · ${game.current + 1} di ${game.teams.length}`, `${team.name}'s turn · ${game.current + 1} of ${game.teams.length}`)}
           </span>
         )}
       </PlayHeader>
 
       <div className="game-stage">
         {game.over ? (
-          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale <kbd>Invio</kbd></button>
+          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 {tr('Classifica finale', 'Final scores')} <kbd>{KEY.enter}</kbd></button>
         ) : game.phase === 'intro' && team ? (
           <div className="sb-intro" key={team.id}>
-            <div className="sb-tag">Tocca a</div>
+            <div className="sb-tag">{tr('Tocca a', 'Your turn')}</div>
             <h2 style={{ color: team.color }}>{team.name}</h2>
-            <ol>
-              <li>Arrivano domande a raffica, ognuna con due risposte: <b>dite quella SBAGLIATA</b>.</li>
-              <li>
-                Avete <b>{game.steps} domande</b> da sbagliare tutte di fila in {fmt(game.seconds * 1000)}.
-              </li>
-              <li>Se dite la risposta vera, o ci mettete troppo, si riparte <b>dalla prima domanda</b>: sono sempre le stesse, nello stesso ordine. Il tempo intanto continua a scorrere.</li>
-            </ol>
-            <p className="muted">Host: premete ← o → per la risposta che dicono, X se sono troppo lenti, Spazio per la pausa.</p>
-            <button className="btn primary big" onClick={via}>Via! <kbd>Invio</kbd></button>
+            {tr(
+              <>
+                <ol>
+                  <li>Arrivano domande a raffica, ognuna con due risposte: <b>dite quella SBAGLIATA</b>.</li>
+                  <li>
+                    Avete <b>{game.steps} domande</b> da sbagliare tutte di fila in {fmt(game.seconds * 1000)}.
+                  </li>
+                  <li>Se dite la risposta vera, o ci mettete troppo, si riparte <b>dalla prima domanda</b>: sono sempre le stesse, nello stesso ordine. Il tempo intanto continua a scorrere.</li>
+                </ol>
+                <p className="muted">Host: premete ← o → per la risposta che dicono, X se sono troppo lenti, Spazio per la pausa.</p>
+              </>,
+              <>
+                <ol>
+                  <li>Questions come in a rapid-fire stream, each with two answers: <b>say the WRONG one</b>.</li>
+                  <li>
+                    You have <b>{game.steps} questions</b> to get all wrong in a row in {fmt(game.seconds * 1000)}.
+                  </li>
+                  <li>If you say the true answer, or take too long, you start again <b>from the first question</b>: they're always the same, in the same order. Meanwhile the clock keeps running.</li>
+                </ol>
+                <p className="muted">Host: press ← or → for the answer they say, X if they're too slow, Space to pause.</p>
+              </>,
+            )}
+            <button className="btn primary big" onClick={via}>{tr('Via!', 'Go!')} <kbd>{KEY.enter}</kbd></button>
           </div>
         ) : run ? (
           <>
@@ -192,24 +207,38 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
               <div className="sb-done">
                 {run.end === 'finished' ? (
                   <>
-                    <h2>🎉 {team?.name} ce l'ha fatta!</h2>
+                    <h2>🎉 {team?.name} {tr("ce l'ha fatta!", 'made it!')}</h2>
                     <p>
-                      {game.steps} risposte sbagliate di fila, con <b>{Math.ceil(run.timeLeft / 1000)} secondi</b> di anticipo.
+                      {tr(
+                        <>
+                          {game.steps} risposte sbagliate di fila, con <b>{Math.ceil(run.timeLeft / 1000)} secondi</b> di anticipo.
+                        </>,
+                        <>
+                          {game.steps} wrong answers in a row, with <b>{Math.ceil(run.timeLeft / 1000)} seconds</b> to spare.
+                        </>,
+                      )}
                     </p>
                   </>
                 ) : (
                   <>
-                    <h2>⏱ Tempo scaduto</h2>
+                    <h2>⏱ {tr('Tempo scaduto', "Time's up")}</h2>
                     <p>
-                      Serie migliore: <b>{run.best} di {game.steps}</b>.
+                      {tr('Serie migliore', 'Best run')}: <b>{tr(`${run.best} di ${game.steps}`, `${run.best} of ${game.steps}`)}</b>.
                     </p>
                   </>
                 )}
                 <p className="muted">
-                  {run.asked} risposte, {run.slips} {run.slips === 1 ? 'ripartenza' : 'ripartenze'} · {team ? scoreOf(game, team) - team.adjust : 0} punti
+                  {tr(
+                    `${run.asked} risposte, ${run.slips} ${run.slips === 1 ? 'ripartenza' : 'ripartenze'}`,
+                    `${run.asked} answers, ${run.slips} ${run.slips === 1 ? 'restart' : 'restarts'}`,
+                  )}{' '}
+                  · {team ? scoreOf(game, team) - team.adjust : 0} {tr('punti', 'points')}
                 </p>
                 <button className="btn primary big" onClick={nextTeam}>
-                  {lastTeam ? '🏆 Classifica finale' : `Tocca a ${game.teams[game.current + 1]?.name}`} <kbd>Invio</kbd>
+                  {lastTeam
+                    ? tr('🏆 Classifica finale', '🏆 Final scores')
+                    : tr(`Tocca a ${game.teams[game.current + 1]?.name}`, `Over to ${game.teams[game.current + 1]?.name}`)}{' '}
+                  <kbd>{KEY.enter}</kbd>
                 </button>
               </div>
             ) : q ? (
@@ -226,7 +255,7 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
                 <div className={`sb-hint ${hintFrac >= 1 ? 'late' : ''}`}>
                   {game.hint > 0 && <div style={{ width: `${hintFrac * 100}%` }} />}
                 </div>
-                {!running && <div className="sb-pause">⏸ In pausa</div>}
+                {!running && <div className="sb-pause">⏸ {tr('In pausa', 'Paused')}</div>}
               </div>
             ) : null}
 
@@ -234,8 +263,8 @@ export default function Play({ loaded }: { loaded: Loaded<SbagliatoSet> }) {
 
             {playing && (
               <div className="host-bar">
-                <button className={`btn ${running ? '' : 'primary'}`} onClick={pause}>{running ? '⏸ Pausa' : '▶ Riprendi'} <kbd>Spazio</kbd></button>
-                <button className="btn ko" onClick={slow} disabled={!running}>⏱ Troppo lento <kbd>X</kbd></button>
+                <button className={`btn ${running ? '' : 'primary'}`} onClick={pause}>{running ? tr('⏸ Pausa', '⏸ Pause') : tr('▶ Riprendi', '▶ Resume')} <kbd>{KEY.space}</kbd></button>
+                <button className="btn ko" onClick={slow} disabled={!running}>⏱ {tr('Troppo lento', 'Too slow')} <kbd>X</kbd></button>
               </div>
             )}
           </>

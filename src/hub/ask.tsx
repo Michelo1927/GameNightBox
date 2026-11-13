@@ -2,6 +2,7 @@
 // (embedded panes, some TV and in-app browsers) never show it and answer "no" by themselves.
 import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { tr } from './i18n';
 
 interface Props {
   message: string;
@@ -27,7 +28,7 @@ function Dialog({ message, yes, done }: Props) {
       <div className="ask" role="dialog" aria-modal onClick={(e) => e.stopPropagation()}>
         <p>{message}</p>
         <div className="ask-buttons">
-          <button className="btn ghost" onClick={() => done(false)}>Annulla</button>
+          <button className="btn ghost" onClick={() => done(false)}>{tr('Annulla', 'Cancel')}</button>
           <button className="btn primary" autoFocus onClick={() => done(true)}>{yes}</button>
         </div>
       </div>

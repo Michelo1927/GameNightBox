@@ -1,12 +1,17 @@
 # Game Night Box
 
+🇮🇹 Italiano · 🇬🇧 [English](README.en.md)
+
 Hub di giochi da serata per stare tutti nella stessa stanza, davanti allo stesso schermo.
 Sito: https://michelo1927.github.io/GameNightBox/
+
+Il sito è in **italiano e in inglese**: la prima volta segue la lingua del browser, poi si cambia con il pulsante
+**IT / EN** in alto a sinistra della home.
 
 | Gioco | In breve |
 |---|---|
 | 🏆 **Jeopardy** | Tabellone 5×5 di domande da 100 a 500 punti, caselle a sorpresa, domanda finale |
-| 🔤 **Passaparola** | Una ruota di 21 lettere per squadra, una definizione per lettera, contro il tempo |
+| 🔤 **Passaparola** | Una ruota di 21 lettere per squadra (26 in inglese), una definizione per lettera, contro il tempo |
 | 🔗 **Catena** | Parole legate a due a due da scoprire lettera per lettera, con finale a prenotazione |
 | 🎵 **Musichiere** | Canzoni da YouTube: a prenotazione (vince chi riempie per primo la colonna) o a turno, ogni squadra con la sua lista e il suo cronometro |
 | 🔟 **Top Ten** | Classifiche vere da indovinare: chi vince la sfida gioca la lista, con troppi errori gli altri rubano i punti |
@@ -23,6 +28,9 @@ Ogni gioco si può creare in tre modi:
 
 Un codice ricevuto si salva nel sito con `npm run import -- <file|codice|link>` (poi commit e push). Regole complete nel riquadro "Come si gioca" di ogni gioco.
 I contenuti del sito stanno in `quizzes/` (Jeopardy) e `content/<gioco>/` (gli altri).
+
+Nella pagina di ogni gioco si vedono tutti i contenuti: prima quelli nella lingua del sito, gli altri con l'etichetta IT o EN.
+Un contenuto in inglese ha `"lang": "en"` nel suo JSON; senza, è italiano.
 
 ## Jeopardy
 

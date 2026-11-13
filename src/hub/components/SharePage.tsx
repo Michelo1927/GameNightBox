@@ -7,6 +7,7 @@ import { copyText } from '../text';
 import { BackPill } from './BackButton';
 import TutorialButton from './Tutorial';
 import { SHARE_TUTORIAL } from '../tutorials';
+import { locale, tr } from '../i18n';
 
 interface Props<T> {
   game: string;
@@ -25,7 +26,7 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
   const [code, setCode] = useState('');
   const [slug, setSlug] = useState('');
   const [msg, setMsg] = useState('');
-  const errors = draft ? validate(draft.data).errors : ['Niente da condividere'];
+  const errors = draft ? validate(draft.data).errors : [tr('Niente da condividere', 'Nothing to share')];
 
   useEffect(() => {
     if (!draft || errors.length) return;
@@ -42,8 +43,8 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
 
   const back = (
     <header className="cr-header">
-      <BackPill label="Indietro" />
-      <h1>{errors.length ? 'Quasi pronto' : 'Pronto! 🎉'}</h1>
+      <BackPill label={tr('Indietro', 'Back')} />
+      <h1>{errors.length ? tr('Quasi pronto', 'Almost ready') : tr('Pronto! 🎉', 'Ready! 🎉')}</h1>
       {!errors.length && <TutorialButton tutorial={SHARE_TUTORIAL} />}
     </header>
   );
@@ -51,13 +52,13 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
     return (
       <div className="creator">
         {back}
-        <p className="cr-tip">Completa prima queste parti:</p>
+        <p className="cr-tip">{tr('Completa prima queste parti:', 'First complete these parts:')}</p>
         <ul className="cr-todo">
           {errors.slice(0, 12).map((e) => (
             <li key={e}>{e}</li>
           ))}
         </ul>
-        <a className="btn primary" href={`#/${game}/crea`}>Torna al creatore</a>
+        <a className="btn primary" href={`#/${game}/crea`}>{tr('Torna al creatore', 'Back to the creator')}</a>
       </div>
     );
 
@@ -67,11 +68,15 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
     setMsg(text);
     setTimeout(() => setMsg(''), 2500);
   };
-  const copy = async (text: string, label: string) => flash((await copyText(text)) ? `${label} copiato ✓` : 'Copia non riuscita: tieni premuto sul testo e copialo a mano');
+  const copy = async (text: string, label: string) => flash(
+      (await copyText(text))
+        ? tr(`${label} copiato ✓`, `${label} copied ✓`)
+        : tr('Copia non riuscita: tieni premuto sul testo e copialo a mano', "Couldn't copy: press and hold on the text and copy it by hand"),
+    );
   const share = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title, text: `"${title}": apri il link per giocare`, url: link });
+        await navigator.share({ title, text: tr(`"${title}": apri il link per giocare`, `"${title}": open the link to play`), url: link });
       } catch {
         /* share sheet closed */
       }
@@ -101,33 +106,41 @@ export default function SharePage<T extends { title: string }>({ game, prefix, l
     <div className="creator">
       {back}
       <p className="cr-tip">
-        Manda il <b>link</b> o il <b>codice</b> a chi farà da host. Per giocare: apri il sito, scegli il gioco, tocca <b>📥 Carica</b> e
-        incolla il codice, oppure apri direttamente il link.
+        {tr(
+          <>
+            Manda il <b>link</b> o il <b>codice</b> a chi farà da host. Per giocare: apri il sito, scegli il gioco, tocca <b>📥 Carica</b> e
+            incolla il codice, oppure apri direttamente il link.
+          </>,
+          <>
+            Send the <b>link</b> or the <b>code</b> to whoever will host. To play: open the site, choose the game, tap <b>📥 Load</b> and
+            paste the code, or just open the link.
+          </>,
+        )}
       </p>
       {!code ? (
-        <p className="muted">Preparazione del codice…</p>
+        <p className="muted">{tr('Preparazione del codice…', 'Making the code…')}</p>
       ) : (
         <>
           <textarea className="cr-code" readOnly rows={5} value={code} onFocus={(e) => e.target.select()} />
           <p className="cr-hint">
-            {code.length.toLocaleString('it-IT')} caratteri
-            {long && <span className="cr-error"> · Troppo lungo per un messaggio: condividilo come file.</span>}
+            {code.length.toLocaleString(locale)} {tr('caratteri', 'characters')}
+            {long && <span className="cr-error"> · {tr('Troppo lungo per un messaggio: condividilo come file.', 'Too long for a message: share it as a file.')}</span>}
           </p>
           <div className="cr-share">
             {long ? (
-              <button className="btn primary big" onClick={shareFile}>📤 Condividi file</button>
+              <button className="btn primary big" onClick={shareFile}>📤 {tr('Condividi file', 'Share file')}</button>
             ) : (
-              <button className="btn primary big" onClick={share}>📤 Condividi link</button>
+              <button className="btn primary big" onClick={share}>📤 {tr('Condividi link', 'Share link')}</button>
             )}
-            <button className="btn ghost" onClick={() => copy(code, 'Codice')}>📋 Copia codice</button>
-            {!long && <button className="btn ghost" onClick={() => copy(link, 'Link')}>🔗 Copia link</button>}
-            <button className="btn ghost" onClick={download}>💾 Scarica file</button>
-            {slug && <button className="btn ghost" onClick={() => go(`/${game}/${slug}/setup`)}>▶ Gioca su questo dispositivo</button>}
+            <button className="btn ghost" onClick={() => copy(code, tr('Codice', 'Code'))}>📋 {tr('Copia codice', 'Copy code')}</button>
+            {!long && <button className="btn ghost" onClick={() => copy(link, 'Link')}>🔗 {tr('Copia link', 'Copy link')}</button>}
+            <button className="btn ghost" onClick={download}>💾 {tr('Scarica file', 'Download file')}</button>
+            {slug && <button className="btn ghost" onClick={() => go(`/${game}/${slug}/setup`)}>▶ {tr('Gioca su questo dispositivo', 'Play on this device')}</button>}
           </div>
           {msg && <div className="cr-toast">{msg}</div>}
         </>
       )}
-      <p className="cr-hint">Salvato anche su questo dispositivo: puoi tornare indietro, modificare e rigenerare il codice.</p>
+      <p className="cr-hint">{tr('Salvato anche su questo dispositivo: puoi tornare indietro, modificare e rigenerare il codice.', 'Also saved on this device: you can go back, edit and make the code again.')}</p>
     </div>
   );
 }

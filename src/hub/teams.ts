@@ -1,5 +1,7 @@
 // Teams, shared by every game.
 
+import { tr } from './i18n';
+
 export type Result = 'right' | 'wrong';
 
 export interface Team {
@@ -16,7 +18,7 @@ export const MAX_TEAMS = 10;
 
 export const newTeam = (i: number): Team => ({
   id: Math.random().toString(36).slice(2, 9),
-  name: `Squadra ${i + 1}`,
+  name: tr(`Squadra ${i + 1}`, `Team ${i + 1}`),
   color: TEAM_COLORS[i % TEAM_COLORS.length],
   adjust: 0,
 });

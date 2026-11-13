@@ -1,6 +1,7 @@
 import type { Quiz } from './quiz/schema';
 import { newTeam, shuffled, type Result, type Team } from '../../hub/teams';
 import { loadSaved, useSaved } from '../../hub/useSaved';
+import { tr } from '../../hub/i18n';
 
 export type { Result, Team };
 
@@ -167,30 +168,30 @@ export function drawGift(game: GameState, quiz: Quiz, key: string, teamId: strin
   const poorest = [...others].sort((a, b) => a.s - b.s)[0];
 
   const cards: (Gift | false | undefined)[] = [
-    { icon: '🍀', title: 'Colpo di fortuna', text: `${me.t.name} vince ${v} punti senza rispondere!`, deltas: { [teamId]: v } },
-    { icon: '💸', title: 'Tasse', text: `${me.t.name} paga ${half} punti di tasse.`, deltas: { [teamId]: -half } },
+    { icon: '🍀', title: tr('Colpo di fortuna', 'Lucky break'), text: tr(`${me.t.name} vince ${v} punti senza rispondere!`, `${me.t.name} wins ${v} points without answering!`), deltas: { [teamId]: v } },
+    { icon: '💸', title: tr('Tasse', 'Taxes'), text: tr(`${me.t.name} paga ${half} punti di tasse.`, `${me.t.name} pays ${half} points in taxes.`), deltas: { [teamId]: -half } },
     {
       icon: '🎉',
-      title: 'Festa per tutti',
-      text: `Tutte le squadre vincono ${half} punti!`,
+      title: tr('Festa per tutti', 'Party for everyone'),
+      text: tr(`Tutte le squadre vincono ${half} punti!`, `Every team wins ${half} points!`),
       deltas: Object.fromEntries(game.teams.map((t) => [t.id, half])),
     },
     first.s > last.s && {
       icon: '🏹',
       title: 'Robin Hood',
-      text: `${first.t.name} (prima) regala ${half} punti a ${last.t.name} (ultima).`,
+      text: tr(`${first.t.name} (prima) regala ${half} punti a ${last.t.name} (ultima).`, `${first.t.name} (first) gives ${half} points to ${last.t.name} (last).`),
       deltas: { [first.t.id]: -half, [last.t.id]: half },
     },
     ahead && {
       icon: '🔄',
-      title: 'Scambio',
-      text: `${me.t.name} scambia il punteggio con ${ahead.t.name}: ${me.s} ⇄ ${ahead.s}.`,
+      title: tr('Scambio', 'Swap'),
+      text: tr(`${me.t.name} scambia il punteggio con ${ahead.t.name}: ${me.s} ⇄ ${ahead.s}.`, `${me.t.name} swaps scores with ${ahead.t.name}: ${me.s} ⇄ ${ahead.s}.`),
       deltas: { [teamId]: ahead.s - me.s, [ahead.t.id]: me.s - ahead.s },
     },
     poorest && {
       icon: '🎁',
-      title: 'Regalo',
-      text: `${me.t.name} regala ${half} punti a ${poorest.t.name}.`,
+      title: tr('Regalo', 'Present'),
+      text: tr(`${me.t.name} regala ${half} punti a ${poorest.t.name}.`, `${me.t.name} gives ${half} points to ${poorest.t.name}.`),
       deltas: { [teamId]: -half, [poorest.t.id]: half },
     },
   ];

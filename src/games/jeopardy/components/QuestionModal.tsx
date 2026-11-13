@@ -5,6 +5,7 @@ import type { Gift, Result, Team } from '../state';
 import { SPECIAL_INFO } from './SpecialIntro';
 import { findCorrectChoice, type Question } from '../quiz/schema';
 import MediaView, { MaybeSplit } from '../../../hub/components/Media';
+import { KEY, tr } from '../../../hub/i18n';
 
 interface Props {
   category: string;
@@ -96,7 +97,7 @@ export default function QuestionModal({ category, question, teams, results, onRe
 
   const answerBox = (
     <div className="answer">
-      <div className="answer-label">Risposta</div>
+      <div className="answer-label">{tr('Risposta', 'Answer')}</div>
       <div className={`answer-text ${split ? 'md' : textSize(question.answer)}`}>{question.answer}</div>
       {question.answerMedia && <MediaView media={question.answerMedia} url={resolveUrl(question.answerMedia.src)} />}
       {/* Host notes can hint at the answer, so they appear only after the reveal. */}
@@ -111,10 +112,10 @@ export default function QuestionModal({ category, question, teams, results, onRe
           <span>{category}</span>
           {turnTeam && (
             <span className="q-turn" style={{ ['--team' as string]: turnTeam.color }}>
-              Risponde <b>{turnTeam.name}</b>
+              {tr('Risponde', 'Answering:')} <b>{turnTeam.name}</b>
             </span>
           )}
-          {answering === 'all' && !special && <span className="q-turn shared">🔥 Per tutte le squadre</span>}
+          {answering === 'all' && !special && <span className="q-turn shared">🔥 {tr('Per tutte le squadre', 'For every team')}</span>}
           <span className="q-points">
             {special ? `${SPECIAL_INFO[special.kind].icon} ${points}` : gift ? `${SPECIAL_INFO.gift.icon} ${points}` : points}
           </span>
@@ -145,14 +146,14 @@ export default function QuestionModal({ category, question, teams, results, onRe
           <div className="q-teams">
             {gift && (
               <span className="special-pick" title={gift.text}>
-                🎁 Imprevisto già applicato: {gift.icon} {gift.title}
+                🎁 {tr('Imprevisto già applicato', 'Wild Card already applied')}: {gift.icon} {gift.title}
               </span>
             )}
             {passedTo && special && (
               <span className="special-pick">
-                🎯 Passata da <b>{special.by.name}</b>
+                🎯 {tr('Passata da', 'Passed by')} <b>{special.by.name}</b>
                 <button className="pick" onClick={() => special.setTarget()}>
-                  ↩ Annulla
+                  ↩ {tr('Annulla', 'Undo')}
                 </button>
               </span>
             )}
@@ -169,14 +170,14 @@ export default function QuestionModal({ category, question, teams, results, onRe
             ))}
             {canPass && (
               <span className="special-pick">
-                🎯 Passa a:
+                🎯 {tr('Passa a:', 'Pass to:')}
                 <select
                   className="steal-select"
                   value=""
                   style={{ ['--team' as string]: 'var(--line)' }}
                   onChange={(e) => e.target.value && special!.setTarget(e.target.value)}
                 >
-                  <option value="">🙋 Nessuno, rispondete voi</option>
+                  <option value="">🙋 {tr('Nessuno, rispondete voi', 'Nobody, you answer')}</option>
                   {others.map((t) => (
                     <option key={t.id} value={t.id}>
                       {t.name}
@@ -187,33 +188,35 @@ export default function QuestionModal({ category, question, teams, results, onRe
             )}
             {pickVictim && robbable.length > 0 && (
               <span className="special-pick">
-                🥷 Rubate a:
+                🥷 {tr('Rubate a:', 'Steal from:')}
                 <select
                   className="steal-select"
                   value={special!.target?.id ?? ''}
                   style={{ ['--team' as string]: special!.target?.color ?? 'var(--line)' }}
                   onChange={(e) => special!.setTarget(e.target.value)}
                 >
-                  <option value="">🏦 Nessuno, dal banco</option>
+                  <option value="">🏦 {tr('Nessuno, dal banco', 'Nobody, from the bank')}</option>
                   {others.map((t) => (
                     <option key={t.id} value={t.id} disabled={!canRob(t)}>
-                      {t.name} ({special!.scores[t.id] ?? 0} punti){canRob(t) ? '' : ': troppo pochi'}
+                      {t.name} ({special!.scores[t.id] ?? 0} {tr('punti', 'points')}){canRob(t) ? '' : tr(': troppo pochi', ': too few')}
                     </option>
                   ))}
                 </select>
               </span>
             )}
             {pickVictim && robbable.length === 0 && (
-              <span className="special-pick">🥷 Nessuna squadra ha {points} punti da rubare: li prendete dal banco.</span>
+              <span className="special-pick">
+                🥷 {tr(`Nessuna squadra ha ${points} punti da rubare: li prendete dal banco.`, `No team has ${points} points to steal: you take them from the bank.`)}
+              </span>
             )}
           </div>
           <div className="q-actions">
             <Timer seconds={timer} />
             <button className="btn primary" onClick={reveal}>
-              {revealed ? 'Nascondi risposta' : 'Mostra risposta'} <kbd>Spazio</kbd>
+              {revealed ? tr('Nascondi risposta', 'Hide answer') : tr('Mostra risposta', 'Show answer')} <kbd>{KEY.space}</kbd>
             </button>
             <button className="btn ghost" onClick={close}>
-              Tabellone <kbd>Esc</kbd>
+              {tr('Tabellone', 'Board')} <kbd>Esc</kbd>
             </button>
           </div>
         </footer>

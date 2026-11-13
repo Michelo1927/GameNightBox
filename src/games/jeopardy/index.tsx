@@ -8,6 +8,7 @@ import Creator from './creator/Creator';
 import ImportPage from './creator/ImportPage';
 import ClaudePage from './creator/ClaudePage';
 import { findQuiz } from './quiz/load';
+import { tr } from '../../hub/i18n';
 
 // Routes, in the tree of hub/nav.ts:
 //   #/jeopardy                  list of quizzes
@@ -29,7 +30,10 @@ const jeopardy: Game = {
   id: 'jeopardy',
   name: 'Jeopardy',
   icon,
-  tagline: 'Tabellone 5×5 di domande da 100 a 500 punti, con caselle a sorpresa e domanda finale.',
+  tagline: tr(
+    'Tabellone 5×5 di domande da 100 a 500 punti, con caselle a sorpresa e domanda finale.',
+    'A 5×5 board of questions worth 100 to 500 points, with surprise squares and a final question.',
+  ),
   tags: ['turno'],
   href: '#/jeopardy',
   route([section, slug, view]) {

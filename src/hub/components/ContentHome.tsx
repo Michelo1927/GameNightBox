@@ -10,6 +10,7 @@ import EntryList, { type Entry } from './EntryList';
 import { IconDisk } from './GameIcon';
 import TutorialButton from './Tutorial';
 import { GAME_TUTORIAL } from '../tutorials';
+import { contentLang, tr } from '../i18n';
 
 interface Props<T> {
   game: string;
@@ -29,7 +30,7 @@ interface Props<T> {
 export default function ContentHome<T>({ game, name, icon, intro, rules, items, onRemove, title, description, tags }: Props<T>) {
   const [list, setList] = useState(items);
   const remove = async (c: Loaded<T>) => {
-    if (!(await ask(`Togliere "${title(c.data)}" da questo dispositivo?`, 'Togli'))) return;
+    if (!(await ask(tr(`Togliere "${title(c.data)}" da questo dispositivo?`, `Remove "${title(c.data)}" from this device?`), tr('Togli', 'Remove')))) return;
     onRemove(c.slug);
     setList(items());
   };
@@ -44,19 +45,20 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
     info: c.errors.length ? [] : tags(c.data),
     date: c.date,
     mine: c.local,
+    lang: contentLang(c.data),
     href: `#/${game}/${c.slug}/setup`,
     errors: c.errors,
     playing: hasGame(game, c.slug),
     icon: <IconDisk icon={icon} />,
     actions: [
-      ...(c.errors.length ? [] : [{ icon: '✏️', title: c.local ? 'Modifica' : 'Modifica una copia', onClick: () => edit(c) }]),
-      ...(c.local ? [{ icon: '🗑', title: 'Togli da questo dispositivo', onClick: () => remove(c) }] : []),
+      ...(c.errors.length ? [] : [{ icon: '✏️', title: c.local ? tr('Modifica', 'Edit') : tr('Modifica una copia', 'Edit a copy'), onClick: () => edit(c) }]),
+      ...(c.local ? [{ icon: '🗑', title: tr('Togli da questo dispositivo', 'Remove from this device'), onClick: () => remove(c) }] : []),
     ],
   }));
 
   return (
     <div className={`page home theme-${game}`}>
-      <BackButton label="Tutti i giochi" />
+      <BackButton label={tr('Tutti i giochi', 'All games')} />
       <TutorialButton tutorial={GAME_TUTORIAL} look="fab" />
       <header className="home-header">
         <h1 className="logo">
@@ -65,14 +67,14 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
         </h1>
         <p className="muted">{intro}</p>
         <div className="home-actions">
-          <a className="btn primary" href={`#/${game}/crea/nuovo`}>✏️ Crea</a>
-          <a className="btn primary" href={`#/${game}/claude`}>🤖 Crea con l'IA</a>
-          <a className="btn ghost" href={`#/${game}/carica`}>📥 Carica</a>
+          <a className="btn primary" href={`#/${game}/crea/nuovo`}>✏️ {tr('Crea', 'Create')}</a>
+          <a className="btn primary" href={`#/${game}/claude`}>🤖 {tr("Crea con l'IA", 'Create with AI')}</a>
+          <a className="btn ghost" href={`#/${game}/carica`}>📥 {tr('Carica', 'Load')}</a>
         </div>
       </header>
 
       <details className="rules-box">
-        <summary>📖 Come si gioca</summary>
+        <summary>📖 {tr('Come si gioca', 'How to play')}</summary>
         {rules}
       </details>
 

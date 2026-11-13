@@ -1,12 +1,14 @@
 import { cleanQuiz } from '../quiz/clean';
 import { POINTS, type Quiz } from '../quiz/schema';
 import { ask } from '../../../hub/ask';
+import { newLangField, tr } from '../../../hub/i18n';
 
 // The quiz being written on this device. Saved on every change: closing the tab loses nothing.
 const KEY = 'jeopardy-quiz:draft';
 
 export const blankQuiz = (): Quiz => ({
   title: '',
+  ...newLangField(),
   categories: Array.from({ length: 5 }, () => ({
     name: '',
     questions: POINTS.map((points) => ({ points, question: '', answer: '' })),
@@ -77,7 +79,7 @@ export function lastSavedSlug(): string | undefined {
  */
 export async function replaceDraft(quiz: Quiz, savedAs?: string): Promise<boolean> {
   const current = loadDraft();
-  if (hasDraftContent(current) && !savedSlugOf(current!) && !(await ask('Stai già scrivendo un quiz su questo dispositivo: sostituirlo con questo?', 'Sostituisci')))
+  if (hasDraftContent(current) && !savedSlugOf(current!) && !(await ask(tr('Stai già scrivendo un quiz su questo dispositivo: sostituirlo con questo?', "You're already writing a quiz on this device: replace it with this one?"), tr('Sostituisci', 'Replace'))))
     return false;
   clearDraft();
   saveDraft(quiz);
@@ -131,7 +133,7 @@ export function compressImage(file: File, max = 480, quality = 0.5): Promise<str
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error('Impossibile leggere questa immagine'));
+      reject(new Error(tr('Impossibile leggere questa immagine', "Can't read this image")));
     };
     img.src = url;
   });

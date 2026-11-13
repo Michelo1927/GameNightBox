@@ -1,5 +1,6 @@
 import { useMusicOn } from '../music';
 import { useMuted } from '../sounds';
+import { tr } from '../i18n';
 
 /** Two switches: background music (🎵) and sound effects (🔊), each on its own. */
 export default function SoundButtons() {
@@ -10,7 +11,7 @@ export default function SoundButtons() {
       <button
         className={`btn ghost icon sound-btn ${music ? '' : 'off'}`}
         onClick={() => setMusic(!music)}
-        title={music ? 'Spegni la musica' : 'Accendi la musica'}
+        title={music ? tr('Spegni la musica', 'Turn the music off') : tr('Accendi la musica', 'Turn the music on')}
         aria-pressed={music}
       >
         🎵
@@ -18,7 +19,7 @@ export default function SoundButtons() {
       <button
         className="btn ghost icon sound-btn"
         onClick={() => setMuted(!muted)}
-        title={muted ? 'Attiva gli effetti sonori' : 'Disattiva gli effetti sonori'}
+        title={muted ? tr('Attiva gli effetti sonori', 'Turn sound effects on') : tr('Disattiva gli effetti sonori', 'Turn sound effects off')}
         aria-pressed={!muted}
       >
         {muted ? '🔇' : '🔊'}

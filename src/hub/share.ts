@@ -1,16 +1,18 @@
 // Content <-> shareable text code: "<PREFIX>" + base64url of the deflated JSON (e.g. "PP1.eJx…").
 // The same format is read by scripts/import-code.ts to save shared content into the repo.
 
+import { tr } from './i18n';
+
 /** Code prefix of each game, so a code pasted in the wrong game can say where it belongs. */
 export const CODES: { prefix: string; game: string; name: string }[] = [
   { prefix: 'JQ1.', game: 'jeopardy', name: 'Jeopardy' },
-  { prefix: 'PP1.', game: 'passaparola', name: 'Passaparola' },
-  { prefix: 'CT1.', game: 'catena', name: 'Catena' },
-  { prefix: 'MU1.', game: 'musichiere', name: 'Musichiere' },
+  { prefix: 'PP1.', game: 'passaparola', name: tr('Passaparola', 'Alphabet Wheel') },
+  { prefix: 'CT1.', game: 'catena', name: tr('Catena', 'Word Chain') },
+  { prefix: 'MU1.', game: 'musichiere', name: tr('Musichiere', 'Name the Song') },
   { prefix: 'TT1.', game: 'topten', name: 'Top Ten' },
-  { prefix: 'SB1.', game: 'sbagliato', name: 'Sbagliato!' },
-  { prefix: 'IF1.', game: 'infila', name: 'In fila!' },
-  { prefix: 'AS1.', game: 'asta', name: "All'asta!" },
+  { prefix: 'SB1.', game: 'sbagliato', name: tr('Sbagliato!', 'Wrong Answer!') },
+  { prefix: 'IF1.', game: 'infila', name: tr('In fila!', 'In Order!') },
+  { prefix: 'AS1.', game: 'asta', name: tr("All'asta!", 'Going Once!') },
 ];
 
 /** Codes longer than this don't fit in a chat message: share them as a file. */
@@ -51,20 +53,23 @@ export async function decode(input: string, prefix: string): Promise<unknown> {
     try {
       return JSON.parse(input);
     } catch {
-      throw new Error('Il testo incollato sembra JSON ma è incompleto: ricopialo per intero');
+      throw new Error(tr('Il testo incollato sembra JSON ma è incompleto: ricopialo per intero', 'The pasted text looks like JSON but is incomplete: copy it again in full'));
     }
   }
 
   const start = text.indexOf(prefix);
   if (start < 0) {
     const other = CODES.find((c) => text.includes(c.prefix));
-    if (other) throw new Error(`Questo è un codice di ${other.name}: aprilo dalla pagina di ${other.name} (📥 Carica).`);
-    throw new Error(`Questo non sembra un codice valido: deve iniziare con "${prefix}"`);
+    if (other) throw new Error(tr(
+        `Questo è un codice di ${other.name}: aprilo dalla pagina di ${other.name} (📥 Carica).`,
+        `This is a ${other.name} code: open it from the ${other.name} page (📥 Load).`,
+      ));
+    throw new Error(tr(`Questo non sembra un codice valido: deve iniziare con "${prefix}"`, `This doesn't look like a valid code: it must start with "${prefix}"`));
   }
   try {
     const bytes = await pipe(fromBase64Url(text.slice(start + prefix.length)), new DecompressionStream('deflate-raw'));
     return JSON.parse(new TextDecoder().decode(bytes));
   } catch {
-    throw new Error('Il codice è incompleto o danneggiato: ricopialo per intero');
+    throw new Error(tr('Il codice è incompleto o danneggiato: ricopialo per intero', 'The code is incomplete or damaged: copy it again in full'));
   }
 }

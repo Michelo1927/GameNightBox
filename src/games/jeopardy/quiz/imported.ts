@@ -2,6 +2,7 @@
 import type { LoadedQuiz } from './load';
 import { movePlayed } from '../../../hub/played';
 import { slugify, validateQuiz, type Quiz } from './schema';
+import { tr } from '../../../hub/i18n';
 
 const KEY = 'jeopardy-quiz:imported';
 
@@ -19,7 +20,7 @@ function write(store: Store) {
   try {
     localStorage.setItem(KEY, JSON.stringify(store));
   } catch {
-    throw new Error('Spazio esaurito nel browser: elimina qualche quiz caricato e riprova');
+    throw new Error(tr('Spazio esaurito nel browser: elimina qualche quiz caricato e riprova', 'The browser is out of space: delete some loaded quizzes and try again'));
   }
 }
 

@@ -12,6 +12,7 @@ import Ranking from '../../hub/components/Ranking';
 import { usePlayer } from './player';
 import type { Playlist } from './schema';
 import { closeRun, isOpen, leaveTurn, nextOpen, runDone, scoreOf, useMusichiere, withRuns, type MGame, type TPhase, type TurnRun } from './state';
+import { KEY, tr } from '../../hub/i18n';
 
 const fmt = (ms: number) => {
   const s = Math.max(0, Math.ceil(ms / 1000));
@@ -183,7 +184,12 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
 
   // After the answer: who plays next (or the end).
   const after = phase === 'shown' || phase === 'timeup' ? leaveTurn(game) : null;
-  const nextLabel = !after || after.over ? 'Classifica finale' : after.current === game.current ? 'Prossima canzone' : `Tocca a ${after.teams[after.current]?.name}`;
+  const nextLabel =
+    !after || after.over
+      ? tr('Classifica finale', 'Final scores')
+      : after.current === game.current
+        ? tr('Prossima canzone', 'Next song')
+        : tr(`Tocca a ${after.teams[after.current]?.name}`, `Over to ${after.teams[after.current]?.name}`);
   const runs = Object.values(game.runs);
   const total = runs.reduce((n, r) => n + r.songs.length, 0);
   const played = runs.reduce((n, r) => n + r.songs.filter((_, k) => !isOpen(r.marks[k])).length, 0);
@@ -225,7 +231,7 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
         onRanking={() => setRanking(game.over ? 'celebrate' : 'normal')}
         onSetup={() => go(`/musichiere/${slug}/setup`)}
       >
-        <span className="pill">A turno · {played} di {total} canzoni</span>
+        <span className="pill">{tr(`A turno · ${played} di ${total} canzoni`, `Take turns · ${played} of ${total} songs`)}</span>
       </PlayHeader>
       <div ref={p.host} className="yt-hidden" aria-hidden />
 
@@ -235,13 +241,13 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
 
           <div className="mu-center">
             {game.over ? (
-              <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale</button>
+              <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 {tr('Classifica finale', 'Final scores')}</button>
             ) : !team || !run ? null : phase === 'shown' || phase === 'timeup' ? (
               <>
                 {phase === 'timeup' ? (
-                  <div className="buzzed" style={{ background: team.color }}>⏰ Tempo scaduto!</div>
+                  <div className="buzzed" style={{ background: team.color }}>⏰ {tr('Tempo scaduto!', "Time's up!")}</div>
                 ) : (
-                  <div className={`mu-verdict ${mark}`}>{mark === 'right' ? '✓ Giusta!' : '✗ Sbagliata'}</div>
+                  <div className={`mu-verdict ${mark}`}>{mark === 'right' ? tr('✓ Giusta!', '✓ Right!') : tr('✗ Sbagliata', '✗ Wrong')}</div>
                 )}
                 {song && (
                   <div className="mu-reveal">
@@ -255,7 +261,7 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
               </>
             ) : (
               <>
-                <div className="buzzed" key={game.current} style={{ background: team.color }}>Tocca a {team.name}</div>
+                <div className="buzzed" key={game.current} style={{ background: team.color }}>{tr('Tocca a', 'Your turn,')} {team.name}</div>
                 {phase === 'judge' && song ? (
                   <div className="mu-reveal">
                     <div className="mu-title">{song.title}</div>
@@ -270,8 +276,8 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
                       <div className="mu-label">{run.pos + 1}</div>
                     </div>
                     <div className="mu-sub">
-                      Canzone {run.pos + 1} di {run.songs.length}
-                      {mark === 'pass' ? ' · era passata' : ''}
+                      {tr(`Canzone ${run.pos + 1} di ${run.songs.length}`, `Song ${run.pos + 1} of ${run.songs.length}`)}
+                      {mark === 'pass' ? tr(' · era passata', ' · was passed') : ''}
                     </div>
                   </>
                 )}
@@ -279,10 +285,13 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
             )}
             {p.error && active && phase !== 'shown' && phase !== 'timeup' && (
               <p className="cr-error">
-                ⚠️ Questo video non parte: {p.error}. Premi <b>Salta</b>: la squadra passa alla sua prossima canzone senza perdere tempo.
+                {tr(
+                  <>⚠️ Questo video non parte: {p.error}. Premi <b>Salta</b>: la squadra passa alla sua prossima canzone senza perdere tempo.</>,
+                  <>⚠️ This video won't start: {p.error}. Press <b>Skip</b>: the team moves to its next song without losing time.</>,
+                )}
               </p>
             )}
-            {!p.ready && <p className="muted">Carico il lettore YouTube…</p>}
+            {!p.ready && <p className="muted">{tr('Carico il lettore YouTube…', 'Loading the YouTube player…')}</p>}
           </div>
 
           <div className="mu-side">{game.teams.slice(half).map(tower)}</div>
@@ -291,44 +300,53 @@ export default function TurnPlay({ loaded }: { loaded: Loaded<Playlist> }) {
         {active && (
           <div className="host-bar">
             {phase === 'ready' ? (
-              <button className="btn primary" onClick={via} disabled={!p.ready}>▶ Via <kbd>Spazio</kbd></button>
+              <button className="btn primary" onClick={via} disabled={!p.ready}>▶ {tr('Via', 'Go')} <kbd>{KEY.space}</kbd></button>
             ) : judging ? (
               <>
-                <button className="btn ok" onClick={() => judge(true)}>✓ Giusta <kbd>Invio</kbd></button>
-                <button className="btn ko" onClick={() => judge(false)}>✗ Sbagliata <kbd>X</kbd></button>
+                <button className="btn ok" onClick={() => judge(true)}>✓ {tr('Giusta', 'Right')} <kbd>{KEY.enter}</kbd></button>
+                <button className="btn ko" onClick={() => judge(false)}>✗ {tr('Sbagliata', 'Wrong')} <kbd>X</kbd></button>
                 {phase === 'play' ? (
                   <>
-                    <button className="btn primary" onClick={pass}>Passa <kbd>P</kbd></button>
-                    <button className="btn" onClick={running ? pause : via}>{running ? '⏸ Pausa' : '▶ Riprendi'} <kbd>Spazio</kbd></button>
-                    <button className="btn" onClick={again}>↺ Da capo <kbd>R</kbd></button>
-                    <button className="btn ghost" onClick={peek} title="Mostra titolo e artista per controllare la risposta">👁 Svela <kbd>S</kbd></button>
+                    <button className="btn primary" onClick={pass}>{tr('Passa', 'Pass')} <kbd>P</kbd></button>
+                    <button className="btn" onClick={running ? pause : via}>{running ? tr('⏸ Pausa', '⏸ Pause') : tr('▶ Riprendi', '▶ Resume')} <kbd>{KEY.space}</kbd></button>
+                    <button className="btn" onClick={again}>↺ {tr('Da capo', 'From the start')} <kbd>R</kbd></button>
+                    <button className="btn ghost" onClick={peek} title={tr('Mostra titolo e artista per controllare la risposta', 'Show title and artist to check the answer')}>👁 {tr('Svela', 'Reveal')} <kbd>S</kbd></button>
                   </>
                 ) : (
-                  <button className="btn" onClick={toggleMusic}>{p.playing ? '⏸ Ferma la musica' : '▶ Ascolta'} <kbd>Spazio</kbd></button>
+                  <button className="btn" onClick={toggleMusic}>{p.playing ? tr('⏸ Ferma la musica', '⏸ Stop the music') : tr('▶ Ascolta', '▶ Listen')} <kbd>{KEY.space}</kbd></button>
                 )}
               </>
             ) : (
               <>
-                <button className="btn" onClick={toggleMusic}>{p.playing ? '⏸ Ferma la musica' : '▶ Ascolta'} <kbd>Spazio</kbd></button>
-                <button className="btn primary" onClick={next}>{nextLabel} <kbd>Invio</kbd></button>
+                <button className="btn" onClick={toggleMusic}>{p.playing ? tr('⏸ Ferma la musica', '⏸ Stop the music') : tr('▶ Ascolta', '▶ Listen')} <kbd>{KEY.space}</kbd></button>
+                <button className="btn primary" onClick={next}>{nextLabel} <kbd>{KEY.enter}</kbd></button>
               </>
             )}
             {p.error && (phase === 'ready' || phase === 'play') && (
-              <button className="btn ghost" onClick={skip}>⏭ Salta</button>
+              <button className="btn ghost" onClick={skip}>⏭ {tr('Salta', 'Skip')}</button>
             )}
           </div>
         )}
         {active && team && (
           <p className="muted mu-help">
             {phase === 'ready'
-              ? `Quando ${team.name} è pronta premi Via: partono la canzone e il suo cronometro.`
+              ? tr(
+                  `Quando ${team.name} è pronta premi Via: partono la canzone e il suo cronometro.`,
+                  `When ${team.name} is ready press Go: the song and the team's clock start.`,
+                )
               : phase === 'play'
                 ? running
-                  ? `La canzone va avanti finché ${team.name} non risponde. Svela mostra il titolo e ferma il cronometro, per controllare la risposta.`
-                  : 'In pausa: anche il cronometro è fermo.'
+                  ? tr(
+                      `La canzone va avanti finché ${team.name} non risponde. Svela mostra il titolo e ferma il cronometro, per controllare la risposta.`,
+                      `The song keeps going until ${team.name} answers. Reveal shows the title and stops the clock, to check the answer.`,
+                    )
+                  : tr('In pausa: anche il cronometro è fermo.', 'Paused: the clock is stopped too.')
                 : phase === 'judge'
-                  ? 'Cronometro fermo. La risposta era giusta o sbagliata?'
-                  : `Il cronometro di ${team.name} è fermo: la musica può andare avanti quanto volete.`}
+                  ? tr('Cronometro fermo. La risposta era giusta o sbagliata?', 'Clock stopped. Was the answer right or wrong?')
+                  : tr(
+                      `Il cronometro di ${team.name} è fermo: la musica può andare avanti quanto volete.`,
+                      `${team.name}'s clock is stopped: the music can go on as long as you like.`,
+                    )}
           </p>
         )}
       </div>

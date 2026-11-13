@@ -8,6 +8,7 @@ import PlayHeader from '../../hub/components/PlayHeader';
 import Ranking from '../../hub/components/Ranking';
 import type { AstaSet } from './schema';
 import { dealRound, finish, inAuction, leave, raise, scoreOf, skipTheme, someoneWon, themesLeft, useAsta, type Round } from './state';
+import { KEY, tr } from '../../hub/i18n';
 
 const fmt = (ms: number) => {
   const s = Math.max(0, Math.ceil(ms / 1000));
@@ -163,56 +164,80 @@ export default function Play({ loaded }: { loaded: Loaded<AstaSet> }) {
       >
         {!game.over && r && (
           <span className="pill" key={`${r.theme}-${r.phase === 'auction' ? 'a' : 'b'}`} style={holder && r.phase !== 'auction' ? { color: holder.color } : undefined}>
-            {r.phase === 'auction' || !holder ? `Tema ${game.dealt} · vince chi arriva a ${game.toWin}` : `${holder.name} · ${r.bid} ${r.bid === 1 ? 'risposta' : 'risposte'}`}
+            {r.phase === 'auction' || !holder
+              ? tr(`Tema ${game.dealt} · vince chi arriva a ${game.toWin}`, `Theme ${game.dealt} · first to ${game.toWin} wins`)
+              : `${holder.name} · ${r.bid} ${r.bid === 1 ? tr('risposta', 'answer') : tr('risposte', 'answers')}`}
           </span>
         )}
       </PlayHeader>
 
       <div className={`game-stage ${playing ? 'as-run' : ''}`}>
         {game.over || !r ? (
-          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 Classifica finale <kbd>Invio</kbd></button>
+          <button className="btn primary big" onClick={() => setRanking('celebrate')}>🏆 {tr('Classifica finale', 'Final scores')} <kbd>{KEY.enter}</kbd></button>
         ) : (
           <>
             <div className="as-theme" key={r.theme}>
-              <span className="as-tag">Il tema</span>
+              <span className="as-tag">{tr('Il tema', 'The theme')}</span>
               <h2>{theme}</h2>
             </div>
 
             {r.phase === 'auction' && turn && (
               <>
                 <div className="as-bid">
-                  <button className="as-step" onClick={() => step(-1)} disabled={draft <= r.bid + 1} title="Offerta più bassa (↓)">
+                  <button className="as-step" onClick={() => step(-1)} disabled={draft <= r.bid + 1} title={tr('Offerta più bassa (↓)', 'Lower bid (↓)')}>
                     −<kbd>↓</kbd>
                   </button>
                   <div className="as-bid-box" style={{ '--team': turn.color } as CSSProperties}>
-                    <small>{turn.name} offre…</small>
+                    <small>{tr(`${turn.name} offre…`, `${turn.name} bids…`)}</small>
                     <b key={draft}>{draft}</b>
                     <span>
                       {holder ? (
                         <>
-                          Offerta più alta: <em>{r.bid}</em> di <em>{holder.name}</em>
+                          {tr(
+                            <>
+                              Offerta più alta: <em>{r.bid}</em> di <em>{holder.name}</em>
+                            </>,
+                            <>
+                              Highest bid: <em>{r.bid}</em> by <em>{holder.name}</em>
+                            </>,
+                          )}
                         </>
                       ) : (
                         <>
-                          Apre <em>{turn.name}</em>: deve fare un'offerta
+                          {tr(
+                            <>
+                              Apre <em>{turn.name}</em>: deve fare un'offerta
+                            </>,
+                            <>
+                              <em>{turn.name}</em> opens: they must make a bid
+                            </>,
+                          )}
                         </>
                       )}
                     </span>
                   </div>
-                  <button className="as-step" onClick={() => step(1)} disabled={draft >= MAX_BID} title="Offerta più alta (↑)">
+                  <button className="as-step" onClick={() => step(1)} disabled={draft >= MAX_BID} title={tr('Offerta più alta (↑)', 'Higher bid (↑)')}>
                     +<kbd>↑</kbd>
                   </button>
                 </div>
                 <div className="host-bar">
-                  <button className="btn primary big" onClick={offer}>🙋 Offrono {draft} <kbd>Invio</kbd></button>
-                  <button className="btn big" onClick={pass} disabled={!r.holder} title={r.holder ? undefined : 'Chi apre deve fare un\'offerta'}>
-                    🏳️ Lasciano <kbd>L</kbd>
+                  <button className="btn primary big" onClick={offer}>🙋 {tr(`Offrono ${draft}`, `They bid ${draft}`)} <kbd>{KEY.enter}</kbd></button>
+                  <button className="btn big" onClick={pass} disabled={!r.holder} title={r.holder ? undefined : tr("Chi apre deve fare un'offerta", 'Whoever opens must make a bid')}>
+                    🏳️ {tr('Lasciano', 'They pass')} <kbd>L</kbd>
                   </button>
-                  {!lastTheme && <button className="btn ghost" onClick={skip}>🔀 Cambia tema</button>}
+                  {!lastTheme && <button className="btn ghost" onClick={skip}>🔀 {tr('Cambia tema', 'Change theme')}</button>}
                 </div>
                 <p className="host-hint">
-                  Host: <b>↑ ↓</b> per la cifra che dicono, <b>Invio</b> per confermarla, <b>L</b> se lasciano. L'asta finisce quando gli altri hanno
-                  lasciato tutti.
+                  {tr(
+                    <>
+                      Host: <b>↑ ↓</b> per la cifra che dicono, <b>Invio</b> per confermarla, <b>L</b> se lasciano. L'asta finisce quando gli altri
+                      hanno lasciato tutti.
+                    </>,
+                    <>
+                      Host: <b>↑ ↓</b> for the number they say, <b>Enter</b> to confirm it, <b>L</b> if they pass. The auction ends when all the others
+                      have passed.
+                    </>,
+                  )}
                 </p>
               </>
             )}
@@ -221,28 +246,48 @@ export default function Play({ loaded }: { loaded: Loaded<AstaSet> }) {
               <>
                 <div className="as-bid">
                   <div className="as-bid-box sold" style={{ '--team': holder.color } as CSSProperties}>
-                    <small>🔨 Aggiudicato a {holder.name}</small>
+                    <small>🔨 {tr(`Aggiudicato a ${holder.name}`, `Sold to ${holder.name}`)}</small>
                     <b>{r.bid}</b>
-                    <span>{prev ? <>Se non ce la fanno, 1 punto a <em>{prev.name}</em></> : 'Nessuno ha rilanciato: se non ce la fanno, nessun punto'}</span>
+                    <span>
+                      {prev
+                        ? tr(
+                            <>
+                              Se non ce la fanno, 1 punto a <em>{prev.name}</em>
+                            </>,
+                            <>
+                              If they don't make it, 1 point to <em>{prev.name}</em>
+                            </>,
+                          )
+                        : tr('Nessuno ha rilanciato: se non ce la fanno, nessun punto', "Nobody raised: if they don't make it, no point")}
+                    </span>
                   </div>
                 </div>
                 <div className="host-bar">
-                  <button className="btn primary big" onClick={via}>▶ Via! Parte il tempo ({game.seconds}s) <kbd>Invio</kbd></button>
+                  <button className="btn primary big" onClick={via}>▶ {tr(`Via! Parte il tempo (${game.seconds}s)`, `Go! The clock starts (${game.seconds}s)`)} <kbd>{KEY.enter}</kbd></button>
                 </div>
-                <p className="host-hint">Quando {holder.name} è pronta. Poi l'host preme <b>Invio</b> per ogni risposta giusta.</p>
+                <p className="host-hint">
+                  {tr(
+                    <>
+                      Quando {holder.name} è pronta. Poi l'host preme <b>Invio</b> per ogni risposta giusta.
+                    </>,
+                    <>
+                      When {holder.name} is ready. Then the host presses <b>Enter</b> for each right answer.
+                    </>,
+                  )}
+                </p>
               </>
             )}
 
             {r.phase === 'run' && holder && (
               <>
-                <div className="as-banner" style={{ '--team': holder.color } as CSSProperties}>Tocca a {holder.name}</div>
+                <div className="as-banner" style={{ '--team': holder.color } as CSSProperties}>{tr('Tocca a', 'Your turn,')} {holder.name}</div>
                 <div className={`as-big ${running ? '' : 'paused'}`}>
                   <div className={`as-panel as-clock ${running && left <= 10000 ? 'hurry' : ''}`}>
-                    <small>Tempo</small>
+                    <small>{tr('Tempo', 'Time')}</small>
                     <b>{fmt(left)}</b>
                   </div>
                   <div className="as-panel as-count">
-                    <small>Risposte</small>
+                    <small>{tr('Risposte', 'Answers')}</small>
                     <b>
                       <span key={r.said} className="n">{r.said}</span>
                       <i> / {r.bid}</i>
@@ -255,11 +300,20 @@ export default function Play({ loaded }: { loaded: Loaded<AstaSet> }) {
                   </div>
                 </div>
                 <div className="host-bar">
-                  <button className="btn ok big" onClick={right} disabled={!running}>✓ Giusta <kbd>Invio</kbd></button>
-                  <button className={`btn ${running ? '' : 'primary'}`} onClick={pause}>{running ? '⏸ Pausa' : '▶ Riprendi'} <kbd>Spazio</kbd></button>
-                  <button className="btn ko" onClick={giveUp}>🏳️ Si arrendono</button>
+                  <button className="btn ok big" onClick={right} disabled={!running}>✓ {tr('Giusta', 'Right')} <kbd>{KEY.enter}</kbd></button>
+                  <button className={`btn ${running ? '' : 'primary'}`} onClick={pause}>{running ? tr('⏸ Pausa', '⏸ Pause') : tr('▶ Riprendi', '▶ Resume')} <kbd>{KEY.space}</kbd></button>
+                  <button className="btn ko" onClick={giveUp}>🏳️ {tr('Si arrendono', 'They give up')}</button>
                 </div>
-                <p className="host-hint">Ripetute o non valide: non premete niente. Un clic di troppo si toglie con <b>Annulla</b> (Ctrl+Z).</p>
+                <p className="host-hint">
+                  {tr(
+                    <>
+                      Ripetute o non valide: non premete niente. Un clic di troppo si toglie con <b>Annulla</b> (Ctrl+Z).
+                    </>,
+                    <>
+                      Repeated or not valid: don't press anything. One click too many is removed with <b>Undo</b> (Ctrl+Z).
+                    </>,
+                  )}
+                </p>
               </>
             )}
 
@@ -267,27 +321,38 @@ export default function Play({ loaded }: { loaded: Loaded<AstaSet> }) {
               <div className="as-done">
                 {r.end === 'made' ? (
                   <>
-                    <h2>🎉 {holder.name} ce l'ha fatta!</h2>
+                    <h2>🎉 {holder.name} {tr("ce l'ha fatta!", 'made it!')}</h2>
                     <p>
-                      {r.bid} {r.bid === 1 ? 'risposta' : 'risposte'} su {r.bid}, con <b>{Math.ceil(r.timeLeft / 1000)} secondi</b> di anticipo.
+                      {tr(
+                        <>
+                          {r.bid} {r.bid === 1 ? 'risposta' : 'risposte'} su {r.bid}, con <b>{Math.ceil(r.timeLeft / 1000)} secondi</b> di anticipo.
+                        </>,
+                        <>
+                          {r.bid} {r.bid === 1 ? 'answer' : 'answers'} of {r.bid}, with <b>{Math.ceil(r.timeLeft / 1000)} seconds</b> to spare.
+                        </>,
+                      )}
                     </p>
                   </>
                 ) : (
                   <>
-                    <h2>{r.end === 'giveup' ? '🏳️ Si sono arresi' : '⏱ Tempo scaduto'}</h2>
+                    <h2>{r.end === 'giveup' ? tr('🏳️ Si sono arresi', '🏳️ They gave up') : tr('⏱ Tempo scaduto', "⏱ Time's up")}</h2>
                     <p>
-                      {holder.name}: <b>{r.said} su {r.bid}</b>.
+                      {holder.name}: <b>{tr(`${r.said} su ${r.bid}`, `${r.said} of ${r.bid}`)}</b>.
                     </p>
                   </>
                 )}
                 <div className="as-point" style={{ color: byId(r.scored)?.color ?? 'var(--muted)' }}>
-                  {byId(r.scored) ? `+1 punto a ${byId(r.scored)!.name}` : 'Nessun punto'}
+                  {byId(r.scored) ? tr(`+1 punto a ${byId(r.scored)!.name}`, `+1 point to ${byId(r.scored)!.name}`) : tr('Nessun punto', 'No point')}
                 </div>
                 {r.end !== 'made' && (
-                  <p className="muted">{prev ? `Il punto va a chi aveva fatto l'offerta prima di ${holder.name}.` : `Nessuno aveva rilanciato sull'offerta di ${holder.name}.`}</p>
+                  <p className="muted">
+                    {prev
+                      ? tr(`Il punto va a chi aveva fatto l'offerta prima di ${holder.name}.`, `The point goes to the team that bid before ${holder.name}.`)
+                      : tr(`Nessuno aveva rilanciato sull'offerta di ${holder.name}.`, `Nobody had raised on ${holder.name}'s bid.`)}
+                  </p>
                 )}
                 <button className="btn primary big" onClick={next}>
-                  {ends ? '🏆 Classifica finale' : 'Prossimo tema'} <kbd>Invio</kbd>
+                  {ends ? tr('🏆 Classifica finale', '🏆 Final scores') : tr('Prossimo tema', 'Next theme')} <kbd>{KEY.enter}</kbd>
                 </button>
               </div>
             )}
@@ -302,9 +367,9 @@ export default function Play({ loaded }: { loaded: Loaded<AstaSet> }) {
             return (
               <div key={t.id} className={`team-chip ${onTurn || playing ? 'on' : ''} ${isOut ? 'off' : ''}`} style={{ borderLeftColor: t.color }}>
                 {t.name}
-                {onTurn && <span className="as-state turn">tocca a voi</span>}
+                {onTurn && <span className="as-state turn">{tr('tocca a voi', 'your turn')}</span>}
                 {r?.phase === 'auction' && r.holder === t.id && <span className="as-state top">{r.bid}</span>}
-                {isOut && <span className="as-state">ha lasciato</span>}
+                {isOut && <span className="as-state">{tr('ha lasciato', 'passed')}</span>}
                 {r?.phase === 'done' && r.scored === t.id && <span className="as-state plus">+1</span>}
                 <span className="score">
                   <AnimatedNumber value={scoreOf(game, t)} />

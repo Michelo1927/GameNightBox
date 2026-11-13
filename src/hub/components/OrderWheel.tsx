@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { sounds } from '../sounds';
 import type { Team } from '../teams';
+import { KEY, ordinal, tr } from '../i18n';
 
 interface Props {
   teams: Team[];
@@ -104,7 +105,7 @@ export default function OrderWheel({ teams, onDone, onSkip, onClose }: Props) {
   return (
     <div className="overlay wheel-overlay">
       <div className="wheel-box">
-        <h2 className="wheel-title">🎡 Chi inizia?</h2>
+        <h2 className="wheel-title">🎡 {tr('Chi inizia?', 'Who goes first?')}</h2>
 
         {!done && (
           <div className="wheel-wrap">
@@ -150,14 +151,14 @@ export default function OrderWheel({ teams, onDone, onSkip, onClose }: Props) {
         <p className="wheel-status">
           {picked ? (
             <>
-              <b style={{ color: picked.color }}>{picked.name}</b> gioca per {order.length + 1}ª!
+              <b style={{ color: picked.color }}>{picked.name}</b> {tr(`gioca per ${order.length + 1}ª!`, `plays ${ordinal(order.length + 1)}!`)}
             </>
           ) : done ? (
-            'Ecco l’ordine di gioco:'
+            tr('Ecco l’ordine di gioco:', 'Here is the playing order:')
           ) : order.length === 0 ? (
-            'Gira la ruota per scoprire chi gioca per prima.'
+            tr('Gira la ruota per scoprire chi gioca per prima.', 'Spin the wheel to find out who plays first.')
           ) : (
-            `Gira ancora: chi gioca per ${order.length + 1}ª?`
+            tr(`Gira ancora: chi gioca per ${order.length + 1}ª?`, `Spin again: who plays ${ordinal(order.length + 1)}?`)
           )}
         </p>
 
@@ -174,22 +175,22 @@ export default function OrderWheel({ teams, onDone, onSkip, onClose }: Props) {
         <div className="double-actions">
           {done ? (
             <button className="btn primary big" onClick={() => onDone(order)}>
-              Al tabellone! <kbd>Invio</kbd>
+              {tr('Al tabellone!', "Let's play!")} <kbd>{KEY.enter}</kbd>
             </button>
           ) : (
             <>
               <button className="btn primary big" onClick={spin} disabled={spinning || !!picked}>
-                {spinning ? 'Gira…' : 'Gira la ruota'} <kbd>Spazio</kbd>
+                {spinning ? tr('Gira…', 'Spinning…') : tr('Gira la ruota', 'Spin the wheel')} <kbd>{KEY.space}</kbd>
               </button>
               {order.length === 0 && !spinning && !picked && (
                 <button className="btn ghost" onClick={onSkip}>
-                  Salta, tieni l'ordine della lista
+                  {tr("Salta, tieni l'ordine della lista", 'Skip, keep the order of the list')}
                 </button>
               )}
             </>
           )}
           <button className="btn ghost" onClick={onClose}>
-            Indietro <kbd>Esc</kbd>
+            {tr('Indietro', 'Back')} <kbd>Esc</kbd>
           </button>
         </div>
       </div>

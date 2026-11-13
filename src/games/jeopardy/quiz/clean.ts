@@ -30,6 +30,7 @@ export function cleanQuiz(quiz: Quiz): Quiz {
   const out: Quiz = { title: quiz.title.trim(), categories: [] };
   if (quiz.description?.trim()) out.description = quiz.description.trim();
   if (quiz.author?.trim()) out.author = quiz.author.trim();
+  if (quiz.lang === 'en') out.lang = 'en';
   if (quiz.credits?.length) out.credits = quiz.credits;
   out.categories = quiz.categories.map((c) => ({ name: c.name.trim(), questions: c.questions.map(cleanQuestion) }));
   const final = cleanFinal(quiz.final);

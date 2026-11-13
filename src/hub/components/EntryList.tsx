@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from 'react';
 import { playedSlugs, setPlayed } from '../played';
+import { lang, locale, tr, type Lang } from '../i18n';
 
 /** A button on a row (edit, remove, archive…): an icon, named by its title. */
 export interface EntryAction {
@@ -19,6 +20,8 @@ export interface Entry {
   date?: number;
   /** Saved on this device, not part of the site. */
   mine?: boolean;
+  /** Language of the content: a label shows it when it isn't the site's. */
+  lang?: Lang;
   /** Where it opens; missing when it can't be played. */
   href?: string;
   errors?: string[];
@@ -40,10 +43,14 @@ interface Props {
   masculine?: boolean;
 }
 
-const WORDS = {
-  f: { mine: 'Le tue', saved: 'salvate', savedOne: 'salvata', addedOne: 'aggiunta', done: 'Fatta', mark: 'già fatta' },
-  m: { mine: 'I tuoi', saved: 'salvati', savedOne: 'salvato', addedOne: 'aggiunto', done: 'Fatto', mark: 'già fatto' },
-};
+const EN = { mine: 'Yours', saved: 'saved', savedOne: 'saved', addedOne: 'added', done: 'Played', mark: 'played' };
+const WORDS = tr(
+  {
+    f: { mine: 'Le tue', saved: 'salvate', savedOne: 'salvata', addedOne: 'aggiunta', done: 'Fatta', mark: 'già fatta' },
+    m: { mine: 'I tuoi', saved: 'salvati', savedOne: 'salvato', addedOne: 'aggiunto', done: 'Fatto', mark: 'già fatto' },
+  },
+  { f: EN, m: EN },
+);
 type Words = (typeof WORDS)['f'];
 
 /**
@@ -54,8 +61,8 @@ type Words = (typeof WORDS)['f'];
 export default function EntryList({
   game,
   entries,
-  emptyMine = 'Non hai ancora partite tue: creane una con i pulsanti in alto.',
-  emptySite = 'Ancora niente qui.',
+  emptyMine = tr('Non hai ancora partite tue: creane una con i pulsanti in alto.', "You don't have games of your own yet: make one with the buttons at the top."),
+  emptySite = tr('Ancora niente qui.', 'Nothing here yet.'),
   masculine = false,
 }: Props) {
   const w = WORDS[masculine ? 'm' : 'f'];
@@ -81,9 +88,9 @@ export default function EntryList({
           {w.mine} <b>{mine.length}</b>
         </button>
         <button role="tab" aria-selected={tab === 'site'} className={tab === 'site' ? 'on' : ''} onClick={() => open('site')}>
-          Del sito <b>{site.length}</b>
+          {tr('Del sito', 'From the site')} <b>{site.length}</b>
         </button>
-        {tab === 'mine' && <small>{w.saved} su questo dispositivo</small>}
+        {tab === 'mine' && <small>{w.saved} {tr('su questo dispositivo', 'on this device')}</small>}
       </div>
       {shown.length ? (
         <EntryRows key={tab} entries={shown} played={played} onToggle={toggle} masculine={masculine} />
@@ -137,14 +144,19 @@ function Row({ entry: e, done, onToggle, w }: { entry: Entry; done: boolean; onT
         {broken ? (
           <p className="entry-errors">
             {e.errors![0]}
-            {e.errors!.length > 1 && ` (e altri ${e.errors!.length - 1} errori)`}
+            {e.errors!.length > 1 && tr(` (e altri ${e.errors!.length - 1} errori)`, ` (and ${e.errors!.length - 1} more errors)`)}
           </p>
         ) : (
           e.description && <p>{e.description}</p>
         )}
         <span className="entry-meta">
           {done && <span className="entry-chip done">✓ {w.done}</span>}
-          {e.playing && !broken && <span className="entry-chip live">In corso</span>}
+          {e.lang && e.lang !== lang && (
+            <span className="entry-chip lang" title={e.lang === 'it' ? tr('In italiano', 'In Italian') : tr('In inglese', 'In English')}>
+              {e.lang.toUpperCase()}
+            </span>
+          )}
+          {e.playing && !broken && <span className="entry-chip live">{tr('In corso', 'In progress')}</span>}
           {facts.map((f) => (
             <span key={f} className="fact">
               {f}
@@ -154,7 +166,7 @@ function Row({ entry: e, done, onToggle, w }: { entry: Entry; done: boolean; onT
       </span>
       <span className="entry-actions">
         {!broken && (
-          <button className={`check ${done ? 'on' : ''}`} title={done ? 'Segna come da fare' : `Segna come ${w.mark}`} aria-pressed={done} onClick={act(onToggle)}>
+          <button className={`check ${done ? 'on' : ''}`} title={done ? tr('Segna come da fare', 'Mark as to play') : tr(`Segna come ${w.mark}`, `Mark as ${w.mark}`)} aria-pressed={done} onClick={act(onToggle)}>
             ✓
           </button>
         )}
@@ -168,11 +180,15 @@ function Row({ entry: e, done, onToggle, w }: { entry: Entry; done: boolean; onT
   );
 }
 
-/** Still to play first, then the newest; the ones already played at the bottom. */
+/** Still to play first, then the ones in the site's language, then the newest; the ones already played at the bottom. */
 function sortEntries(list: Entry[], played: Set<string>) {
+  const other = (e: Entry) => Number(!!e.lang && e.lang !== lang);
   return [...list].sort(
     (a, b) =>
-      Number(played.has(a.slug)) - Number(played.has(b.slug)) || (b.date ?? 0) - (a.date ?? 0) || a.title.localeCompare(b.title),
+      Number(played.has(a.slug)) - Number(played.has(b.slug)) ||
+      other(a) - other(b) ||
+      (b.date ?? 0) - (a.date ?? 0) ||
+      a.title.localeCompare(b.title),
   );
 }
 
@@ -210,10 +226,10 @@ function savedTab(game: string): Tab | null {
   }
 }
 
-/** "il 12 nov", "l'8 nov", with the year only when it isn't this year's. */
+/** "il 12 nov", "l'8 nov" ("on 12 Nov"), with the year only when it isn't this year's. */
 function onDay(ms: number) {
   const d = new Date(ms);
   const year = d.getFullYear() !== new Date().getFullYear();
-  const text = d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', ...(year ? { year: 'numeric' } : {}) });
-  return `${d.getDate() === 8 || d.getDate() === 11 ? "l'" : 'il '}${text}`;
+  const text = d.toLocaleDateString(locale, { day: 'numeric', month: 'short', ...(year ? { year: 'numeric' } : {}) });
+  return tr(`${d.getDate() === 8 || d.getDate() === 11 ? "l'" : 'il '}${text}`, `on ${text}`);
 }

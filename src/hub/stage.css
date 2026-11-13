@@ -376,6 +376,8 @@ kbd { border-radius: 5px; }
 .entry-chip { flex: none; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 99px; }
 .entry-chip.live { background: var(--accent); color: #1a1000; }
 .entry-chip.done { background: rgba(255, 255, 255, 0.14); color: var(--text); }
+/* Content in the other language: IT / EN. */
+.entry-chip.lang { background: none; color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.28); padding: 1px 7px; letter-spacing: 0.05em; }
 
 .entry-actions { flex: none; display: flex; gap: 4px; }
 .entry-actions button {

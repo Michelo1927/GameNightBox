@@ -2,6 +2,7 @@
 // The same format is read by scripts/import-code.ts to save a shared quiz into the repo.
 import { decode, encode } from '../../../hub/share';
 import { validateQuiz, type Quiz } from './schema';
+import { tr } from '../../../hub/i18n';
 
 const PREFIX = 'JQ1.';
 
@@ -11,6 +12,6 @@ export const encodeQuiz = (quiz: Quiz): Promise<string> => encode(PREFIX, quiz);
 export async function decodeQuiz(input: string): Promise<Quiz> {
   const data = await decode(input, PREFIX);
   const { errors } = validateQuiz(data);
-  if (errors.length) throw new Error(`Il quiz contiene errori: ${errors.slice(0, 3).join('; ')}`);
+  if (errors.length) throw new Error(`${tr('Il quiz contiene errori', 'The quiz has errors')}: ${errors.slice(0, 3).join('; ')}`);
   return data as Quiz;
 }

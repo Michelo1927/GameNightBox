@@ -1,7 +1,6 @@
 import { gameKey } from '../../hub/content';
 import { newTeam, type Team } from '../../hub/teams';
 import { useSaved } from '../../hub/useSaved';
-import { LETTERS } from './schema';
 
 export type Mark = 'right' | 'wrong';
 
@@ -11,7 +10,7 @@ export interface Run {
   marks: Record<string, Mark>;
   /** Milliseconds left (saved when the clock stops, not while it runs). */
   timeLeft: number;
-  /** Index in LETTERS of the letter on screen. */
+  /** Index in the wheel's letters of the letter on screen. */
   pos: number;
 }
 
@@ -48,10 +47,10 @@ export const rights = (run?: Run) => (run ? Object.values(run.marks).filter((m) 
 export const wrongs = (run?: Run) => (run ? Object.values(run.marks).filter((m) => m === 'wrong').length : 0);
 
 /** Next letter without a mark after `from` (going round the wheel); -1 when all are marked. */
-export function nextOpen(run: Run, from: number, skipFrom = true): number {
-  for (let k = skipFrom ? 1 : 0; k <= LETTERS.length; k++) {
-    const i = (from + k) % LETTERS.length;
-    if (!run.marks[LETTERS[i]]) return i;
+export function nextOpen(letters: string[], run: Run, from: number, skipFrom = true): number {
+  for (let k = skipFrom ? 1 : 0; k <= letters.length; k++) {
+    const i = (from + k) % letters.length;
+    if (!run.marks[letters[i]]) return i;
   }
   return -1;
 }
