@@ -247,7 +247,8 @@ kbd { border-radius: 5px; }
   box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -6px 12px rgba(0, 0, 0, 0.25), inset 0 2px 0 rgba(255, 255, 255, 0.35);
 }
 .game-icon { width: clamp(52px, min(7vw, 10vh), 104px); }
-.glyph { width: 66%; height: 66%; overflow: visible; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3)); }
+/* The icon may sit inside a glowing title (the game page logo): don't let its text-shadow and letter-spacing reach the icon's digits. */
+.glyph { width: 66%; height: 66%; overflow: visible; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3)); text-shadow: none; letter-spacing: normal; }
 .glyph .w { fill: #fff; }
 .glyph .d { fill: var(--ink); }
 .glyph .ws, .glyph .ds { fill: none; stroke-linecap: round; stroke-linejoin: round; }

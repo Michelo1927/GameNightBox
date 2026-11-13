@@ -7,6 +7,8 @@ import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
 import { ask } from '../../../hub/ask';
 import BackButton from '../../../hub/components/BackButton';
+import { IconDisk } from '../../../hub/components/GameIcon';
+import gameIcon from '../icon';
 import TutorialButton from '../../../hub/components/Tutorial';
 import { HOME_TUTORIAL } from '../creator/tutorials';
 
@@ -41,7 +43,10 @@ export default function Home() {
       <BackButton label="Tutti i giochi" />
       <TutorialButton tutorial={HOME_TUTORIAL} look="fab" />
       <header className="home-header">
-        <h1 className="logo">JEOPARDY<span>QUIZ</span></h1>
+        <h1 className="logo">
+          <IconDisk className="logo-icon" icon={gameIcon} />
+          JEOPARDY<span>QUIZ</span>
+        </h1>
         <p className="muted">Scegli un quiz per iniziare</p>
         <div className="home-actions">
           <a className="btn primary" href="#/jeopardy/crea/nuovo">✏️ Crea un quiz</a>
