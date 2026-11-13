@@ -1,6 +1,6 @@
 import { BUZZ_KEYS, BUZZ_MODES } from '../../hub/buzzer';
 import icon from './icon';
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -142,7 +142,6 @@ const infila: Game = {
           game="infila"
           name="In fila!"
           icon={icon}
-          hue={165}
           intro="Rimettete le carte in ordine, da un capo all'altro della fila."
           rules={RULES}
           items={lib.all}

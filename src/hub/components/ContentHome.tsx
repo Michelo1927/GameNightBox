@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Loaded } from '../content';
 import { loadSaved } from '../useSaved';
 import { gameKey } from '../content';
@@ -6,6 +6,7 @@ import { startDraft } from '../draft';
 import { go } from '../nav';
 import { ask } from '../ask';
 import BackButton from './BackButton';
+import EntryList, { type Entry } from './EntryList';
 import { IconDisk } from './GameIcon';
 import TutorialButton from './Tutorial';
 import { GAME_TUTORIAL } from '../tutorials';
@@ -22,66 +23,36 @@ interface Props<T> {
   title: (d: T) => string;
   description: (d: T) => string | undefined;
   tags: (d: T) => string[];
-  hue: number;
 }
 
-/** First page of a game: what to play (from the site or made with an AI on this device). */
-export default function ContentHome<T>({ game, name, icon, intro, rules, items, onRemove, title, description, tags, hue }: Props<T>) {
+/** First page of a game: what to play, from the site or saved on this device (made here, with an AI or loaded from a code). */
+export default function ContentHome<T>({ game, name, icon, intro, rules, items, onRemove, title, description, tags }: Props<T>) {
   const [list, setList] = useState(items);
-  const remove = async (e: MouseEvent, c: Loaded<T>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const remove = async (c: Loaded<T>) => {
     if (!(await ask(`Togliere "${title(c.data)}" da questo dispositivo?`, 'Togli'))) return;
     onRemove(c.slug);
     setList(items());
   };
-  const edit = async (e: MouseEvent, c: Loaded<T>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const edit = async (c: Loaded<T>) => {
     // A copy from the site becomes a new one on this device; one made here is replaced when its code is generated again.
     if (await startDraft(game, c.data, c.local ? c.slug : undefined)) go(`/${game}/crea`);
   };
-  const local = list.filter((c) => c.local);
-  const site = list.filter((c) => !c.local);
-
-  const card = (c: Loaded<T>) => (
-    <a
-      key={c.slug}
-      className={`quiz-card ${c.errors.length ? 'broken' : ''}`}
-      href={c.errors.length ? undefined : `#/${game}/${c.slug}/setup`}
-      style={c.errors.length ? undefined : ({ ['--hue' as string]: hue } as CSSProperties)}
-    >
-      <IconDisk className="quiz-icon" icon={icon} />
-      <h2>{title(c.data) || c.slug}</h2>
-      {description(c.data) && <p className="muted">{description(c.data)}</p>}
-      {c.errors.length > 0 ? (
-        <ul className="errors">
-          {c.errors.slice(0, 5).map((e) => (
-            <li key={e}>{e}</li>
-          ))}
-        </ul>
-      ) : (
-        <div className="tags">
-          {tags(c.data).map((t) => (
-            <span key={t}>{t}</span>
-          ))}
-        </div>
-      )}
-      {!c.errors.length && hasGame(game, c.slug) && <span className="badge">Partita in corso</span>}
-      {!c.errors.length && (
-        <span className="card-actions">
-          <button title="Modifica" onClick={(e) => edit(e, c)}>
-            ✏️
-          </button>
-          {c.local && (
-            <button title="Togli da questo dispositivo" onClick={(e) => remove(e, c)}>
-              🗑
-            </button>
-          )}
-        </span>
-      )}
-    </a>
-  );
+  const entries: Entry[] = list.map((c) => ({
+    slug: c.slug,
+    title: title(c.data) || c.slug,
+    description: description(c.data),
+    info: c.errors.length ? [] : tags(c.data),
+    date: c.date,
+    mine: c.local,
+    href: `#/${game}/${c.slug}/setup`,
+    errors: c.errors,
+    playing: hasGame(game, c.slug),
+    icon: <IconDisk icon={icon} />,
+    actions: [
+      ...(c.errors.length ? [] : [{ icon: '✏️', title: c.local ? 'Modifica' : 'Modifica una copia', onClick: () => edit(c) }]),
+      ...(c.local ? [{ icon: '🗑', title: 'Togli da questo dispositivo', onClick: () => remove(c) }] : []),
+    ],
+  }));
 
   return (
     <div className={`page home theme-${game}`}>
@@ -105,17 +76,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
         {rules}
       </details>
 
-      {local.length > 0 && (
-        <>
-          <h3>Creati su questo dispositivo</h3>
-          <div className="quiz-grid">{local.map(card)}</div>
-          {site.length > 0 && <h3>Del sito</h3>}
-        </>
-      )}
-      <div className="quiz-grid">
-        {site.map(card)}
-        {list.length === 0 && <p className="muted">Ancora niente: creane uno.</p>}
-      </div>
+      <EntryList game={game} entries={entries} />
     </div>
   );
 }

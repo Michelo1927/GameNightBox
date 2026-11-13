@@ -1,5 +1,6 @@
 // Quizzes loaded from a code, kept in this browser's localStorage.
 import type { LoadedQuiz } from './load';
+import { movePlayed } from '../../../hub/played';
 import { slugify, validateQuiz, type Quiz } from './schema';
 
 const KEY = 'jeopardy-quiz:imported';
@@ -32,9 +33,9 @@ function hash(text: string) {
 export function importedQuizzes(): LoadedQuiz[] {
   return Object.entries(read())
     .sort(([, a], [, b]) => b.added - a.added)
-    .map(([slug, { quiz }]) => {
+    .map(([slug, { quiz, added }]) => {
       const { errors, warnings } = validateQuiz(quiz);
-      return { slug, quiz, errors, warnings, imported: true };
+      return { slug, quiz, errors, warnings, imported: true, date: added };
     });
 }
 
@@ -50,6 +51,7 @@ export function removeImported(slug: string) {
   const store = read();
   delete store[slug];
   write(store);
+  movePlayed('jeopardy', slug, null);
   try {
     localStorage.removeItem(`jeopardy-quiz:game:${slug}`);
   } catch {

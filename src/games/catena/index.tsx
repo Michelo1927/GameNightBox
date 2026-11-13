@@ -1,6 +1,6 @@
 import { BUZZ_MODES } from '../../hub/buzzer';
 import icon from './icon';
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -113,7 +113,6 @@ const catena: Game = {
           game="catena"
           name="Catena"
           icon={icon}
-          hue={290}
           intro="Parole legate a due a due: trovate quelle in mezzo."
           rules={RULES}
           items={lib.all}

@@ -10,13 +10,13 @@
 @keyframes sign-in { from { opacity: 0; transform: scale(0.84) rotate(-2deg); } }
 
 /* Posto nella fila (--n), per far entrare gli elementi di un elenco uno dopo l'altro. */
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(2) { --n: 1; }
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(3) { --n: 2; }
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(4) { --n: 3; }
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(5) { --n: 4; }
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(6) { --n: 5; }
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(7) { --n: 6; }
-:is(.game-card, .quiz-card, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(n + 8) { --n: 7; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(2) { --n: 1; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(3) { --n: 2; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(4) { --n: 3; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(5) { --n: 4; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(6) { --n: 5; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(7) { --n: 6; }
+:is(.game-card, .entry-row, .ranking li, .mu-col, .ct-row, .final-bet):nth-child(n + 8) { --n: 7; }
 
 /* ---------- Ingressi di pagina ----------
    Solo dentro .enter-on (App.tsx): la pagina uscita dalla scatola dell'intro non li rifà. */
@@ -24,7 +24,7 @@
 /* Solo opacità sulle schermate di gioco: una trasformazione sposterebbe le finestre a tutto schermo che contengono. */
 .enter-on .board-page { animation: fade-in 0.35s ease-out backwards; }
 .enter-on .marquee { animation: sign-in 0.7s var(--ease-spring) backwards; }
-.enter-on :is(.game-card, .quiz-card) {
+.enter-on :is(.game-card, .entry-row) {
   animation: card-in 0.6s var(--ease-spring) backwards;
   animation-delay: calc(70ms + var(--n, 0) * 55ms);
 }

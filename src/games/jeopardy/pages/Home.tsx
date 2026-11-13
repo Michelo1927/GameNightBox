@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type MouseEvent } from 'react';
+import { useState } from 'react';
 import { hasSavedGame } from '../state';
 import { replaceDraft } from '../creator/draft';
 import { go } from '../../../hub/nav';
@@ -7,6 +7,8 @@ import { importedQuizzes, removeImported } from '../quiz/imported';
 import { quizzes, type LoadedQuiz } from '../quiz/load';
 import { ask } from '../../../hub/ask';
 import BackButton from '../../../hub/components/BackButton';
+import EntryList, { EntryRows, type Entry } from '../../../hub/components/EntryList';
+import { playedSlugs, setPlayed } from '../../../hub/played';
 import { IconDisk } from '../../../hub/components/GameIcon';
 import gameIcon from '../icon';
 import TutorialButton from '../../../hub/components/Tutorial';
@@ -23,20 +25,32 @@ export default function Home() {
   };
   const archive = (slug: string, on: boolean) => setArchivedList(setArchived(slug, on));
 
+  const [played, setPlayedSet] = useState(() => playedSlugs('jeopardy'));
   const isArchived = (q: LoadedQuiz) => archived.includes(q.slug);
-  const shownImported = imported.filter((q) => !isArchived(q));
-  const shownSite = quizzes.filter((q) => !isArchived(q));
-  const inArchive = [...imported, ...quizzes].filter(isArchived);
-  const card = (q: LoadedQuiz, inArchive = false) => (
-    <QuizCard
-      key={q.slug}
-      loaded={q}
-      archived={inArchive}
-      onArchive={() => archive(q.slug, !inArchive)}
-      onRemove={q.imported ? () => remove(q.slug, q.quiz.title) : undefined}
-      onEdit={q.imported && !q.errors.length ? async () => (await replaceDraft(q.quiz, q.slug)) && go('/jeopardy/crea') : undefined}
-    />
-  );
+  const entry = (q: LoadedQuiz, inArchive = false): Entry => ({
+    slug: q.slug,
+    title: q.quiz.title ?? q.slug,
+    description: q.quiz.description || (q.quiz.author ? `di ${q.quiz.author}` : q.quiz.categories?.map((c) => c.name).join(' · ')),
+    info: q.errors.length ? [] : [`${q.quiz.categories.length} categorie`],
+    date: q.date,
+    mine: q.imported,
+    href: `#/jeopardy/${q.slug}/setup`,
+    errors: q.errors,
+    playing: !q.errors.length && hasSavedGame(q.slug),
+    icon: <span className="icon-disk entry-emoji">{icon(q.quiz.title ?? q.slug)}</span>,
+    actions: [
+      ...(q.imported && !q.errors.length
+        ? [{ icon: '✏️', title: 'Apri nel creatore di quiz', onClick: async () => (await replaceDraft(q.quiz, q.slug)) && go('/jeopardy/crea') }]
+        : []),
+      inArchive
+        ? { icon: '📤', title: 'Rimetti nella lista', onClick: () => archive(q.slug, false) }
+        : { icon: '📦', title: 'Sposta in archivio', onClick: () => archive(q.slug, true) },
+      ...(q.imported ? [{ icon: '🗑', title: 'Togli da questo dispositivo', onClick: () => remove(q.slug, q.quiz.title) }] : []),
+    ],
+  });
+  const all = [...imported, ...quizzes];
+  const shown = all.filter((q) => !isArchived(q)).map((q) => entry(q));
+  const inArchive = all.filter(isArchived).map((q) => entry(q, true));
 
   return (
     <div className="page home theme-jeopardy">
@@ -56,95 +70,24 @@ export default function Home() {
         </div>
       </header>
 
-      {shownImported.length > 0 && (
-        <>
-          <h3>Caricati su questo dispositivo</h3>
-          <div className="quiz-grid">{shownImported.map((q) => card(q))}</div>
-          {shownSite.length > 0 && <h3>Quiz del sito</h3>}
-        </>
-      )}
-      <div className="quiz-grid">
-        {shownSite.map((q) => card(q))}
-        {quizzes.length === 0 && <p className="muted">Nessun quiz trovato in quizzes/.</p>}
-        {quizzes.length > 0 && shownSite.length === 0 && shownImported.length === 0 && (
-          <p className="muted">Tutti i quiz sono in archivio: li trovi qui sotto.</p>
-        )}
-      </div>
+      <EntryList
+        game="jeopardy"
+        entries={shown}
+        masculine
+        emptyMine="Non hai ancora quiz tuoi: creane uno con i pulsanti in alto."
+        emptySite={quizzes.length ? 'Tutti i quiz del sito sono in archivio: li trovi qui sotto.' : 'Nessun quiz trovato in quizzes/.'}
+      />
 
       {inArchive.length > 0 && (
         <details className="archive">
           <summary>
             📦 Archivio ({inArchive.length}) <span className="muted">· solo su questo dispositivo</span>
           </summary>
-          <div className="quiz-grid">{inArchive.map((q) => card(q, true))}</div>
+          <EntryRows masculine entries={inArchive} played={played} onToggle={(slug) => setPlayedSet(setPlayed('jeopardy', slug, !played.has(slug)))} />
         </details>
       )}
     </div>
   );
-}
-
-interface CardProps {
-  loaded: LoadedQuiz;
-  archived?: boolean;
-  onArchive: () => void;
-  onRemove?: () => void;
-  onEdit?: () => void;
-}
-
-function QuizCard({ loaded: { slug, quiz, errors }, archived, onArchive, onRemove, onEdit }: CardProps) {
-  // Buttons inside the card link: they must not open the quiz.
-  const action = (fn: () => void) => (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    fn();
-  };
-  return (
-    <a
-      className={`quiz-card ${errors.length ? 'broken' : ''} ${archived ? 'archived' : ''}`}
-      href={errors.length ? undefined : `#/jeopardy/${slug}/setup`}
-      style={errors.length ? undefined : ({ ['--hue' as string]: hue(slug) } as CSSProperties)}
-    >
-      <span className="quiz-icon">{icon(quiz.title ?? slug)}</span>
-      <h2>{quiz.title ?? slug}</h2>
-      {(quiz.description || quiz.author) && <p className="muted">{quiz.description || `di ${quiz.author}`}</p>}
-      {errors.length > 0 ? (
-        <ul className="errors">
-          {errors.slice(0, 5).map((e) => (
-            <li key={e}>{e}</li>
-          ))}
-        </ul>
-      ) : (
-        <div className="tags">
-          {quiz.categories.map((c) => (
-            <span key={c.name}>{c.name}</span>
-          ))}
-        </div>
-      )}
-      {!errors.length && hasSavedGame(slug) && <span className="badge">Partita in corso</span>}
-      <span className="card-actions">
-        {onEdit && (
-          <button title="Apri nel creatore di quiz" onClick={action(onEdit)}>
-            ✏️ Modifica
-          </button>
-        )}
-        <button title={archived ? 'Rimetti nella prima schermata' : 'Sposta in archivio'} onClick={action(onArchive)}>
-          {archived ? '📤 Ripristina' : '📦 Archivia'}
-        </button>
-        {onRemove && (
-          <button title="Togli da questo dispositivo" onClick={action(onRemove)}>
-            🗑
-          </button>
-        )}
-      </span>
-    </a>
-  );
-}
-
-/** Stable color per quiz, in the blue-violet-teal range so cards stay readable with gold/white text. */
-function hue(slug: string) {
-  let h = 0;
-  for (const ch of slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return [225, 250, 270, 290, 200, 185, 330, 210][h % 8];
 }
 
 // An icon guessed from the title; a generic one otherwise.

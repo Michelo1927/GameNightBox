@@ -1,6 +1,6 @@
 import { BUZZ_KEYS, BUZZ_MODES } from '../../hub/buzzer';
 import icon from './icon';
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -169,7 +169,6 @@ const musichiere: Game = {
           game="musichiere"
           name="Musichiere"
           icon={icon}
-          hue={330}
           intro="Indovinate titolo e artista: prenotandovi sulla stessa canzone, o a turno ognuno con la sua lista."
           rules={RULES}
           items={lib.all}

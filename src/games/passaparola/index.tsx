@@ -1,4 +1,4 @@
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -124,7 +124,6 @@ const passaparola: Game = {
           game="passaparola"
           name="Passaparola"
           icon={icon}
-          hue={185}
           intro="Una ruota per squadra, una definizione per ogni lettera."
           rules={RULES}
           items={lib.all}

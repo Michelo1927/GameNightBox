@@ -5,15 +5,21 @@ import { GAME_TUTORIAL } from '../../../hub/tutorials';
 export const HOME_TUTORIAL: Tutorial = {
   id: 'gioco-jeopardy',
   steps: [
-    ...GAME_TUTORIAL.steps.filter((s) => s.title !== 'Modifica' && s.title !== 'Le regole'),
+    ...GAME_TUTORIAL.steps.filter((s) => s.title !== 'Già fatta? Segnala' && s.title !== 'Le regole'),
     {
-      title: 'Modifica e archivia',
-      target: '.quiz-grid .quiz-card .card-actions',
+      title: 'Già fatto, modifica, archivia',
+      target: '.entry-row .entry-actions',
       text: (
-        <p>
-          <b>📦 Archivia</b> toglie un quiz da questa schermata (lo ritrovi in fondo, nell'archivio). Sui quiz caricati o creati da te
-          c'è anche <b>✏️ Modifica</b>, che lo riapre nel creatore.
-        </p>
+        <>
+          <p>
+            Con <b>✓</b> segni un quiz come già fatto: diventa più chiaro e scende in fondo. Un altro tocco lo rimette fra quelli da
+            fare.
+          </p>
+          <p>
+            <b>📦</b> lo toglie da questa schermata (lo ritrovi in fondo, nell'archivio). Sui quiz caricati o creati da te c'è anche
+            la <b>matita</b>, che lo riapre nel creatore.
+          </p>
+        </>
       ),
     },
   ],

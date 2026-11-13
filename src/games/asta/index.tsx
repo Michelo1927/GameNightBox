@@ -1,4 +1,4 @@
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -120,7 +120,6 @@ const asta: Game = {
           game="asta"
           name="All'asta!"
           icon={icon}
-          hue={225}
           intro="Le squadre rilanciano su quante risposte sanno dire: chi vince l'asta deve dirle tutte in tempo."
           rules={RULES}
           items={lib.all}

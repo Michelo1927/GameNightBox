@@ -68,20 +68,9 @@ kbd {
 .home-header { text-align: center; margin-bottom: 32px; }
 .logo { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(3rem, 9vw, 5.5rem); letter-spacing: 2px; margin: 0; color: var(--gold); text-shadow: 3px 4px 0 #000; }
 .logo span { color: var(--text); margin-left: 12px; }
-.quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.quiz-card {
-  position: relative; display: block; padding: 20px; border-radius: var(--radius);
-  background: linear-gradient(160deg, var(--cell), var(--cell-2)); border: 1px solid var(--line);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.quiz-card:not(.broken):hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
-.quiz-card h2 { margin: 0 0 6px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 1.7rem; letter-spacing: 0.5px; }
-.quiz-card p { margin: 0 0 12px; }
-.quiz-card.broken { background: #3b0d14; cursor: not-allowed; }
 .errors { margin: 8px 0 0; padding-left: 18px; font-size: 0.85rem; color: #ffb3b3; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tags span { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: rgba(0, 0, 0, 0.3); }
-.badge { position: absolute; top: 12px; right: 12px; font-size: 0.7rem; font-weight: 800; background: var(--gold); color: #000; padding: 3px 8px; border-radius: 99px; }
 
 .setup .title { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(2.2rem, 6vw, 3.5rem); margin: 16px 0 4px; color: var(--gold); }
 .setup h2 { margin-top: 32px; }
@@ -336,8 +325,6 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .seg button.on { background: var(--gold); border-color: var(--gold); color: #1a1400; }
 
 /* ---------- Home: each quiz gets its own color ---------- */
-.quiz-card[style*='--hue'] { background: linear-gradient(160deg, hsl(var(--hue) 75% 38%), hsl(var(--hue) 80% 22%)); }
-.quiz-card .quiz-icon { font-size: 2rem; line-height: 1; margin-bottom: 6px; display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   .board.dealing .cat-cell, .board.dealing .cell, .question-overlay, .double-title, .winner-name { animation: none; }
@@ -523,14 +510,9 @@ button.team-points:hover { background: rgba(255, 255, 255, 0.08); }
 .wheel-order.big li { font-size: clamp(1.2rem, min(3.4vw, 4.5vh), 1.8rem); padding: 8px 26px; min-width: 60%; }
 
 /* ---------- Home: archive quizzes this device doesn't need on the first screen ---------- */
-.card-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; }
-.card-actions button { border: 0; border-radius: 8px; padding: 5px 10px; background: rgba(0, 0, 0, 0.35); color: var(--text); font: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 0.75; }
-.card-actions button:hover, .card-actions button:focus-visible { opacity: 1; background: rgba(0, 0, 0, 0.6); }
 .archive { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 16px; }
 .archive summary { cursor: pointer; font-weight: 800; font-size: 1.1rem; margin-bottom: 14px; }
 .archive summary .muted { font-weight: 500; font-size: 0.9rem; }
-.quiz-card.archived { filter: saturate(0.45); opacity: 0.85; }
-.quiz-card.archived:hover { filter: none; opacity: 1; }
 
 /* ---------- Music and sound effects switches ---------- */
 .sound-btn { position: relative; }

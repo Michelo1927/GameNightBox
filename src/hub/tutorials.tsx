@@ -61,12 +61,18 @@ export const GAME_TUTORIAL: Tutorial = {
   steps: [
     {
       title: 'Scegli cosa giocare',
-      target: '.quiz-grid .quiz-card',
+      target: '.entry-list',
       text: (
-        <p>
-          Ogni scheda è una partita pronta. Toccala, scrivi i nomi delle squadre e si parte. Se chiudi a metà, la partita resta salvata
-          su questo dispositivo (“Partita in corso”).
-        </p>
+        <>
+          <p>
+            Le partite sono in due schede: <b>Del sito</b>, pronte da giocare, e <b>Le tue</b>, quelle create o caricate su questo
+            dispositivo. In cima ci sono le più nuove.
+          </p>
+          <p>
+            Toccane una, scrivi i nomi delle squadre e si parte. Se chiudi a metà, la partita resta salvata su questo dispositivo
+            (“In corso”).
+          </p>
+        </>
       ),
     },
     {
@@ -100,13 +106,18 @@ export const GAME_TUTORIAL: Tutorial = {
       text: <p>Se qualcuno ti ha mandato un codice, un link o un file con una partita, aprila da qui.</p>,
     },
     {
-      title: 'Modifica',
-      target: '.quiz-grid .quiz-card .card-actions',
+      title: 'Già fatta? Segnala',
+      target: '.entry-row .entry-actions',
       text: (
-        <p>
-          Con la matita cambi una partita esistente: si apre nel creatore. Se è una del sito, ne fai una copia tua e l'originale
-          resta com'è.
-        </p>
+        <>
+          <p>
+            Con <b>✓</b> segni una partita come già fatta: diventa più chiara e scende in fondo, così in cima restano quelle nuove.
+            Un altro tocco la rimette fra quelle da fare.
+          </p>
+          <p>
+            Con la matita la cambi: si apre nel creatore. Se è una del sito, ne fai una copia tua e l'originale resta com'è.
+          </p>
+        </>
       ),
     },
   ],

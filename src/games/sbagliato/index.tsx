@@ -1,4 +1,4 @@
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
@@ -129,7 +129,6 @@ const sbagliato: Game = {
           game="sbagliato"
           name="Sbagliato!"
           icon={icon}
-          hue={270}
           intro="Domande facilissime a raffica: dite la risposta sbagliata."
           rules={RULES}
           items={lib.all}

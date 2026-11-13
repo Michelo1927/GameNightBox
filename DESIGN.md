@@ -51,13 +51,15 @@ GameNightBox/
 │  │  ├─ games.ts              cosa deve dichiarare un gioco (nome, icona, indirizzi)
 │  │  ├─ teams.ts              squadre e colori
 │  │  ├─ useSaved.ts           stato salvato nel browser + Annulla
-│  │  ├─ content.ts            contenuti del sito + quelli creati sul dispositivo
+│  │  ├─ content.ts            tipi e controlli dei contenuti (li usano anche gli script)
+│  │  ├─ library.ts            contenuti del sito + quelli salvati sul dispositivo, con la data
+│  │  ├─ played.ts             partite segnate come già fatte (sul dispositivo)
 │  │  ├─ creation.tsx          indirizzi per creare e condividere: crea, crea/codice, carica
 │  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1. TT1. SB1. IF1.)
 │  │  ├─ buzzer.ts             prenotazione: un tasto per squadra, o decide l'host
 │  │  ├─ keys.ts  text.ts  youtube.ts  sounds.ts  media.ts  nav.ts
 │  │  └─ components/           Timer, OrderWheel, Ranking, Media, TeamList, SetupPage,
-│  │                           PlayHeader, ContentHome, ClaudeCreate, CreatorPage, SharePage, ImportCode
+│  │                           PlayHeader, ContentHome, EntryList, ClaudeCreate, CreatorPage, SharePage, ImportCode
 │  └─ games/
 │     ├─ index.ts              elenco dei giochi dell'hub
 │     └─ jeopardy/
@@ -128,6 +130,13 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   viene riconosciuto e indirizzato alla pagina giusta.
 - ✏️ su ogni contenuto (del sito o del dispositivo) lo apre nel creatore; "Crea con l'IA" può aprire la
   risposta nel creatore anche se ha errori, per correggerli a mano.
+- La pagina di ogni gioco (Jeopardy compreso) elenca i contenuti con `EntryList`: due schede, "Le tue"
+  (salvate sul dispositivo, bordo tratteggiato) e "Del sito"; si apre su "Le tue" se ce ne sono. Righe
+  compatte su due colonne (una sul telefono), al massimo 3 righe e mezza, poi la scheda scorre da sola.
+  Ogni riga ha la data: "aggiunta il" per il sito (commit che ha aggiunto il file, letto da git al build da
+  `vite-plugin-dates.ts`: il deploy fa il checkout di tutta la storia) e "salvata il" per le proprie.
+  ✓ segna una partita come già fatta (sul dispositivo): resta più chiara e va in fondo. In cima le più nuove.
+  Senza partite proprie, "Le tue" dice solo di crearne una coi pulsanti in alto, senza ripeterli.
 - `npm run import` riconosce il prefisso e scrive `content/<gioco>/<slug>.json`.
 
 **Passaparola** (`#/passaparola`)

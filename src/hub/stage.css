@@ -82,7 +82,7 @@ body {
   font-weight: 700; transition: transform 0.08s, background 0.15s, box-shadow 0.15s;
 }
 .btn:active:not(:disabled) { transform: translateY(1px) scale(0.98); }
-.btn:focus-visible, .team-chip:focus-visible, .cell:focus-visible, .quiz-card:focus-visible, .game-card:focus-visible {
+.btn:focus-visible, .team-chip:focus-visible, .cell:focus-visible, .entry-row:focus-visible, .game-card:focus-visible {
   outline: 3px solid var(--gold-hi); outline-offset: 3px;
 }
 .btn.primary {
@@ -257,7 +257,6 @@ kbd { border-radius: 5px; }
 .glyph .t { font-family: var(--font-display); text-anchor: middle; }
 /* On a game's own page: by the title, and smaller on each card. */
 .logo .logo-icon { width: 0.95em; vertical-align: -0.12em; margin-right: 0.3em; box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 -4px 8px rgba(0, 0, 0, 0.25); }
-.quiz-card .icon-disk.quiz-icon { width: 2.6rem; margin-bottom: 8px; box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent), inset 0 -3px 6px rgba(0, 0, 0, 0.25); }
 .game-text { display: flex; flex-direction: column; gap: clamp(2px, 0.6vh, 6px); min-width: 0; }
 .game-card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, min(2.6vw, 4vh), 2.4rem); line-height: 1.15; letter-spacing: 0.5px; color: var(--text); }
 .game-card p {
@@ -310,21 +309,86 @@ kbd { border-radius: 5px; }
 }
 .home[class*='theme-'] .logo { color: #fff; text-shadow: 0 0 14px var(--accent), 0 0 44px var(--accent), 3px 4px 0 rgba(0, 0, 0, 0.6); }
 .home .logo span { color: var(--gold-hi); text-shadow: 0 0 14px rgba(255, 201, 40, 0.7), 3px 4px 0 #3a1d00; }
-.home .quiz-card, .home .quiz-card[style*='--hue'] {
-  border-radius: 20px;
-  background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 24%, var(--bg-3)), var(--bg-2) 70%);
-  border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
-}
-.home .quiz-card { transition: transform 0.2s var(--ease-out), box-shadow 0.2s, border-color 0.2s; }
-.home .quiz-card:not(.broken):active { transform: translateY(-1px) scale(0.985); transition-duration: 0.08s; }
-.home .quiz-card:not(.broken):hover { border-color: var(--accent); box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 35%, transparent), 0 14px 34px rgba(0, 0, 0, 0.35); }
-.home .quiz-card.broken { background: #3b0d22; border-color: rgba(255, 77, 94, 0.4); }
-.home .quiz-card h2 { font-family: var(--font-display); }
-.home .quiz-card .tags span { background: color-mix(in srgb, var(--accent) 18%, rgba(0, 0, 0, 0.35)); }
-.home .badge { background: var(--accent); color: #1a1000; box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
 .home h3 { color: var(--accent); }
 .rules-box { border-radius: 16px; border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* The list (components/EntryList.tsx): two tabs, then compact rows on two columns, at most three and a half rows high. */
+.entry-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 26px 0 14px; }
+.entry-tabs button {
+  display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 18px; border-radius: 99px; cursor: pointer;
+  border: 2px solid color-mix(in srgb, var(--accent) 35%, transparent); background: transparent; color: var(--text);
+  font-family: var(--font-display); font-size: 1.25rem; letter-spacing: 0.5px; transition: background 0.15s, border-color 0.15s;
+}
+.entry-tabs button:hover { border-color: var(--accent); }
+.entry-tabs button b { font-weight: 400; font-size: 0.85em; color: var(--muted); }
+.entry-tabs button.on { background: var(--accent); border-color: var(--accent); color: #1a1000; }
+.entry-tabs button.on b { color: rgba(26, 16, 0, 0.6); }
+.entry-tabs small { margin-left: 6px; color: var(--muted); font-size: 0.85rem; }
+.entry-none { margin: 4px 2px; color: var(--muted); }
+
+/* The box scrolls on its own; the half row at the bottom fades a little, to show there is more. */
+.entry-scroll {
+  overflow-y: auto; padding: 4px 6px 0 2px; margin: -4px -6px 0 -2px;
+  scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 50%, transparent) transparent;
+  mask-image: linear-gradient(180deg, #000 calc(100% - 22px), rgba(0, 0, 0, 0.25));
+}
+.entry-scroll.fits { mask-image: none; }
+.entry-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
+@media (max-width: 700px) { .entry-grid { grid-template-columns: 1fr; } }
+
+.entry-row {
+  position: relative; display: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 14px; border-radius: 14px;
+  color: var(--text); text-decoration: none; cursor: pointer;
+  background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 20%, var(--bg-3)), var(--bg-2) 75%);
+  border: 2px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s, border-color 0.2s, opacity 0.2s, filter 0.2s;
+}
+.entry-row:not(.broken):hover { border-color: var(--accent); box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 30%, transparent); transform: translateY(-2px); }
+.entry-row:not(.broken):active { transform: scale(0.985); transition-duration: 0.08s; }
+/* Saved on this device: dashed border, darker. */
+.entry-row.mine { border-style: dashed; background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 12%, var(--bg-2)), var(--bg) 80%); }
+/* Already played: faded, at the bottom of the list. */
+.entry-row.played { opacity: 0.55; filter: saturate(0.4); }
+.entry-row.played:hover { opacity: 0.9; filter: none; }
+.entry-row.broken { cursor: not-allowed; background: #3b0d22; border-color: rgba(255, 77, 94, 0.4); }
+
+.entry-icon { flex: none; display: grid; }
+.entry-icon .icon-disk { width: 46px; box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent), inset 0 -3px 6px rgba(0, 0, 0, 0.25); }
+.entry-emoji { font-size: 1.5rem; line-height: 1; }
+.entry-body { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.entry-row h2 {
+  margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; letter-spacing: 0.5px; line-height: 1.15;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.entry-row p { margin: 0; font-size: 0.88rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-row .entry-errors { color: #ffb3b3; white-space: normal; }
+/* On the phone the title may take two lines instead of being cut. */
+@media (max-width: 700px) {
+  .entry-row h2 { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}
+.entry-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+.entry-meta .fact + .fact::before { content: '•'; margin-right: 10px; opacity: 0.5; }
+.entry-chip { font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 99px; }
+.entry-chip.live { background: var(--accent); color: #1a1000; }
+.entry-chip.done { background: rgba(255, 255, 255, 0.14); color: var(--text); }
+
+.entry-actions { flex: none; display: flex; gap: 4px; }
+.entry-actions button {
+  width: 32px; height: 32px; border: 0; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.3); color: var(--text); opacity: 0.7;
+}
+.entry-actions button:hover, .entry-actions button:focus-visible { opacity: 1; background: rgba(0, 0, 0, 0.55); }
+.entry-actions button.check.on { opacity: 1; background: var(--accent); color: #1a1000; font-weight: 800; }
+
+.archive .entry-scroll { margin-top: 4px; }
+
+/* Phone: smaller icon and buttons, so the text keeps its room. */
+@media (max-width: 700px) {
+  .entry-row { gap: 10px; padding: 8px 8px 8px 10px; }
+  .entry-icon .icon-disk { width: 38px; }
+  .entry-actions { gap: 2px; }
+  .entry-actions button { width: 28px; height: 28px; font-size: 0.8rem; }
+}
 
 /* ---------- Setup ---------- */
 .setup .title { color: var(--accent, var(--gold-hi)); text-shadow: 0 0 18px color-mix(in srgb, var(--accent, var(--gold)) 55%, transparent); }
@@ -344,4 +408,4 @@ html, body, * { scrollbar-width: none; }
 /* Phones: no blue box when tapping buttons and links (the keyboard outline above stays). */
 html { -webkit-tap-highlight-color: transparent; }
 :focus:not(:focus-visible) { outline: none; }
-button, a, .btn, .cell, .team-chip, .game-card, .quiz-card { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+button, a, .btn, .cell, .team-chip, .game-card, .entry-row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }

@@ -1,3 +1,4 @@
+import siteDates from 'virtual:content-dates';
 import { importedQuizzes } from './imported';
 import { isRemote, validateQuiz, type Quiz } from './schema';
 
@@ -15,6 +16,8 @@ export interface LoadedQuiz {
   warnings: string[];
   /** Loaded from a code and stored in this browser (not part of the site). */
   imported?: boolean;
+  /** When it was added to the site, or loaded on this device (ms); missing when unknown. */
+  date?: number;
 }
 
 export const quizzes: LoadedQuiz[] = Object.entries(quizModules)
@@ -25,7 +28,7 @@ export const quizzes: LoadedQuiz[] = Object.entries(quizModules)
     if (errors.length === 0) {
       for (const c of quiz.categories) c.questions.sort((a, b) => a.points - b.points);
     }
-    return { slug, quiz, errors, warnings };
+    return { slug, quiz, errors, warnings, date: siteDates[path] };
   })
   .sort((a, b) => (a.quiz.title ?? a.slug).localeCompare(b.quiz.title ?? b.slug));
 

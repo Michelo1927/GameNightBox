@@ -1,6 +1,6 @@
 import { BUZZ_KEYS, BUZZ_MODES } from '../../hub/buzzer';
 import icon from './icon';
-import { library } from '../../hub/content';
+import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
 import type { Game } from '../../hub/games';
@@ -137,7 +137,6 @@ const topten: Game = {
           game="topten"
           name="Top Ten"
           icon={icon}
-          hue={90}
           intro="Classifiche vere: trovate tutte le risposte prima di finire gli errori."
           rules={RULES}
           items={lib.all}
