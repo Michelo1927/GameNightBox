@@ -39,13 +39,15 @@
 .as-page, .theme-asta { --accent: var(--blue); }
 
 /* ---------- The studio: backdrop, two spotlights, a glossy floor ---------- */
-html { background: var(--bg); }
-body {
+/* The glows are fixed to the window, not to the page: body is only as tall as the window, so on a page a little
+   taller they used to end in a straight line at the bottom once scrolled. */
+html {
   background:
-    radial-gradient(ellipse 60% 45% at 50% -8%, rgba(120, 90, 255, 0.45), transparent 70%) top center / 100% 100vh no-repeat,
-    radial-gradient(ellipse 80% 50% at 50% 115%, rgba(255, 61, 139, 0.16), transparent 70%) bottom center / 100% 100vh no-repeat,
+    radial-gradient(ellipse 60% 45% at 50% -8%, rgba(120, 90, 255, 0.45), transparent 70%) top center / 100% 100% no-repeat fixed,
+    radial-gradient(ellipse 80% 50% at 50% 115%, rgba(255, 61, 139, 0.16), transparent 70%) bottom center / 100% 100% no-repeat fixed,
     var(--bg);
 }
+body { background: transparent; }
 
 /* Game screens fill the TV: the light rig sits behind them. */
 .board-page { position: relative; isolation: isolate; }
