@@ -41,8 +41,8 @@ interface Props {
 }
 
 const WORDS = {
-  f: { mine: 'Le tue', saved: 'salvate', ready: 'pronte', savedOne: 'salvata', addedOne: 'aggiunta', done: 'Fatta', mark: 'già fatta' },
-  m: { mine: 'I tuoi', saved: 'salvati', ready: 'pronti', savedOne: 'salvato', addedOne: 'aggiunto', done: 'Fatto', mark: 'già fatto' },
+  f: { mine: 'Le tue', saved: 'salvate', savedOne: 'salvata', addedOne: 'aggiunta', done: 'Fatta', mark: 'già fatta' },
+  m: { mine: 'I tuoi', saved: 'salvati', savedOne: 'salvato', addedOne: 'aggiunto', done: 'Fatto', mark: 'già fatto' },
 };
 type Words = (typeof WORDS)['f'];
 
@@ -83,7 +83,7 @@ export default function EntryList({
         <button role="tab" aria-selected={tab === 'site'} className={tab === 'site' ? 'on' : ''} onClick={() => open('site')}>
           Del sito <b>{site.length}</b>
         </button>
-        <small>{tab === 'mine' ? `${w.saved} su questo dispositivo` : `${w.ready} da giocare`}</small>
+        {tab === 'mine' && <small>{w.saved} su questo dispositivo</small>}
       </div>
       {shown.length ? (
         <EntryRows key={tab} entries={shown} played={played} onToggle={toggle} masculine={masculine} />
