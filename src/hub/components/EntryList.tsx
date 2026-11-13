@@ -127,7 +127,8 @@ function Row({ entry: e, done, onToggle, w }: { entry: Entry; done: boolean; onT
     ev.stopPropagation();
     fn();
   };
-  const facts = [...(e.info ?? []), ...(e.date ? [`${e.mine ? w.savedOne : w.addedOne} il ${formatDate(e.date)}`] : [])];
+  // The date first: when the line is too long, the facts at the end are the ones cut.
+  const facts = [...(e.date ? [`${e.mine ? w.savedOne : w.addedOne} ${onDay(e.date)}`] : []), ...(e.info ?? [])];
   return (
     <a className={`entry-row ${e.mine ? 'mine' : ''} ${done ? 'played' : ''} ${broken ? 'broken' : ''}`} href={broken ? undefined : e.href}>
       <span className="entry-icon">{e.icon}</span>
@@ -209,9 +210,10 @@ function savedTab(game: string): Tab | null {
   }
 }
 
-/** "12 nov", with the year only when it isn't this year's. */
-function formatDate(ms: number) {
+/** "il 12 nov", "l'8 nov", with the year only when it isn't this year's. */
+function onDay(ms: number) {
   const d = new Date(ms);
   const year = d.getFullYear() !== new Date().getFullYear();
-  return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', ...(year ? { year: 'numeric' } : {}) });
+  const text = d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', ...(year ? { year: 'numeric' } : {}) });
+  return `${d.getDate() === 8 || d.getDate() === 11 ? "l'" : 'il '}${text}`;
 }
