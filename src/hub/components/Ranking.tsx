@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type CSSProperties } from 'react';
 import { sounds } from '../sounds';
 import type { Team } from '../teams';
 import { ordinal, tr } from '../i18n';
@@ -31,7 +31,8 @@ export default function Ranking({ teams, onClose, celebrate }: Props) {
   return (
     <div className="overlay" onClick={onClose}>
       {celebrate && <Confetti colors={teams.map((t) => t.color)} />}
-      <div className={`ranking ${celebrate ? 'celebrate' : ''}`} onClick={(e) => e.stopPropagation()}>
+      {/* Many teams: smaller rows, then two columns, so the ranking stays on the screen. */}
+      <div className={`ranking${celebrate ? ' celebrate' : ''}${teams.length > 4 ? ' many' : ''}${teams.length > 6 ? ' cols' : ''}`} onClick={(e) => e.stopPropagation()}>
         {celebrate && winners.length > 0 && (
           <div className="winner">
             <div className="winner-label">{winners.length > 1 ? tr('🏆 Pareggio!', "🏆 It's a tie!") : tr('🏆 Vince', '🏆 The winner is')}</div>
@@ -46,7 +47,7 @@ export default function Ranking({ teams, onClose, celebrate }: Props) {
           </div>
         )}
         <h2>{tr('Classifica', 'Scores')}</h2>
-        <ol>
+        <ol style={{ '--rows': Math.ceil(sorted.length / 2) } as CSSProperties}>
           {sorted.map((t) => (
             <li key={t.id} style={{ borderColor: t.color }}>
               <span className="pos">{medals[position(t.score)] ?? tr(`${position(t.score) + 1}°`, ordinal(position(t.score) + 1))}</span>
@@ -55,8 +56,10 @@ export default function Ranking({ teams, onClose, celebrate }: Props) {
             </li>
           ))}
         </ol>
-        {celebrate && <TournamentFinish teams={teams} />}
-        <button className="btn primary" onClick={onClose}>{tr('Chiudi', 'Close')}</button>
+        <div className="ranking-actions">
+          {celebrate && <TournamentFinish teams={teams} />}
+          <button className="btn primary" onClick={onClose}>{tr('Chiudi', 'Close')}</button>
+        </div>
       </div>
     </div>
   );

@@ -214,13 +214,22 @@ kbd {
 .player .bar div { height: 100%; background: var(--gold); transition: width 0.2s linear; }
 .yt-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
 
-.ranking { background: var(--bg-2); border-radius: 14px; padding: 28px; width: min(520px, 100%); text-align: center; border: 1px solid var(--line); }
+.ranking { background: var(--bg-2); border-radius: 14px; padding: clamp(24px, 4vh, 44px) clamp(20px, 4vw, 56px); width: min(780px, 100%); max-height: 100%; overflow-y: auto; box-sizing: border-box; text-align: center; border: 1px solid var(--line); }
 .ranking h2 { margin: 0 0 16px; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 2.4rem; color: var(--gold); }
 .ranking ol { list-style: none; padding: 0; margin: 0 0 20px; display: flex; flex-direction: column; gap: 8px; }
-.ranking li { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(0, 0, 0, 0.3); border-left: 6px solid; font-size: 1.2rem; }
+.ranking li { display: flex; align-items: center; gap: 16px; padding: clamp(10px, 1.8vh, 16px) clamp(14px, 2vw, 24px); border-radius: 10px; background: rgba(0, 0, 0, 0.3); border-left: 6px solid; font-size: clamp(1.2rem, 2.6vh, 1.6rem); }
 .ranking .pos { width: 40px; font-size: 1.5rem; }
 .ranking .name { flex: 1; text-align: left; font-weight: 700; }
-.ranking .score { font-family: 'Anton', sans-serif; font-size: 1.6rem; }
+.ranking .score { font-family: 'Anton', sans-serif; font-size: clamp(1.6rem, 3.6vh, 2.3rem); }
+.ranking-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; }
+.ranking.many ol { gap: 5px; }
+.ranking.many li { padding: clamp(6px, 1vh, 10px) clamp(12px, 1.6vw, 18px); font-size: clamp(1.05rem, 2vh, 1.3rem); gap: 10px; }
+.ranking.many .score { font-size: clamp(1.3rem, 2.8vh, 1.8rem); }
+.ranking.many .pos { width: 32px; font-size: 1.2rem; }
+.ranking.many .winner-name { font-size: clamp(1.8rem, min(5vw, 7vh), 3.4rem); }
+.ranking.cols ol { display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(var(--rows), auto); }
+.ranking.cols .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 560px) { .ranking.cols ol { display: flex; } }
 
 @media (max-width: 640px) {
   .board-header .title { font-size: 1.2rem; }

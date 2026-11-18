@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import type { Game } from './games';
 import { go } from './nav';
 import { ask } from './ask';
@@ -157,6 +157,29 @@ function TournamentPage({ games }: { games: Game[] }) {
   const place = (score: number) => table.filter((x) => x.score > score).length;
   const nameOf = (id: string) => t.teams.find((x) => x.id === id);
 
+  // The games played: under the ranking while playing, under the winner (where there is room) at the end.
+  const playedList = t.played.length > 0 && (
+    <>
+      <h2>{tr('Giochi fatti', 'Games played')}</h2>
+      <ul className="trn-played">
+        {t.played.map((p, i) => {
+          const best = Math.max(...Object.values(p.points));
+          const winners = Object.entries(p.points).filter(([, v]) => v === best).map(([id]) => nameOf(id)?.name).filter(Boolean);
+          const game = byId(p.game);
+          return (
+            <li key={i} className={`theme-${p.game}`} title={`${game?.name ?? p.game} · ${p.title}`}>
+              {game && <IconDisk className="trn-row-icon" icon={game.icon} />}
+              <span>
+                <b>{game?.name ?? p.game}</b>
+                <span className="muted">🏆 {winners.join(', ')}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+
   const end = async () => {
     if (await ask(tr('Finire il torneo adesso? I giochi non ancora finiti restano fuori.', 'End the tournament now? The games not finished yet are left out.'), tr('Finisci', 'End'))) {
       setTournament((x) => ({ ...x, ended: true, current: undefined }));
@@ -165,19 +188,22 @@ function TournamentPage({ games }: { games: Game[] }) {
   };
 
   return (
-    <div className="page setup trn-page">
+    <div className="page setup trn-page trn-main">
       <BackButton label={tr('Tutti i giochi', 'All games')} />
-      <h1 className="title">🏆 {tr('Torneo', 'Tournament')}</h1>
-      <p className="muted">
-        {over
-          ? tr('Torneo finito', 'Tournament over')
-          : tr(`Gioco ${progressOf(t)} di ${t.games.length} · ${scaleText(t.teams.length)}`, `Game ${progressOf(t)} of ${t.games.length} · ${scaleText(t.teams.length)}`)}
-      </p>
-
       <div className="trn-grid">
-        <section>
+        <header className="trn-head">
+          <h1 className="title">🏆 {tr('Torneo', 'Tournament')}</h1>
+          <p className="muted trn-count">
+            {over
+              ? tr('Torneo finito', 'Tournament over')
+              : tr(`Gioco ${progressOf(t)} di ${t.games.length} · ${scaleText(t.teams.length)}`, `Game ${progressOf(t)} of ${t.games.length} · ${scaleText(t.teams.length)}`)}
+          </p>
+        </header>
+
+        <section className="trn-left">
           <h2>{tr('Classifica', 'Ranking')}</h2>
-          <ol className="trn-table">
+          {/* Many teams: smaller rows, then two columns, so the page still fits on the screen. */}
+          <ol className={`trn-table${table.length > 4 ? ' many' : ''}${table.length > 6 ? ' cols' : ''}`} style={{ '--rows': Math.ceil(table.length / 2) } as CSSProperties}>
             {table.map((x) => (
               <li key={x.id} style={{ borderColor: x.color }}>
                 <span className="trn-pos">{place(x.score) + 1}</span>
@@ -188,60 +214,26 @@ function TournamentPage({ games }: { games: Game[] }) {
             ))}
           </ol>
 
-          <h2>{tr('Giochi', 'Games')}</h2>
-          <ul className="trn-list">
-            {t.played.map((p, i) => {
-              const best = Math.max(...Object.values(p.points));
-              const winners = Object.entries(p.points).filter(([, v]) => v === best).map(([id]) => nameOf(id)?.name).filter(Boolean);
-              return (
-                <li key={i} className={`theme-${p.game}`}>
-                  <span className="trn-state ok">✓</span>
-                  <span className="trn-what">
-                    <b>{byId(p.game)?.name ?? p.game}</b> <span className="muted">· {p.title}</span>
-                  </span>
-                  <span className="muted">{tr(`vince ${winners.join(' e ')}`, `${winners.join(' and ')} won`)}</span>
-                </li>
-              );
-            })}
-            {t.current && !over && (
-              <li className={`theme-${t.current.game} now`}>
-                <span className="trn-state">▶</span>
-                <span className="trn-what">
-                  <b>{byId(t.current.game)?.name}</b> {t.current.title && <span className="muted">· {t.current.title}</span>}
-                </span>
-                <span className="muted">{t.current.started ? tr('in corso', 'being played') : tr('tocca a questo', 'up next')}</span>
-              </li>
-            )}
-            {!over &&
-              remaining(t).map((id, i) => (
-                <li key={`${id}-${i}`} className={`theme-${id}`}>
-                  <span className="trn-state">○</span>
-                  <span className="trn-what">
-                    <b>{byId(id)?.name ?? id}</b>
-                  </span>
-                  <span className="muted">{tr('nella ruota', 'in the wheel')}</span>
-                </li>
-              ))}
-          </ul>
+          {!over && playedList}
+          <div className="trn-actions-row">
+            <button className="btn ghost" onClick={() => setNames((n) => !n)}>🎨 {tr('Nomi e colori', 'Names and colours')}</button>
+            {!over && <button className="btn ghost" onClick={end}>🏁 {tr('Finisci il torneo', 'End the tournament')}</button>}
+          </div>
+          {names && <TeamList fixed teams={t.teams} onChange={(fn) => setTournament((x) => ({ ...x, teams: fn(x.teams) }))} />}
         </section>
 
         <section className="trn-next">
           {over ? (
-            <Final t={t} onRanking={() => setRanking(true)} />
+            <Final t={t} />
           ) : t.current ? (
             <CurrentGame t={t} game={byId(t.current.game)} />
           ) : (
             <NextWheel t={t} games={games} />
           )}
+          {over && playedList}
         </section>
       </div>
 
-      <div className="trn-footer">
-        <button className="btn ghost" onClick={() => setNames((n) => !n)}>🎨 {tr('Nomi e colori', 'Names and colours')}</button>
-        {!over && <button className="btn ghost" onClick={end}>🏁 {tr('Finisci il torneo', 'End the tournament')}</button>}
-        <a className="btn ghost" href="#/torneo/nuovo">＋ {tr('Nuovo torneo', 'New tournament')}</a>
-      </div>
-      {names && <TeamList fixed teams={t.teams} onChange={(fn) => setTournament((x) => ({ ...x, teams: fn(x.teams) }))} />}
 
       {ranking && <Ranking teams={standings(t)} celebrate={over} onClose={() => setRanking(false)} />}
     </div>
@@ -324,12 +316,13 @@ function NextWheel({ t, games }: { t: Tournament; games: Game[] }) {
   );
 }
 
-function Final({ t, onRanking }: { t: Tournament; onRanking: () => void }) {
+function Final({ t }: { t: Tournament }) {
   const table = standings(t);
   const best = Math.max(...table.map((x) => x.score));
   const winners = table.filter((x) => x.score === best);
   return (
     <div className="trn-current trn-final">
+      <span className="trn-trophy" aria-hidden>🏆</span>
       <span className="trn-tag">{winners.length > 1 ? tr('Pareggio!', "It's a tie!") : tr('Vince il torneo', 'Tournament winner')}</span>
       <h2>
         {winners.map((w, i) => (
@@ -340,8 +333,7 @@ function Final({ t, onRanking }: { t: Tournament; onRanking: () => void }) {
         ))}
       </h2>
       <p className="muted">{tr(`${best} punti in ${t.played.length} giochi`, `${best} points in ${t.played.length} games`)}</p>
-      <button className="btn primary big" onClick={onRanking}>🏆 {tr('Classifica finale', 'Final ranking')}</button>
-      <a className="btn ghost" href="#/torneo/nuovo">{tr('Nuovo torneo', 'New tournament')}</a>
+      <a className="btn primary big" href="#/torneo/nuovo">＋ {tr('Nuovo torneo', 'New tournament')}</a>
     </div>
   );
 }

@@ -16,7 +16,7 @@
 .trn-count { font-size: 1rem; font-weight: 600; }
 
 /* New tournament: the games to put in the wheel. */
-.trn-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.trn-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
 .trn-game {
   display: flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px; border-radius: 16px; color: var(--text);
   background: var(--bg-2); border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent); transition: border-color 0.15s, background 0.15s;
@@ -25,25 +25,67 @@
   flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 6px 8px; border: 0; border-radius: 12px;
   background: none; font: inherit; font-weight: 700; color: inherit; text-align: left; cursor: pointer;
 }
-.trn-game-main span:nth-child(2) { flex: 1; min-width: 0; }
+.trn-game-main span:nth-child(2) { flex: 1; min-width: 0; overflow-wrap: anywhere; line-height: 1.15; }
+/* The click on a tile must not leave the browser's focus ring around half of it (the stepper sits beside it). */
+.trn-game-main:focus { outline: none; }
+.trn-game:has(.trn-game-main:focus-visible) { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
 .trn-game .icon-disk { width: 40px; flex: none; }
 .trn-game:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
 .trn-game-main:active { transform: scale(0.98); }
 .trn-game.on { background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, var(--bg-3)), var(--bg-2)); border-color: var(--accent); }
 .trn-check { width: 26px; height: 26px; border-radius: 50%; flex: none; border: 2px solid color-mix(in srgb, var(--accent) 50%, transparent); }
 .trn-stepper { display: flex; align-items: center; gap: 4px; flex: none; }
-.trn-stepper b { min-width: 2em; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; color: var(--accent); }
+.trn-stepper b { min-width: 1.7em; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; color: var(--accent); }
 .trn-stepper button {
-  width: 30px; height: 30px; border-radius: 50%; border: 0; font: inherit; font-weight: 900; font-size: 1.1rem; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 50%; border: 0; font: inherit; font-weight: 900; font-size: 1.1rem; cursor: pointer;
   background: var(--accent); color: #1a0d33;
 }
 .trn-stepper button:disabled { opacity: 0.35; cursor: default; }
 .trn-actions { margin-top: 10px; }
 
-/* The tournament page. */
+/* The tournament page: wider than the other pages, sized on the screen height too (but always all on screen). */
+.page.trn-main { max-width: min(1600px, 100%); padding-bottom: 24px; }
+/* Filling the screen: the page is as tall as the window, the ranking's rows and the card share the room left. */
+.trn-main { min-height: 100vh; min-height: 100dvh; box-sizing: border-box; display: flex; flex-direction: column; }
+.trn-main .trn-grid { flex: 1; align-items: stretch; }
+.trn-main .trn-left, .trn-main .trn-next { display: flex; flex-direction: column; min-height: 0; position: static; }
+.trn-main .trn-table:not(.cols) { flex: 1 1 auto; }
+.trn-main .trn-table:not(.cols) li { flex: 1 1 0; max-height: clamp(44px, 8vh, 90px); }
+/* The wheel and the chosen game: as tall as the window (not as the ranking beside them), content centred. */
+.trn-main .trn-next > :first-child { justify-content: center; }
+.trn-main .trn-next > :is(.trn-wheel, .trn-current:not(.trn-final)) { flex: none; min-height: calc(100vh - 110px); min-height: calc(100dvh - 110px); box-sizing: border-box; position: sticky; top: 16px; }
+.trn-main .trn-next > .trn-final { flex: 1 1 auto; }
+.trn-main .trn-final h2 { font-size: clamp(2.6rem, 11vh, 7rem); line-height: 1.05; }
+.trn-trophy { font-size: clamp(2.6rem, 12vh, 9rem); line-height: 1; filter: drop-shadow(0 0 30px rgba(255, 201, 40, 0.55)); animation: drop-in 0.6s var(--ease-spring) 0.1s backwards; }
+.trn-main .trn-final p { font-size: clamp(1rem, 2vh, 1.4rem); }
+.trn-main .trn-count { font-size: clamp(1rem, 1.8vh, 1.2rem); }
+.trn-main .trn-grid h2 { font-size: clamp(1.3rem, 2.4vh, 1.7rem); }
+.trn-main .trn-table li { padding: clamp(8px, 1.3vh, 14px) clamp(12px, 1.4vw, 18px); font-size: clamp(1.1rem, 2.4vh, 2rem); }
+.trn-main .trn-table b { font-size: clamp(1.4rem, 3.4vh, 2.8rem); }
+.trn-main .trn-table.many { gap: 4px; }
+.trn-main .trn-table.many li { padding: clamp(5px, 0.9vh, 9px) clamp(10px, 1.2vw, 14px); font-size: clamp(1rem, 1.9vh, 1.6rem); gap: 8px; }
+.trn-main .trn-table.many b { font-size: clamp(1.2rem, 2.6vh, 2.2rem); }
+.trn-main .trn-table.many .trn-pos { width: 1.3em; }
+.trn-main .trn-table.cols { display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(var(--rows), minmax(auto, clamp(40px, 8vh, 90px))); flex: 1 1 auto; align-content: start; }
+.trn-main .trn-table.cols .trn-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trn-row-icon { width: clamp(28px, 3.6vh, 38px); flex: none; }
+.trn-main .trn-big-icon { width: clamp(80px, 13vh, 130px); }
+.trn-main .trn-current h2 { font-size: clamp(2.2rem, 6.5vh, 4rem); }
+.trn-main .trn-wheel h2 { font-size: clamp(1.6rem, 4.6vh, 3rem); white-space: nowrap; }
+.trn-main .trn-wheel .wheel-wrap { width: min(560px, 78vw, 38vh); }
+.trn-main .trn-wheel { gap: min(12px, 1.4vh); padding: clamp(12px, 2.4vh, 28px); }
+/* Title and count above the lists, the next step beside them from the top (all of it on screen on a TV). */
+.trn-main .trn-grid { grid-template-areas: 'head next' 'left next'; grid-template-rows: auto 1fr; row-gap: 0; }
+.trn-head { grid-area: head; }
+.trn-left { grid-area: left; }
+.trn-main .trn-next { grid-area: next; }
+.trn-head .title { margin-top: 0; }
+.trn-head p { margin: 0; }
+.trn-main .trn-current .btn.primary { font-size: clamp(1.05rem, 2.2vh, 1.6rem); padding: 0.7em 1.4em; }
+
 .trn-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 40px); align-items: start; }
 .trn-grid h2 { margin-top: 18px; }
-.trn-table, .trn-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.trn-table { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .trn-table li {
   display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--bg-2);
   border-left: 5px solid; font-size: 1.15rem; animation: pop-in 0.4s var(--ease-spring) backwards;
@@ -53,15 +95,9 @@
 .trn-pos { width: 1.6em; font-family: var(--font-display); color: var(--gold-hi); }
 .trn-name { flex: 1; font-weight: 700; }
 .trn-table b { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: var(--gold-hi); }
-.trn-list li { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--line); }
-.trn-list li.now { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, rgba(0, 0, 0, 0.25)); }
-.trn-state { width: 1.4em; text-align: center; color: var(--accent); font-weight: 900; }
-.trn-state.ok { color: var(--ok); }
-.trn-what { flex: 1; min-width: 0; }
-.trn-what b { color: var(--accent); }
-.trn-list .muted { font-size: 0.9rem; }
 
 .trn-next { position: sticky; top: 16px; }
+.trn-next > h2 { margin: 18px 0 8px; }
 .trn-current, .trn-wheel {
   display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: clamp(16px, 3vh, 30px);
   border-radius: 22px; background: rgba(0, 0, 0, 0.3); border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
@@ -76,7 +112,15 @@
 .trn-picked { color: var(--accent); }
 .trn-final h2 { font-size: clamp(2.4rem, 7vh, 4rem); }
 
-.trn-footer { display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 12px; }
+.trn-actions-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 12px; }
+/* The games played, under the ranking: small tiles, two per row, so a long tournament stays short. */
+.trn-played { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.trn-played li { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--line); }
+.trn-played li > span { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.trn-played b { color: var(--accent); }
+.trn-played b, .trn-played .muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trn-played .muted { font-size: 0.85rem; }
+.trn-played .trn-row-icon { width: 30px; }
 
 /* Notes in the games' pages. */
 .trn-note {
@@ -87,11 +131,13 @@
 .trn-pick { max-width: 760px; margin: 0 auto 18px; text-align: center; }
 .trn-teams { display: flex; flex-wrap: wrap; gap: 8px; }
 .trn-team { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 99px; background: var(--bg-2); border: 2px solid; font-weight: 700; }
-.ranking .trn-finish { margin-bottom: 8px; }
 
 @media (max-width: 760px) {
   .trn-grid { grid-template-columns: 1fr; }
+  .trn-main .trn-grid { grid-template-areas: 'head' 'next' 'left'; grid-template-rows: auto; row-gap: 16px; }
   .trn-next { position: static; order: -1; }
+  .trn-main .trn-next > :is(.trn-wheel, .trn-current:not(.trn-final)) { min-height: 0; position: static; }
+  .trn-main .trn-table:not(.cols) li { flex: none; }
 }
 
 /* A game played inside the tournament: a wrapper that changes nothing in the layout. */

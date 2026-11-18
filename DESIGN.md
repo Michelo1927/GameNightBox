@@ -303,7 +303,10 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 
 - Dalla home (riquadro sopra i giochi): **Nuovo torneo** = squadre (una volta sola) + giochi da mettere nella ruota
   (almeno 2 e 2). Il torneo è salvato sul dispositivo (`gnb:torneo`), uno alla volta, e si riprende dalla home.
-- Pagina del torneo: classifica generale, elenco dei giochi (fatti, in corso, nella ruota) e a destra il prossimo passo.
+- Pagina del torneo: a sinistra titolo, classifica generale (più piccola con più di 4 squadre, su due colonne con più di 6)
+  e i pulsanti "Nomi e colori" / "Finisci il torneo"; a destra il prossimo passo (ruota, gioco scelto, vincitore con
+  "Nuovo torneo"). I giochi fatti, a riquadri due per riga, stanno sotto la classifica durante il torneo e sotto il
+  vincitore alla fine. Quelli da giocare sono solo nella ruota.
   La ruota (la stessa che sceglie chi inizia, `components/SpinWheel.tsx`) pesca solo tra i giochi rimasti; il gioco
   uscito si può rimettere nella ruota finché non è iniziato. Un gioco si può mettere più volte (− ×n +, fino a 5):
   `games` lo contiene ripetuto, uno spicchio per volta, e ogni partita giocata ne toglie uno (`remaining`).
