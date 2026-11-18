@@ -38,6 +38,8 @@ export interface RGame {
   steps: number;
   /** Seconds to answer each question before it counts as a slip (0: no limit). */
   perQuestion: number;
+  /** Whether a team that finishes also gets a point for each second left (missing in older saves: yes). */
+  timeBonus?: boolean;
   /** Index in teams of the team playing. */
   current: number;
   phase: Phase;
@@ -72,6 +74,7 @@ export const newGame = (teams: Team[] = [newTeam(0), newTeam(1)], opts: Partial<
   seconds: 120,
   steps: 10,
   perQuestion: 0,
+  timeBonus: true,
   current: 0,
   phase: 'intro',
   runs: {},
@@ -103,11 +106,11 @@ export function deal(g: RGame, total: number): { g: RGame; list: number[]; passw
 /** Answers in a row needed to finish: the password, then one per question (the last one after the last question). */
 export const goal = (g: RGame) => g.steps + 1;
 
-/** 10 points for every step of the best run, plus a point for each second left when the team finishes. */
+/** 10 points for every step of the best run, plus (if chosen in the setup) a point for each second left when the team finishes. */
 export function scoreOf(g: RGame, t: Team) {
   const r = g.runs[t.id];
   if (!r) return t.adjust;
-  return r.best * 10 + (r.end === 'finished' ? Math.ceil(r.timeLeft / 1000) : 0) + t.adjust;
+  return r.best * 10 + (r.end === 'finished' && g.timeBonus !== false ? Math.ceil(r.timeLeft / 1000) : 0) + t.adjust;
 }
 
 export function useRitardo(slug: string, total: number) {

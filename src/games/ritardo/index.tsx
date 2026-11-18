@@ -44,7 +44,7 @@ const RULES = tr(
       lista è sempre la stessa, nello stesso ordine, e il tempo continua a scorrere. Si può aggiungere un tempo massimo per ogni risposta.
     </li>
     <li>L'host preme → se la risposta è giusta, ← se è sbagliata; con R vede la risposta attesa.</li>
-    <li>Vince chi arriva in fondo, e tra chi ci arriva chi ha più tempo avanzato; se nessuno ci arriva, chi è arrivato più avanti. Punti: 10 per ogni risposta della serie migliore, +1 per ogni secondo avanzato.</li>
+    <li>Vince chi arriva in fondo, e tra chi ci arriva chi ha più tempo avanzato; se nessuno ci arriva, chi è arrivato più avanti. Punti: 10 per ogni risposta della serie migliore, +1 per ogni secondo avanzato (se scelto nelle opzioni).</li>
   </ul>,
   <ul>
     <li>
@@ -57,7 +57,7 @@ const RULES = tr(
       list is always the same, in the same order, and the clock keeps running. You can add a time limit for each answer.
     </li>
     <li>The host presses → if the answer is right, ← if it is wrong; R shows the expected answer.</li>
-    <li>Whoever reaches the end wins, and among those who do, whoever has the most time left; if nobody does, whoever got furthest. Points: 10 for each answer of the best run, +1 for each second left.</li>
+    <li>Whoever reaches the end wins, and among those who do, whoever has the most time left; if nobody does, whoever got furthest. Points: 10 for each answer of the best run, +1 for each second left (if chosen in the options).</li>
   </ul>,
 );
 
@@ -75,7 +75,7 @@ function Setup({ slug, data }: { slug: string; data: RitardoSet }) {
       started={game.started}
       onPlay={() => go(`/ritardo/${slug}/play`)}
       onRestart={() =>
-        setGame((g) => newGame(g.teams.map((t) => ({ ...t, adjust: 0 })), { seconds: g.seconds, steps: g.steps, perQuestion: g.perQuestion }))
+        setGame((g) => newGame(g.teams.map((t) => ({ ...t, adjust: 0 })), { seconds: g.seconds, steps: g.steps, perQuestion: g.perQuestion, timeBonus: g.timeBonus }))
       }
     >
       <Choice label={tr('❓ Domande per squadra', '❓ Questions per team')} value={game.steps} options={STEPS.map((n) => ({ value: n, label: String(n) }))} onChange={(steps) => setGame((g) => ({ ...g, steps }))} />
@@ -85,6 +85,15 @@ function Setup({ slug, data }: { slug: string; data: RitardoSet }) {
         value={game.perQuestion}
         options={PER_QUESTION.map((n) => ({ value: n, label: n ? `${n}s` : tr('Nessuno', 'None') }))}
         onChange={(perQuestion) => setGame((g) => ({ ...g, perQuestion }))}
+      />
+      <Choice
+        label={tr('⏩ Punti per i secondi di anticipo (+1 al secondo a chi finisce)', '⏩ Points for the seconds to spare (+1 per second to whoever finishes)')}
+        value={game.timeBonus !== false ? 1 : 0}
+        options={[
+          { value: 1, label: tr('Sì', 'Yes') },
+          { value: 0, label: tr('No', 'No') },
+        ]}
+        onChange={(v) => setGame((g) => ({ ...g, timeBonus: v === 1 }))}
       />
       <p className="muted">
         ⏪{' '}

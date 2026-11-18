@@ -284,7 +284,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   scopre toccandola o con R (si ricopre a ogni risposta). Non è sfocata: finché è coperta non è proprio nella
   pagina, perché un testo sfocato a volte si legge per un istante. Dopo un errore il messaggio dice qual era.
 - A tempo scaduto si vede fino a che domanda si è arrivati (la serie migliore + 1). Punti come Sbagliato!: 10 per
-  ogni risposta della serie migliore, +1 per ogni secondo avanzato a chi arriva in fondo.
+  ogni risposta della serie migliore, +1 per ogni secondo avanzato a chi arriva in fondo (opzione nel setup, accesa di base).
 
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.
