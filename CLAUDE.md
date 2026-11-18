@@ -1,7 +1,7 @@
 # Game Night Box
 
 Hub di giochi a squadre da serata (React + Vite + TypeScript), pubblicato su GitHub Pages
-(https://michelo1927.github.io/GameNightBox/) a ogni push su `main`. Giochi: Jeopardy, Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila!, All'asta!, In ritardo!.
+(https://michelo1927.github.io/GameNightBox/) a ogni push su `main`. Giochi: Jeopardy!, Passaparola!, Catena!, Musichiere!, Top Ten!, Sbagliato!, In fila!, All'asta!, In ritardo!.
 
 - Motore comune in `src/hub/` (non importa mai da `src/games/`); ogni gioco in `src/games/<id>/`, elencato in `src/games/index.ts`.
 

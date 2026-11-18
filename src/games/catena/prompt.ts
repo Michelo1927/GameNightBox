@@ -47,7 +47,7 @@ function promptEn(f: Form): string {
   const finals = Number(f.finals) || 0;
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
-  return `Create a "Word Chain" game in English for a team game night with friends.
+  return `Create a "Word Chain!" game in English for a team game night with friends.
 
 Theme: ${topic || 'none in particular: everyday English words and expressions'}.
 Players: ${audience || 'friends between 20 and 40'}.

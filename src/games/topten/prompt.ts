@@ -10,7 +10,7 @@ export function prompt(f: Form): string {
   const answers = Math.min(MAX_ANSWERS, Math.max(MIN_ANSWERS, Number(f.answers) || 10));
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
-  return `Prepara le liste per un gioco "Top Ten" in italiano, per una serata tra amici a squadre.
+  return `Prepara le liste per un gioco "Top Ten!" in italiano, per una serata tra amici a squadre.
 
 Tema: ${topic || 'vario: geografia, cultura generale, sport, spettacolo, cibo, record'}.
 Pubblico: ${audience || 'amici italiani tra i 20 e i 40 anni'}.
@@ -58,7 +58,7 @@ function promptEn(f: Form): string {
   const answers = Math.min(MAX_ANSWERS, Math.max(MIN_ANSWERS, Number(f.answers) || 10));
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
-  return `Prepare the lists for a "Top Ten" game in English, for a team game night with friends.
+  return `Prepare the lists for a "Top Ten!" game in English, for a team game night with friends.
 
 Theme: ${topic || 'mixed: geography, general knowledge, sport, entertainment, food, records'}.
 Players: ${audience || 'friends between 20 and 40'}.

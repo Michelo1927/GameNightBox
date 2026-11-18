@@ -29,7 +29,7 @@ e creazione dei quiz tramite Claude.
 ## Architettura
 
 Il sito è un **hub di giochi**: la home (`#/`) elenca i giochi, ognuno ha le sue pagine.
-Giochi: Jeopardy, Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila! (vedi "Gli altri giochi" più sotto).
+Giochi: Jeopardy!, Passaparola!, Catena!, Musichiere!, Top Ten!, Sbagliato!, In fila!, All'asta!, In ritardo! (tutti con il punto esclamativo; vedi "Gli altri giochi" più sotto).
 
 ```
 GameNightBox/
@@ -128,8 +128,8 @@ Il sito è in **italiano** (predefinito) e in **inglese**.
   valore (testo, JSX, liste), quindi regole e tutorial lunghi sono due blocchi `RULES_IT` / `RULES_EN`. TypeScript
   vuole sempre tutte e due le versioni: una traduzione mancante è un errore di compilazione, non un buco nel sito.
   Fuori dal browser (script, CI) la lingua è sempre l'italiano.
-- Nomi dei giochi in inglese: Jeopardy, Alphabet Wheel (Passaparola), Word Chain (Catena), Name the Song (Musichiere),
-  Top Ten, Wrong Answer! (Sbagliato!), In Order! (In fila!), Going Once! (All'asta!), One Behind! (In ritardo!). Gli id, gli indirizzi e i
+- Nomi dei giochi in inglese: Jeopardy!, Alphabet Wheel! (Passaparola!), Word Chain! (Catena!), Name the Song! (Musichiere!),
+  Top Ten!, Wrong Answer! (Sbagliato!), In Order! (In fila!), Going Once! (All'asta!), One Behind! (In ritardo!). Gli id, gli indirizzi e i
   prefissi dei codici restano quelli italiani.
 - **Lingua dei contenuti**: campo facoltativo `"lang"` in ogni quiz/contenuto, `"it"` o `"en"`; se manca è italiano,
   quindi si scrive solo `"lang": "en"` (`contentLang`, `langField`, `checkLang`). Le chiavi del formato restano
@@ -171,7 +171,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   Senza partite proprie, "Le tue" dice solo di crearne una coi pulsanti in alto, senza ripeterli.
 - `npm run import` riconosce il prefisso e scrive `content/<gioco>/<slug>.json`.
 
-**Passaparola** (`#/passaparola`)
+**Passaparola!** (`#/passaparola`)
 - Ogni squadra gioca la sua ruota intera, una dopo l'altra, con un suo tempo (90 s - 5 min).
 - 21 lettere italiane (niente J K W X Y); i Passaparola in inglese (`"lang": "en"`) hanno tutte le 26 lettere.
   Per ogni lettera la risposta "inizia" o "contiene" la lettera:
@@ -180,7 +180,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   Passaparola salta la lettera senza svelarla; l'errore la chiude.
 - Una ruota per squadra, con risposte diverse: il contenuto ha tante ruote quante squadre al massimo.
 
-**Catena** (`#/catena`)
+**Catena!** (`#/catena`)
 - 8 parole legate a due a due; si vedono la prima e l'ultima, le altre solo con l'iniziale.
 - Qui la risposta non si può svelare (resterebbe in gioco), quindi l'host **scrive** la risposta della
   squadra e l'app la confronta (senza accenti, un errore di battitura ammesso dalle 6 lettere in su).
@@ -188,7 +188,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - Giusta: 10 punti per lettera ancora nascosta e la squadra continua. Sbagliata: una lettera in più, turno alla successiva.
 - Finale facoltativo: parola misteriosa con 5 indizi, prenotazione, 250 → 50 punti; chi sbaglia è fuori per quella parola.
 
-**Musichiere** (`#/musichiere`)
+**Musichiere!** (`#/musichiere`)
 - Due modalità, scelte nel setup (cambiarla a partita iniziata la fa ricominciare, con conferma).
 - **A prenotazione** (`Play.tsx`): tutte le squadre sulla stessa canzone. Colonne di caselle per squadra (5/7/10)
   che si riempiono solo con le risposte giuste: vince la prima squadra che riempie la colonna (se finiscono
@@ -212,7 +212,7 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - I link YouTube sono il punto debole dei contenuti generati dall'IA: la pagina "Crea con l'IA" li
   controlla uno per uno (oEmbed di YouTube) e mostra il titolo vero del video, con il link modificabile.
 
-**Top Ten** (`#/topten`)
+**Top Ten!** (`#/topten`)
 - Ogni lista è una classifica vera (o un elenco chiuso) di 5-10 risposte, con la fonte sotto la domanda:
   così le risposte "giuste" non sono un sondaggio inventato e nessuno può contestarle.
 - Tutte le risposte valgono 10 punti, che vanno in palio e finiscono tutti alla squadra che vince la lista.

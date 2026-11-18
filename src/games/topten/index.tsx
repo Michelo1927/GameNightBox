@@ -20,7 +20,7 @@ const lib = library<TopTenSet>('topten', import.meta.glob('/content/topten/*.jso
 
 const creation: Creation<TopTenSet> = {
   game: 'topten',
-  a: tr('una Top Ten', 'a Top Ten'),
+  a: tr('una Top Ten!', 'a Top Ten!'),
   prefix: 'TT1.',
   lib,
   validate: validateTopTen,
@@ -58,7 +58,7 @@ function Setup({ slug, data }: { slug: string; data: TopTenSet }) {
   return (
     <SetupPage
       back="#/topten"
-      backLabel={tr('← Tutte le Top Ten', '← All Top Tens')}
+      backLabel={tr('← Tutte le Top Ten!', '← All Top Ten! games')}
       title={data.title}
       description={data.description}
       teams={game.teams}
@@ -111,7 +111,7 @@ function Preview({ data }: { data: TopTenSet }) {
 
 const topten: Game = {
   id: 'topten',
-  name: 'Top Ten',
+  name: 'Top Ten!',
   icon,
   tagline: tr(
     'Classifiche vere da indovinare: chi vince la sfida gioca la lista, ma con troppi errori si fa rubare i punti.',
@@ -128,7 +128,7 @@ const topten: Game = {
       return (
         <ClaudeCreate<TopTenSet>
           back="#/topten"
-          title={tr("Top Ten con l'IA", 'Top Ten with AI')}
+          title={tr("Top Ten! con l'IA", 'Top Ten! with AI')}
           intro={
             tr(
               <>
@@ -160,7 +160,7 @@ const topten: Game = {
       return (
         <ContentHome<TopTenSet>
           game="topten"
-          name="Top Ten"
+          name="Top Ten!"
           icon={icon}
           intro={tr('Classifiche vere: trovate tutte le risposte prima di finire gli errori.', 'Real rankings: find every answer before you run out of mistakes.')}
           rules={RULES}

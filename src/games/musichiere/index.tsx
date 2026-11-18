@@ -53,7 +53,7 @@ const RULES_EN = (
   </>
 );
 
-const NAME = tr('Musichiere', 'Name the Song');
+const NAME = tr('Musichiere!', 'Name the Song!');
 
 const RULES_IT = (
   <>

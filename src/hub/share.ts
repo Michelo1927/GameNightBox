@@ -5,11 +5,11 @@ import { tr } from './i18n';
 
 /** Code prefix of each game, so a code pasted in the wrong game can say where it belongs. */
 export const CODES: { prefix: string; game: string; name: string }[] = [
-  { prefix: 'JQ1.', game: 'jeopardy', name: 'Jeopardy' },
-  { prefix: 'PP1.', game: 'passaparola', name: tr('Passaparola', 'Alphabet Wheel') },
-  { prefix: 'CT1.', game: 'catena', name: tr('Catena', 'Word Chain') },
-  { prefix: 'MU1.', game: 'musichiere', name: tr('Musichiere', 'Name the Song') },
-  { prefix: 'TT1.', game: 'topten', name: 'Top Ten' },
+  { prefix: 'JQ1.', game: 'jeopardy', name: 'Jeopardy!' },
+  { prefix: 'PP1.', game: 'passaparola', name: tr('Passaparola!', 'Alphabet Wheel!') },
+  { prefix: 'CT1.', game: 'catena', name: tr('Catena!', 'Word Chain!') },
+  { prefix: 'MU1.', game: 'musichiere', name: tr('Musichiere!', 'Name the Song!') },
+  { prefix: 'TT1.', game: 'topten', name: 'Top Ten!' },
   { prefix: 'SB1.', game: 'sbagliato', name: tr('Sbagliato!', 'Wrong Answer!') },
   { prefix: 'IF1.', game: 'infila', name: tr('In fila!', 'In Order!') },
   { prefix: 'AS1.', game: 'asta', name: tr("All'asta!", 'Going Once!') },

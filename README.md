@@ -10,11 +10,11 @@ Il sito è in **italiano e in inglese**: la prima volta segue la lingua del brow
 
 | Gioco | In breve |
 |---|---|
-| 🏆 **Jeopardy** | Tabellone 5×5 di domande da 100 a 500 punti, caselle a sorpresa, domanda finale |
-| 🔤 **Passaparola** | Una ruota di 21 lettere per squadra (26 in inglese), una definizione per lettera, contro il tempo |
-| 🔗 **Catena** | Parole legate a due a due da scoprire lettera per lettera, con finale a prenotazione |
-| 🎵 **Musichiere** | Canzoni da YouTube: a prenotazione (vince chi riempie per primo la colonna) o a turno, ogni squadra con la sua lista e il suo cronometro |
-| 🔟 **Top Ten** | Classifiche vere da indovinare: chi vince la sfida gioca la lista, con troppi errori gli altri rubano i punti |
+| 🏆 **Jeopardy!** | Tabellone 5×5 di domande da 100 a 500 punti, caselle a sorpresa, domanda finale |
+| 🔤 **Passaparola!** | Una ruota di 21 lettere per squadra (26 in inglese), una definizione per lettera, contro il tempo |
+| 🔗 **Catena!** | Parole legate a due a due da scoprire lettera per lettera, con finale a prenotazione |
+| 🎵 **Musichiere!** | Canzoni da YouTube: a prenotazione (vince chi riempie per primo la colonna) o a turno, ogni squadra con la sua lista e il suo cronometro |
+| 🔟 **Top Ten!** | Classifiche vere da indovinare: chi vince la sfida gioca la lista, con troppi errori gli altri rubano i punti |
 | ❌ **Sbagliato!** | Domande facilissime a raffica: bisogna dire la risposta sbagliata, tante volte di fila, contro il tempo |
 | ↔️ **In fila!** | Carte mescolate da rimettere in ordine (date, altezze, distanze...): chi sbaglia si fa rubare i punti |
 | 🔨 **All'asta!** | Esce un tema e le squadre rilanciano su quante risposte sanno dire: chi vince l'asta deve dirle tutte prima che scada il tempo |
@@ -43,7 +43,7 @@ Supporta domande con **immagini, audio, video e YouTube** (anche "solo audio" pe
 
 ## Giocare
 
-1. Apri il sito, scegli **Jeopardy** e poi un quiz. Quelli che non ti servono più li togli dalla prima schermata con **📦 Archivia**:
+1. Apri il sito, scegli **Jeopardy!** e poi un quiz. Quelli che non ti servono più li togli dalla prima schermata con **📦 Archivia**:
    finiscono nella sezione Archivio in fondo alla pagina, da cui li rimetti con **📤 Ripristina**
    (l'archivio vale solo per il dispositivo su cui lo fai).
 2. Crea le squadre (nome e colore). Nelle **Opzioni** scegli la durata del timer e quante caselle speciali di ogni tipo usare (da 0 a 5, di default una per tipo).

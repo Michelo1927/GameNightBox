@@ -76,7 +76,7 @@ export default function Editor() {
   return (
     <CreatorPage
       game="topten"
-      title={tr('Crea una Top Ten', 'Create a Top Ten')}
+      title={tr('Crea una Top Ten!', 'Create a Top Ten!')}
       tip={
         tr(
           <>

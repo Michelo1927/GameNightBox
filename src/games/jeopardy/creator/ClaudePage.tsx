@@ -24,7 +24,7 @@ function buildPrompt(f: Form): string {
   const what = f.categories.trim()
     ? `Usa esattamente queste 5 categorie, con lo stesso nome e nello stesso ordine: ${f.categories.trim()}.`
     : `Tema: ${f.topic.trim() || 'cultura generale'}. Scegli tu 5 categorie varie e divertenti su questo tema.`;
-  return `Crea un quiz in stile Jeopardy in italiano per una serata tra amici a squadre.
+  return `Crea un quiz in stile Jeopardy! in italiano per una serata tra amici a squadre.
 
 ${what}
 Pubblico: ${f.audience.trim() || 'amici italiani tra i 20 e i 35 anni'}.
@@ -69,7 +69,7 @@ function buildPromptEn(f: Form): string {
   const what = f.categories.trim()
     ? `Use exactly these 5 categories, with the same names and in the same order: ${f.categories.trim()}.`
     : `Theme: ${f.topic.trim() || 'general knowledge'}. Choose 5 varied and fun categories on this theme yourself.`;
-  return `Create a Jeopardy-style quiz in English for a team game night with friends.
+  return `Create a Jeopardy!-style quiz in English for a team game night with friends.
 
 ${what}
 Players: ${f.audience.trim() || 'friends between 20 and 35'}.

@@ -33,7 +33,7 @@ const creation: Creation<CatenaSet> = {
   Editor,
 };
 
-const NAME = tr('Catena', 'Word Chain');
+const NAME = tr('Catena!', 'Word Chain!');
 
 const RULES_EN = (
   <ul>
@@ -103,7 +103,7 @@ const catena: Game = {
       return (
         <ClaudeCreate<CatenaSet>
           back="#/catena"
-          title={tr("Catena con l'IA", 'Word Chain with AI')}
+          title={tr("Catena! con l'IA", 'Word Chain! with AI')}
           intro={
             tr(
               <>

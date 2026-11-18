@@ -96,7 +96,7 @@ export default function Editor() {
   return (
     <CreatorPage
       game="passaparola"
-      title={tr('Crea un Passaparola', 'Create an Alphabet Wheel')}
+      title={tr('Crea un Passaparola!', 'Create an Alphabet Wheel!')}
       tip={
         tr(
           <>

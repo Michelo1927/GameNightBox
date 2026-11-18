@@ -28,7 +28,7 @@ addAlias(([first, ...rest]) => {
 });
 const jeopardy: Game = {
   id: 'jeopardy',
-  name: 'Jeopardy',
+  name: 'Jeopardy!',
   icon,
   tagline: tr(
     'Tabellone 5×5 di domande da 100 a 500 punti, con caselle a sorpresa e domanda finale.',

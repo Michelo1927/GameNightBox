@@ -10,11 +10,11 @@ the **IT / EN** button at the top left of the home page.
 
 | Game | In short |
 |---|---|
-| 🏆 **Jeopardy** | A 5×5 board of questions worth 100 to 500 points, surprise squares, a final question |
-| 🔤 **Alphabet Wheel** | A wheel per team with one clue per letter, against the clock (26 letters in English, 21 in Italian) |
-| 🔗 **Word Chain** | Words linked two by two, found letter by letter, with a buzz-in final |
-| 🎵 **Name the Song** | Songs from YouTube: buzzing in (the first team to fill its column wins) or taking turns, each team with its own list and clock |
-| 🔟 **Top Ten** | Real rankings to guess: whoever wins the face-off plays the list, with too many mistakes the others steal the points |
+| 🏆 **Jeopardy!** | A 5×5 board of questions worth 100 to 500 points, surprise squares, a final question |
+| 🔤 **Alphabet Wheel!** | A wheel per team with one clue per letter, against the clock (26 letters in English, 21 in Italian) |
+| 🔗 **Word Chain!** | Words linked two by two, found letter by letter, with a buzz-in final |
+| 🎵 **Name the Song!** | Songs from YouTube: buzzing in (the first team to fill its column wins) or taking turns, each team with its own list and clock |
+| 🔟 **Top Ten!** | Real rankings to guess: whoever wins the face-off plays the list, with too many mistakes the others steal the points |
 | ❌ **Wrong Answer!** | Rapid-fire super easy questions: you must say the wrong answer, many times in a row, against the clock |
 | ↔️ **In Order!** | Shuffled cards to put back in order (dates, heights, distances...): get it wrong and the points get stolen |
 | 🔨 **Going Once!** | A theme comes up and the teams bid on how many answers they can say: whoever wins the auction must say them all before time runs out |
@@ -44,7 +44,7 @@ Questions can have **images, audio, video and YouTube** (also "audio only" to gu
 
 ## Playing
 
-1. Open the site, choose **Jeopardy** and then a quiz. You can take the ones you no longer need off the list with **📦 Move to the archive**:
+1. Open the site, choose **Jeopardy!** and then a quiz. You can take the ones you no longer need off the list with **📦 Move to the archive**:
    they go to the Archive section at the bottom of the page, where **📤 Put back in the list** brings them back
    (the archive only applies to the device you use it on).
 2. Create the teams (name and colour). In **Options** choose the timer length and how many special squares of each kind to use (0 to 5, one of each by default).

@@ -10,7 +10,7 @@ export function prompt(f: Form): string {
   const n = Number(f.teams) || 2;
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
-  return `Crea un gioco "Passaparola" in italiano per una serata tra amici a squadre.
+  return `Crea un gioco "Passaparola!" in italiano per una serata tra amici a squadre.
 
 Tema: ${topic || 'cultura generale varia (cinema, musica, geografia, storia, cucina, sport, scienza, parole comuni)'}.
 Pubblico: ${audience || 'amici italiani tra i 20 e i 40 anni'}.
@@ -59,7 +59,7 @@ function promptEn(f: Form): string {
   const n = Number(f.teams) || 2;
   const topic = String(f.topic ?? '').trim();
   const audience = String(f.audience ?? '').trim();
-  return `Create an "Alphabet Wheel" game in English for a team game night with friends.
+  return `Create an "Alphabet Wheel!" game in English for a team game night with friends.
 
 Theme: ${topic || 'mixed general knowledge (movies, music, geography, history, food, sport, science, everyday words)'}.
 Players: ${audience || 'friends between 20 and 40'}.

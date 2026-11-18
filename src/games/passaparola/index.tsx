@@ -23,7 +23,7 @@ const lib = library<Passaparola>(
 
 const creation: Creation<Passaparola> = {
   game: 'passaparola',
-  a: tr('un Passaparola', 'an Alphabet Wheel'),
+  a: tr('un Passaparola!', 'an Alphabet Wheel!'),
   prefix: 'PP1.',
   lib,
   validate: validatePassaparola,
@@ -32,7 +32,7 @@ const creation: Creation<Passaparola> = {
   Editor,
 };
 
-const NAME = tr('Passaparola', 'Alphabet Wheel');
+const NAME = tr('Passaparola!', 'Alphabet Wheel!');
 
 const RULES_EN = (
   <ul>
@@ -67,7 +67,7 @@ function Setup({ slug, data }: { slug: string; data: Passaparola }) {
   return (
     <SetupPage
       back="#/passaparola"
-      backLabel={tr('← Tutti i Passaparola', '← All Alphabet Wheels')}
+      backLabel={tr('← Tutti i Passaparola!', '← All Alphabet Wheel! games')}
       title={data.title}
       description={data.description}
       teams={game.teams}
@@ -78,7 +78,7 @@ function Setup({ slug, data }: { slug: string; data: Passaparola }) {
       onRestart={() => setGame((g) => newGame(g.teams.map((t) => ({ ...t, adjust: 0 })), g.seconds))}
       blocked={
         game.teams.length > max
-          ? tr(`Questo Passaparola ha ${max} ruote: al massimo ${max} squadre.`, `This Alphabet Wheel has ${max} wheels: at most ${max} teams.`)
+          ? tr(`Questo Passaparola! ha ${max} ruote: al massimo ${max} squadre.`, `This Alphabet Wheel! has ${max} wheels: at most ${max} teams.`)
           : undefined
       }
     >
@@ -119,7 +119,7 @@ const passaparola: Game = {
       return (
         <ClaudeCreate<Passaparola>
           back="#/passaparola"
-          title={tr("Passaparola con l'IA", 'Alphabet Wheel with AI')}
+          title={tr("Passaparola! con l'IA", 'Alphabet Wheel! with AI')}
           intro={
             tr(
               <>
