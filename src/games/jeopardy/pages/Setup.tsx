@@ -5,6 +5,7 @@ import {
   resetGame,
   settingsOf,
   SPECIAL_KINDS,
+  storageKey,
   useGame,
   type Settings,
   type SpecialKind,
@@ -13,7 +14,10 @@ import {
 import { SPECIAL_INFO } from '../components/SpecialIntro';
 import OrderWheel from '../../../hub/components/OrderWheel';
 import TeamList from '../../../hub/components/TeamList';
+import { TournamentTeams, useTournamentSetup } from '../../../hub/components/TournamentParts';
 import { useState } from 'react';
+import GameSlots from '../../../hub/components/GameSlots';
+import { pageOf } from '../../../hub/tournament';
 
 const SPECIAL_HELP: Record<SpecialKind, string> = tr(
   {
@@ -44,7 +48,12 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
     if (await ask(tr('Azzerare punteggi e caselle giocate?', 'Reset scores and played squares?'), tr('Azzera', 'Reset'))) setGame((g) => resetGame(g, quiz));
   };
   const [wheel, setWheel] = useState(false);
-  const play = () => go(`/jeopardy/${slug}/play`);
+  const setTeams = (fn: (teams: Team[]) => Team[]) => setGame((g) => ({ ...g, teams: fn(g.teams) }));
+  const tour = useTournamentSetup({ game: 'jeopardy', slug, title: quiz.title, teams: game.teams, setTeams, started: inProgress, restart: () => setGame((g) => resetGame(g, quiz)) });
+  const play = () => {
+    tour.markStarted();
+    go(`/jeopardy/${slug}/play`);
+  };
   // A new game with several teams starts with the wheel that draws the order.
   const start = () => (!inProgress && game.teams.length > 1 ? setWheel(true) : play());
   const startWith = (order: Team[]) => {
@@ -65,9 +74,11 @@ export default function Setup({ loaded }: { loaded: LoadedQuiz }) {
       <h1 className="title">{quiz.title}</h1>
       {quiz.description && <p className="muted">{quiz.description}</p>}
 
+      {!pageOf().tournament && <GameSlots storeKey={storageKey(slug, 0)} path={`/jeopardy/${encodeURIComponent(slug)}`} />}
+
       <h2>{tr('Squadre', 'Teams')}</h2>
       <p className="muted">{tr("Si gioca a turno: l'ordine lo decide la ruota quando inizi la partita.", 'Teams take turns: the wheel decides the order when you start the game.')}</p>
-      <TeamList teams={game.teams} onChange={(fn) => setGame((g) => ({ ...g, teams: fn(g.teams) }))} />
+      {tour.active ? <TournamentTeams teams={game.teams} /> : <TeamList teams={game.teams} onChange={setTeams} />}
 
       <h2>{tr('Opzioni', 'Options')}</h2>
       <div className="options">

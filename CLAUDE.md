@@ -4,6 +4,7 @@ Hub di giochi a squadre da serata (React + Vite + TypeScript), pubblicato su Git
 (https://michelo1927.github.io/GameNightBox/) a ogni push su `main`. Giochi: Jeopardy!, Passaparola!, Catena!, Musichiere!, Top Ten!, Sbagliato!, In fila!, All'asta!, In ritardo!.
 
 - Motore comune in `src/hub/` (non importa mai da `src/games/`); ogni gioco in `src/games/<id>/`, elencato in `src/games/index.ts`.
+- Torneo (`#/torneo`, `src/hub/tournament.ts`): passa da `SetupPage` e `Ranking`, quindi un gioco nuovo deve usarli.
 
 - Quiz: `quizzes/<slug>/quiz.json` + file media nella stessa cartella. Formato in `src/games/jeopardy/quiz/schema.ts`.
 - Per creare un quiz usa la skill `/crea-quiz` (`.claude/skills/crea-quiz/SKILL.md`).

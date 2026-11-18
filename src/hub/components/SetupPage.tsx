@@ -2,9 +2,13 @@ import { useState, type ReactNode } from 'react';
 import type { Team } from '../teams';
 import OrderWheel from './OrderWheel';
 import TeamList from './TeamList';
+import GameSlots from './GameSlots';
+import { gameKey } from '../content';
 import BackButton from './BackButton';
 import { ask } from '../ask';
 import { tr } from '../i18n';
+import { pageOf } from '../tournament';
+import { TournamentTeams, useTournamentSetup } from './TournamentParts';
 
 interface Props {
   back: string;
@@ -29,17 +33,27 @@ interface Props {
 /** Teams + options + start, shared by the games. A new game with several teams starts with the order wheel. */
 export default function SetupPage({ back, backLabel, title, description, teams, setTeams, maxTeams, started, onPlay, onRestart, blocked, wheel: withWheel = true, children }: Props) {
   const [wheel, setWheel] = useState(false);
-  const start = () => (withWheel && !started && teams.length > 1 ? setWheel(true) : onPlay());
+  const game = back.replace(/^#\//, '').split('/')[0];
+  const page = pageOf();
+  const slug = (page.slug ?? '').replace(/~\d+$/, '');
+  const tour = useTournamentSetup({ game, slug, title, teams, setTeams, started, restart: onRestart });
+  const play = () => {
+    tour.markStarted();
+    onPlay();
+  };
+  const start = () => (withWheel && !started && teams.length > 1 ? setWheel(true) : play());
 
   return (
-    <div className={`page setup theme-${back.replace(/^#\//, '').split('/')[0]}`}>
+    <div className={`page setup theme-${game}`}>
       <BackButton label={backLabel.replace(/^←\s*/, '')} />
       <h1 className="title">{title}</h1>
       {description && <p className="muted">{description}</p>}
 
+      {!page.tournament && <GameSlots storeKey={gameKey(game, slug, 0)} path={`/${game}/${encodeURIComponent(slug)}`} />}
+
       <h2>{tr('Squadre', 'Teams')}</h2>
       {withWheel && <p className="muted">{tr("L'ordine lo decide la ruota quando inizi la partita.", 'The wheel decides the order when you start the game.')}</p>}
-      <TeamList teams={teams} onChange={setTeams} max={maxTeams} />
+      {tour.active ? <TournamentTeams teams={teams} /> : <TeamList teams={teams} onChange={setTeams} max={maxTeams} />}
 
       {children && (
         <>
@@ -65,9 +79,9 @@ export default function SetupPage({ back, backLabel, title, description, teams, 
           teams={teams}
           onDone={(order) => {
             setTeams(() => order);
-            onPlay();
+            play();
           }}
-          onSkip={onPlay}
+          onSkip={play}
           onClose={() => setWheel(false)}
         />
       )}

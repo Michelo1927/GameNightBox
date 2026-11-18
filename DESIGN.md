@@ -56,6 +56,7 @@ GameNightBox/
 │  │  ├─ content.ts            tipi e controlli dei contenuti (li usano anche gli script)
 │  │  ├─ library.ts            contenuti del sito + quelli salvati sul dispositivo, con la data
 │  │  ├─ played.ts             partite segnate come già fatte (sul dispositivo)
+│  │  ├─ tournament.ts  TournamentPages.tsx   torneo: stato e punti; pagine #/torneo e #/torneo/nuovo
 │  │  ├─ creation.tsx          indirizzi per creare e condividere: crea, crea/codice, carica
 │  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1. TT1. SB1. IF1.)
 │  │  ├─ buzzer.ts             prenotazione: un tasto per squadra, o decide l'host
@@ -290,6 +291,37 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
   cartella in `quizzes/` e il quiz compare in home.
 - Lo stato della partita (squadre, punteggi, caselle giocate) è salvato nel `localStorage`:
   ricaricando la pagina non si perde nulla. C'è un pulsante "Nuova partita".
+- **Più partite sullo stesso contenuto** (fuori dal torneo): nella preparazione, sopra le squadre, la riga "Partita 1 ·
+  Partita 2 · ＋ Nuova partita" (`components/GameSlots.tsx`, anche nella preparazione di Jeopardy!), con i nomi delle
+  squadre; ognuna ha squadre e punti suoi e si elimina con ✕ (la Partita 1 no: si azzera). Le altre partite hanno
+  l'indirizzo `#/<gioco>/<slug>~<n>/setup` e `/play` (n = 2, 3…) e il salvataggio con `~<n>` in fondo alla chiave
+  (`slotOfPage`, `withSlot` e `gameKey` in `hub/content.ts`). `App.tsx` passa al gioco l'indirizzo senza `~<n>` e
+  ridisegna da zero per ogni partita; `nav.ts` tiene il `~<n>` negli spostamenti che il gioco fa da solo. "In corso"
+  nell'elenco dei contenuti vale se una qualsiasi delle partite è iniziata; togliere un contenuto toglie tutte le partite.
+
+## Torneo (`#/torneo`)
+
+- Dalla home (riquadro sopra i giochi): **Nuovo torneo** = squadre (una volta sola) + giochi da mettere nella ruota
+  (almeno 2 e 2). Il torneo è salvato sul dispositivo (`gnb:torneo`), uno alla volta, e si riprende dalla home.
+- Pagina del torneo: classifica generale, elenco dei giochi (fatti, in corso, nella ruota) e a destra il prossimo passo.
+  La ruota (la stessa che sceglie chi inizia, `components/SpinWheel.tsx`) pesca solo tra i giochi rimasti; il gioco
+  uscito si può rimettere nella ruota finché non è iniziato. Un gioco si può mettere più volte (− ×n +, fino a 5):
+  `games` lo contiene ripetuto, uno spicchio per volta, e ogni partita giocata ne toglie uno (`remaining`).
+- I giochi del torneo hanno indirizzi loro, sotto il torneo: `#/torneo/<gioco>` (scelta del contenuto, con l'avviso
+  "Torneo: scegli con che cosa giocare"), `#/torneo/<gioco>/<slug>/setup` e `/play`. Sono le stesse pagine del gioco
+  (`App.tsx` passa al gioco l'indirizzo senza `torneo`), ma con un **salvataggio separato** (`gnb:<gioco>:torneo:<slug>`,
+  Jeopardy! `jeopardy-quiz:torneo:<slug>`, vedi `gameKey`): lo stesso contenuto aperto fuori dal torneo è una partita
+  normale, con le sue squadre, e non tocca quella del torneo. Gli spostamenti che i giochi fanno da soli
+  (`go('/<gioco>/<slug>/play')`, i link ai contenuti) restano nel torneo: `nav.ts` aggiunge il prefisso.
+- Aprendo la preparazione di un contenuto per il torneo la partita del torneo riparte da zero con le squadre del
+  torneo, che lì sono bloccate (niente aggiunte o tolte; nomi e colori si cambiano dalla pagina del torneo). Da
+  "Inizia la partita" quel contenuto è del torneo e si riprende dalla pagina del torneo.
+- Punti torneo da ogni gioco, dal piazzamento nella classifica finale: ultimo 0, uno in più per ogni posto sopra
+  (2 squadre: 1 · 0; 3 squadre: 2 · 1 · 0); a pari merito stessi punti. Si assegnano col pulsante "Torna al torneo e
+  assegna i punti" nella classifica finale del gioco (solo a partita finita).
+- I giochi non sanno niente del torneo: passa tutto da `SetupPage` (e la preparazione di Jeopardy!), `Ranking`,
+  `ContentHome` e la home di Jeopardy!, con i pezzi in `components/TournamentParts.tsx`.
+- "Finisci il torneo" chiude prima della fine: contano i giochi finiti.
 
 ## Formato del quiz (`quiz.json`)
 

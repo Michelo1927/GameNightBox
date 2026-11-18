@@ -86,6 +86,22 @@ kbd {
 .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
 .swatch { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; }
 .swatch.on { border-color: #fff; box-shadow: 0 0 0 2px #000 inset; }
+/* The games on the same content (GameSlots): one chip per game, the one on screen highlighted. */
+.slots { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 4px; }
+.slot {
+  display: flex; align-items: center; max-width: 100%; border-radius: 999px; background: var(--bg-2);
+  border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.slot.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 22%, var(--bg-2)); }
+.slot-main {
+  display: flex; gap: 8px; align-items: baseline; min-width: 0; padding: 6px 14px; border: 0; background: none;
+  font: inherit; color: var(--text); cursor: pointer;
+}
+.slot.on .slot-main { cursor: default; }
+.slot-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; font-size: 0.9em; }
+.slot-x { border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px 12px 6px 0; font: inherit; opacity: 0.7; }
+.slot-x:hover { opacity: 1; }
+.slot-new { padding: 6px 14px; }
 .setup-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 32px; }
 
 /* ---------- Board ---------- */

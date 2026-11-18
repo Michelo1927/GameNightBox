@@ -5,6 +5,7 @@ import TutorialButton from './components/Tutorial';
 import { HUB_TUTORIAL } from './tutorials';
 import LangSwitch from './components/LangSwitch';
 import { tr } from './i18n';
+import { TournamentCard } from './TournamentPages';
 
 /** Games that fit on a TV in three rows of three; from the tenth on, rows of four. */
 const ROW_OF_THREE_MAX = 9;
@@ -48,6 +49,8 @@ export default function HubHome({ games }: { games: Game[] }) {
         </h1>
         <p>{tr('Giochi a squadre per la serata: tutti nella stessa stanza, davanti allo stesso schermo.', 'Team games for a night in: everyone in the same room, in front of the same screen.')}</p>
       </header>
+
+      <TournamentCard />
 
       <div className={`game-grid ${games.length > ROW_OF_THREE_MAX ? 'many' : ''}`} ref={grid}>
         {games.map((g) => (

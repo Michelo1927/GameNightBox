@@ -1,6 +1,7 @@
 // Quizzes loaded from a code, kept in this browser's localStorage.
 import type { LoadedQuiz } from './load';
 import { movePlayed } from '../../../hub/played';
+import { savedSlots } from '../../../hub/content';
 import { slugify, validateQuiz, type Quiz } from './schema';
 import { tr } from '../../../hub/i18n';
 
@@ -54,7 +55,7 @@ export function removeImported(slug: string) {
   write(store);
   movePlayed('jeopardy', slug, null);
   try {
-    localStorage.removeItem(`jeopardy-quiz:game:${slug}`);
+    for (const [, k] of savedSlots(`jeopardy-quiz:game:${slug}`)) localStorage.removeItem(k);
   } catch {
     /* ignore */
   }

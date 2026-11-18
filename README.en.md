@@ -20,6 +20,9 @@ the **IT / EN** button at the top left of the home page.
 | 🔨 **Going Once!** | A theme comes up and the teams bid on how many answers they can say: whoever wins the auction must say them all before time runs out |
 | ⏪ **One Behind!** | Easy questions against the clock, but you always answer the previous one: read the new one, remember the old one |
 
+🏆 **Tournament**: from the home page choose the teams and the games; each round a wheel picks the next game, the teams stay
+the same and every game gives tournament points by placing (last 0, then one more for each place).
+
 Every game can be created in three ways:
 - **✏️ Create**: by hand from your phone, saved as you type; at the end **✨ Make the code** gives a code and a link
   to send to the host, who opens it or pastes it in **📥 Load**. With ✏️ on a game you can edit it.

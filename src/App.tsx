@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState, type ReactNode } from 'react';
 import { games } from './games';
 import { norm, useHash } from './hub/nav';
 import HubHome from './hub/HubHome';
+import { TournamentRoute } from './hub/TournamentPages';
 import Intro, { shouldPlayIntro } from './hub/components/Intro';
 import { SoundDock } from './hub/components/SoundButtons';
 
@@ -11,10 +12,23 @@ import { SoundDock } from './hub/components/SoundButtons';
 export default function App() {
   const hash = useHash();
   const parts = hash.replace(/^#\/?/, '').split('/');
-  let page = null;
-  for (const game of games) {
-    page = game.route(parts);
-    if (page) break;
+  let page: ReactNode = null;
+  if (parts[0] === 'torneo' && games.some((g) => g.id === parts[1])) {
+    // A game inside the tournament: the game's own pages, kept apart from the same pages outside (other React tree,
+    // other saves), so nothing played on its own leaks into the tournament or back.
+    const inner = games.find((g) => g.id === parts[1])!.route(parts.slice(1));
+    page = <div key="torneo" className="trn-scope">{inner}</div>;
+  } else if (parts[0] === 'torneo') page = <TournamentRoute games={games} view={parts[1]} />;
+  else {
+    // Another game on the same content (#/<game>/<slug>~<n>/...): the game's pages for the content, redrawn from
+    // scratch for each game (its save is picked from the address, see slotOfPage in hub/content.ts).
+    const slot = /^(.+)~(\d+)$/.exec(parts[1] ?? '');
+    const inner = slot ? [parts[0], slot[1], ...parts.slice(2)] : parts;
+    for (const game of games) {
+      page = game.route(inner);
+      if (page) break;
+    }
+    if (slot && page) page = <Fragment key={`slot-${slot[2]}`}>{page}</Fragment>;
   }
   const [intro, setIntro] = useState(shouldPlayIntro);
   const [opened, setOpened] = useState(false);

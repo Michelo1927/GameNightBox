@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TournamentPick } from '../../../hub/components/TournamentParts';
 import { hasSavedGame } from '../state';
 import { replaceDraft } from '../creator/draft';
 import { go } from '../../../hub/nav';
@@ -71,6 +72,7 @@ export default function Home() {
           {import.meta.env.DEV && <a className="btn ghost" href="/editor.html">🛠 {tr('Editor (locale)', 'Editor (local)')}</a>}
         </div>
       </header>
+      <TournamentPick game="jeopardy" name="Jeopardy!" />
 
       <EntryList
         game="jeopardy"

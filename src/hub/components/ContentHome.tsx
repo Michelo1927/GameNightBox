@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { Loaded } from '../content';
 import { loadSaved } from '../useSaved';
-import { gameKey } from '../content';
+import { gameKey, savedSlots } from '../content';
 import { startDraft } from '../draft';
 import { go } from '../nav';
 import { ask } from '../ask';
@@ -9,6 +9,7 @@ import BackButton from './BackButton';
 import EntryList, { type Entry } from './EntryList';
 import { IconDisk } from './GameIcon';
 import TutorialButton from './Tutorial';
+import { TournamentPick } from './TournamentParts';
 import { GAME_TUTORIAL } from '../tutorials';
 import { contentLang, tr } from '../i18n';
 
@@ -72,6 +73,7 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
           <a className="btn ghost" href={`#/${game}/carica`}>📥 {tr('Carica', 'Load')}</a>
         </div>
       </header>
+      <TournamentPick game={game} name={name} />
 
       <details className="rules-box">
         <summary>📖 {tr('Come si gioca', 'How to play')}</summary>
@@ -84,6 +86,6 @@ export default function ContentHome<T>({ game, name, icon, intro, rules, items, 
 }
 
 function hasGame(game: string, slug: string) {
-  const g = loadSaved<{ started?: boolean }>(gameKey(game, slug));
-  return !!g?.started;
+  // Any of the games on the content (there can be more than one, see slotOfPage).
+  return savedSlots(gameKey(game, slug, 0)).some(([, k]) => !!loadSaved<{ started?: boolean }>(k)?.started);
 }

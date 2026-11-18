@@ -4,8 +4,12 @@
 //   #/<game>                    the game's page (its contents)
 //   #/<game>/<slug>/setup       teams and options of one content
 //   #/<game>/<slug>/play        the game being played
+//   #/<game>/<slug>~<n>/...     another game on the same content, with its own teams and save (n = 2, 3, ...)
 //   #/<game>/crea[/...]         creator (Jeopardy: one page per question below it)
 //   #/<game>/claude, /carica    create with Claude, load a code
+//   #/torneo[/nuovo]            the tournament (and a new one)
+//   #/torneo/<game>/...         a game played inside the tournament: the same pages as above, under the tournament,
+//                               with their own saves (see gameKey in content.ts)
 //
 // The browser history is kept equal to the path from the hub to the page on screen, so the browser's (or the
 // phone's) back button always goes one folder up, the same as the back buttons on the pages. Every move goes
@@ -33,6 +37,11 @@ export function norm(hash: string): string {
 export function parentOf(hash: string): string | null {
   const p = split(norm(hash));
   if (!p.length) return null;
+  // A tournament game: its pages hang under the tournament instead of the hub.
+  if (p[0] === 'torneo' && p.length > 1) {
+    const inner = parentOf(`#/${p.slice(1).join('/')}`);
+    return !inner || inner === '#/' ? '#/torneo' : inner.replace('#/', '#/torneo/');
+  }
   const [game, page, arg] = p;
   const up = (...parts: string[]) => `#/${parts.join('/')}`;
   if (p.length === 1) return '#/';
@@ -76,8 +85,42 @@ const backBy = (n: number) =>
     history.go(-n);
   });
 
-/** Opens a page: up to the folder it shares with the current one, then down to it. */
-export async function go(path: string) {
+/**
+ * Inside a tournament game, the game's own moves (to its setup, its board, its list of contents) stay inside the
+ * tournament: the games write their usual addresses and here they get the tournament's prefix.
+ */
+function inTournament(path: string): string {
+  const here = split(norm(location.hash));
+  const to = split(norm(path));
+  if (here[0] !== 'torneo' || !here[1] || here[1] === 'nuovo' || to[0] !== here[1]) return path;
+  if (to[1] === 'crea' || to[1] === 'claude' || to[1] === 'carica') return path;
+  return `#/torneo/${to.join('/')}`;
+}
+
+/**
+ * On the pages of another game on the same content (#/<game>/<slug>~<n>/..., see slotOfPage in content.ts), the
+ * game's moves to its own setup and board stay on that game: the games write the content's address, here it gets ~<n>.
+ */
+function inSlot(path: string): string {
+  const here = split(norm(location.hash));
+  const m = /^(.*)~(\d+)$/.exec(here[1] ?? '');
+  if (here[0] === 'torneo' || !m) return path;
+  const to = split(norm(path));
+  const same = (a: string, b: string) => {
+    try {
+      return decodeURIComponent(a) === decodeURIComponent(b);
+    } catch {
+      return a === b;
+    }
+  };
+  if (to[0] !== here[0] || !to[1] || !same(to[1], m[1]) || to.length < 3) return path;
+  return `#/${[to[0], here[1], ...to.slice(2)].join('/')}`;
+}
+
+/** Opens a page: up to the folder it shares with the current one, then down to it (`exact`: no ~<n> added). */
+export async function go(path: string, exact = false) {
+  path = inTournament(path);
+  if (!exact) path = inSlot(path);
   const target = chainOf(path);
   const here = chainOf(location.hash);
   if (target[target.length - 1] === here[here.length - 1]) return;

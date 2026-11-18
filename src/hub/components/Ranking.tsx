@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { sounds } from '../sounds';
 import type { Team } from '../teams';
 import { ordinal, tr } from '../i18n';
+import { TournamentFinish } from './TournamentParts';
 
 interface Props {
   teams: (Team & { score: number })[];
@@ -54,6 +55,7 @@ export default function Ranking({ teams, onClose, celebrate }: Props) {
             </li>
           ))}
         </ol>
+        {celebrate && <TournamentFinish teams={teams} />}
         <button className="btn primary" onClick={onClose}>{tr('Chiudi', 'Close')}</button>
       </div>
     </div>

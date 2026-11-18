@@ -1,7 +1,7 @@
 // The content of a game other than Jeopardy: content/<game>/<slug>.json in the repo,
 // plus what was made or loaded on this device (kept in localStorage), each with its date.
 import siteDates from 'virtual:content-dates';
-import { gameKey, type Library, type Loaded, type Validation } from './content';
+import { gameKey, savedSlots, type Library, type Loaded, type Validation } from './content';
 import { movePlayed } from './played';
 import { hash, slugify } from './text';
 import { tr } from './i18n';
@@ -67,7 +67,7 @@ export function library<T>(game: string, modules: Record<string, unknown>, valid
       write(datesKey, dates);
       movePlayed(game, slug, null);
       try {
-        localStorage.removeItem(gameKey(game, slug));
+        for (const [, k] of savedSlots(gameKey(game, slug, 0))) localStorage.removeItem(k);
       } catch {
         /* nothing saved */
       }

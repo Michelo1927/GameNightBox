@@ -2,6 +2,7 @@ import type { Quiz } from './quiz/schema';
 import { newTeam, shuffled, type Result, type Team } from '../../hub/teams';
 import { loadSaved, useSaved } from '../../hub/useSaved';
 import { tr } from '../../hub/i18n';
+import { inTournamentPage, savedSlots, slotOfPage, withSlot } from '../../hub/content';
 
 export type { Result, Team };
 
@@ -252,13 +253,18 @@ export function gameOver(game: GameState, quiz: Quiz): boolean {
   return !usesQuizFinal(game, quiz) || game.final?.stage === 'done';
 }
 
-const storageKey = (slug: string) => `jeopardy-quiz:game:${slug}`;
+// Inside the tournament the game has its own save, and so does every other game on the same quiz (see gameKey in
+// hub/content.ts).
+export const storageKey = (slug: string, slot = slotOfPage()) => withSlot(`jeopardy-quiz:${inTournamentPage() ? 'torneo' : 'game'}:${slug}`, slot);
 
 const loadGame = (slug: string) => loadSaved<GameState>(storageKey(slug));
 
+/** Whether a game on the quiz (any of them) has begun. */
 export function hasSavedGame(slug: string): boolean {
-  const g = loadGame(slug);
-  return !!g && (Object.keys(g.played).length > 0 || Object.keys(g.results).length > 0);
+  return savedSlots(storageKey(slug, 0)).some(([, k]) => {
+    const g = loadSaved<GameState>(k);
+    return !!g && (Object.keys(g.played ?? {}).length > 0 || Object.keys(g.results ?? {}).length > 0);
+  });
 }
 
 /** Older saved games have no special cells yet: pick them now among the cells not played. */

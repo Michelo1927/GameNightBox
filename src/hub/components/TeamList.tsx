@@ -7,10 +7,12 @@ interface Props {
   onChange: (update: (teams: Team[]) => Team[]) => void;
   /** Most teams allowed (default MAX_TEAMS). */
   max?: number;
+  /** Only names and colours can change (the tournament's teams once it has started). */
+  fixed?: boolean;
 }
 
 /** Team editor shared by the games: name, color, order, add and remove. */
-export default function TeamList({ teams, onChange, max = MAX_TEAMS }: Props) {
+export default function TeamList({ teams, onChange, max = MAX_TEAMS, fixed }: Props) {
   const update = (id: string, patch: Partial<Team>) => onChange((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   const remove = (id: string) => onChange((ts) => ts.filter((t) => t.id !== id));
   const add = () => onChange((ts) => [...ts, newTeam(ts.length)]);
@@ -26,10 +28,10 @@ export default function TeamList({ teams, onChange, max = MAX_TEAMS }: Props) {
       <div className="team-list">
         {teams.map((t, i) => (
           <div className="team-row" key={t.id} style={{ borderColor: t.color }}>
-            <span className="team-order">
+            {!fixed && <span className="team-order">
               <button onClick={() => move(i, -1)} disabled={i === 0} aria-label={tr('Sposta su', 'Move up')}>▲</button>
               <button onClick={() => move(i, 1)} disabled={i === teams.length - 1} aria-label={tr('Sposta giù', 'Move down')}>▼</button>
-            </span>
+            </span>}
             <input value={t.name} onChange={(e) => update(t.id, { name: e.target.value })} aria-label={tr('Nome squadra', 'Team name')} />
             <div className="swatches">
               {TEAM_COLORS.map((c) => (
@@ -42,14 +44,16 @@ export default function TeamList({ teams, onChange, max = MAX_TEAMS }: Props) {
                 />
               ))}
             </div>
-            <button className="btn ghost" onClick={() => remove(t.id)} disabled={teams.length <= 1}>
-              {tr('Rimuovi', 'Remove')}
-            </button>
+            {!fixed && (
+              <button className="btn ghost" onClick={() => remove(t.id)} disabled={teams.length <= 1}>
+                {tr('Rimuovi', 'Remove')}
+              </button>
+            )}
           </div>
         ))}
       </div>
       <div className="setup-row">
-        {teams.length < max && (
+        {!fixed && teams.length < max && (
           <button className="btn ghost" onClick={add}>
             + {tr('Aggiungi squadra', 'Add team')}
           </button>

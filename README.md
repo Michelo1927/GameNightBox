@@ -20,6 +20,9 @@ Il sito è in **italiano e in inglese**: la prima volta segue la lingua del brow
 | 🔨 **All'asta!** | Esce un tema e le squadre rilanciano su quante risposte sanno dire: chi vince l'asta deve dirle tutte prima che scada il tempo |
 | ⏪ **In ritardo!** | Domande facili contro il tempo, ma si risponde sempre a quella prima: leggi la nuova e ricorda la vecchia |
 
+🏆 **Torneo**: dalla home scegli le squadre e i giochi; a ogni turno una ruota sceglie il prossimo gioco, le squadre
+restano le stesse e ogni gioco dà punti torneo in base al piazzamento (l'ultimo 0, poi uno in più per ogni posto).
+
 Ogni gioco si può creare in tre modi:
 - **✏️ Crea**: a mano dal telefono, si salva da solo; alla fine **✨ Genera il codice** dà un codice e un link
   da mandare a chi fa da host, che lo apre o lo incolla in **📥 Carica**. Con ✏️ su un contenuto lo si modifica.
