@@ -105,8 +105,8 @@ const passaparola: Game = {
   name: NAME,
   icon,
   tagline: tr(
-    'Una ruota di 21 lettere per squadra: una definizione per lettera, contro il tempo.',
-    'A 26-letter wheel per team: one clue per letter, against the clock.',
+    'Dalla A alla Z, una definizione per lettera, prima che scada il tempo.',
+    'From A to Z, one clue per letter, before time runs out.',
   ),
   tags: ['turno', 'tempo'],
   href: '#/passaparola',

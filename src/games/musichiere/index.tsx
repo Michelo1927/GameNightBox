@@ -172,8 +172,8 @@ const musichiere: Game = {
   name: NAME,
   icon,
   tagline: tr(
-    'Canzoni da YouTube da indovinare: a prenotazione, o a turno con una lista e un cronometro per squadra.',
-    'Songs from YouTube to guess: buzzing in, or taking turns with a list and a clock per team.',
+    'Canzoni da indovinare: a prenotazione, o a turno con una lista e un cronometro per squadra.',
+    'Songs to guess: buzzing in, or taking turns with a list and a clock per team.',
   ),
   tags: ['prenotazione', 'turno', 'internet'],
   href: '#/musichiere',

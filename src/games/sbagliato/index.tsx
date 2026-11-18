@@ -109,8 +109,8 @@ const sbagliato: Game = {
   name: NAME,
   icon,
   tagline: tr(
-    'Domande facilissime a raffica: bisogna dire la risposta sbagliata, tante volte di fila, contro il tempo.',
-    'Rapid-fire super easy questions: you must say the wrong answer, many times in a row, against the clock.',
+    'Domande facilissime a raffica: bisogna dire la risposta sbagliata, contro il tempo.',
+    'Rapid-fire super easy questions: you must say the wrong answer, against the clock.',
   ),
   tags: ['turno', 'tempo'],
   href: '#/sbagliato',

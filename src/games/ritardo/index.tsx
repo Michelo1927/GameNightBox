@@ -127,8 +127,8 @@ const ritardo: Game = {
   name: NAME,
   icon,
   tagline: tr(
-    'Domande facili contro il tempo, ma si risponde sempre a quella prima: leggi la nuova e ricorda la vecchia.',
-    'Easy questions against the clock, but you always answer the previous one: read the new one, remember the old one.',
+    'Leggi la nuova, rispondi alla vecchia. Il cervello va in tilt.',
+    'Read the new one, answer the old one. Your brain will short-circuit.',
   ),
   tags: ['turno', 'tempo'],
   href: '#/ritardo',
