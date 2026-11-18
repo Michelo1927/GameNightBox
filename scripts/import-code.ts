@@ -1,6 +1,6 @@
 // Saves something shared as a code (from a game's creator) into the repo:
 //   Jeopardy → quizzes/<slug>/ (embedded photos become separate files, so the quiz behaves like the others)
-//   Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila!, All'asta! → content/<game>/<slug>.json
+//   Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila!, All'asta!, In ritardo! → content/<game>/<slug>.json
 // Usage: npm run import -- <file-with-code.txt | code | link> [slug]
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,6 +13,7 @@ import { validateTopTen } from '../src/games/topten/schema';
 import { validateSbagliato } from '../src/games/sbagliato/schema';
 import { validateInFila } from '../src/games/infila/schema';
 import { validateAsta } from '../src/games/asta/schema';
+import { validateRitardo } from '../src/games/ritardo/schema';
 import type { Validation } from '../src/hub/content';
 
 const GAMES: { prefix: string; game: string; key: string; validate: (d: unknown) => Validation }[] = [
@@ -24,6 +25,7 @@ const GAMES: { prefix: string; game: string; key: string; validate: (d: unknown)
   { prefix: 'SB1.', game: 'sbagliato', key: 'domande', validate: validateSbagliato },
   { prefix: 'IF1.', game: 'infila', key: 'sequenze', validate: validateInFila },
   { prefix: 'AS1.', game: 'asta', key: 'temi', validate: validateAsta },
+  { prefix: 'RI1.', game: 'ritardo', key: 'domande', validate: validateRitardo },
 ];
 
 const [input, slugArg] = process.argv.slice(2);

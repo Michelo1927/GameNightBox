@@ -7,6 +7,7 @@ import topten from './topten';
 import sbagliato from './sbagliato';
 import infila from './infila';
 import asta from './asta';
+import ritardo from './ritardo';
 
 /** Every game of the hub, in the order shown on the home page. To add one, create src/games/<id>/ and list it here. */
-export const games: Game[] = [jeopardy, passaparola, catena, musichiere, topten, sbagliato, infila, asta];
+export const games: Game[] = [jeopardy, passaparola, catena, musichiere, topten, sbagliato, infila, asta, ritardo];

@@ -13,6 +13,7 @@ export const CODES: { prefix: string; game: string; name: string }[] = [
   { prefix: 'SB1.', game: 'sbagliato', name: tr('Sbagliato!', 'Wrong Answer!') },
   { prefix: 'IF1.', game: 'infila', name: tr('In fila!', 'In Order!') },
   { prefix: 'AS1.', game: 'asta', name: tr("All'asta!", 'Going Once!') },
+  { prefix: 'RI1.', game: 'ritardo', name: tr('In ritardo!', 'One Behind!') },
 ];
 
 /** Codes longer than this don't fit in a chat message: share them as a file. */

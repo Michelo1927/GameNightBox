@@ -129,7 +129,7 @@ Il sito è in **italiano** (predefinito) e in **inglese**.
   vuole sempre tutte e due le versioni: una traduzione mancante è un errore di compilazione, non un buco nel sito.
   Fuori dal browser (script, CI) la lingua è sempre l'italiano.
 - Nomi dei giochi in inglese: Jeopardy, Alphabet Wheel (Passaparola), Word Chain (Catena), Name the Song (Musichiere),
-  Top Ten, Wrong Answer! (Sbagliato!), In Order! (In fila!), Going Once! (All'asta!). Gli id, gli indirizzi e i
+  Top Ten, Wrong Answer! (Sbagliato!), In Order! (In fila!), Going Once! (All'asta!), One Behind! (In ritardo!). Gli id, gli indirizzi e i
   prefissi dei codici restano quelli italiani.
 - **Lingua dei contenuti**: campo facoltativo `"lang"` in ogni quiz/contenuto, `"it"` o `"en"`; se manca è italiano,
   quindi si scrive solo `"lang": "en"` (`contentLang`, `langField`, `checkLang`). Le chiavi del formato restano
@@ -271,6 +271,20 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - Vince chi arriva per primo ai punti scelti nel setup (3/5/7/10, di solito 5); se i temi finiscono prima, chi ne ha di più.
   I temi escono in ordine casuale, senza ripetersi.
 - Il totale delle risposte possibili non si mostra mai: il gioco sta tutto nel tema.
+
+**In ritardo!** (`#/ritardo`, nome provvisorio)
+- Domande facili di cultura generale, ognuna con una risposta cortissima (1-3 parole, numeri in cifre).
+- Ogni squadra gioca da sola, con il suo tempo (60-240 s, di solito 120) e la sua lista di N domande (5-20, di solito 10),
+  pescata da un mazzo mescolato comune come in Sbagliato!. Si risponde "in ritardo di una": sulla domanda k si dice
+  la risposta della domanda k-1; sulla prima si dice la parola d'ordine (una parola buffa scelta dall'app, diversa
+  per ogni squadra), dopo l'ultima resta da dire la sua risposta. Quindi N + 1 risposte di fila per finire.
+- Risposta sbagliata = si riparte dalla domanda 1 della stessa lista (stessa parola d'ordine), il tempo continua.
+- Tempo massimo per risposta facoltativo (5-15 s, spento di base): se scade è come una risposta sbagliata.
+- L'host preme → (giusta), ← o X (sbagliata), Spazio (pausa). La risposta attesa sullo schermo è coperta da pallini e si
+  scopre toccandola o con R (si ricopre a ogni risposta). Non è sfocata: finché è coperta non è proprio nella
+  pagina, perché un testo sfocato a volte si legge per un istante. Dopo un errore il messaggio dice qual era.
+- A tempo scaduto si vede fino a che domanda si è arrivati (la serie migliore + 1). Punti come Sbagliato!: 10 per
+  ogni risposta della serie migliore, +1 per ogni secondo avanzato a chi arriva in fondo.
 
 - I quiz vengono caricati in fase di build (`import.meta.glob`): basta aggiungere una
   cartella in `quizzes/` e il quiz compare in home.

@@ -18,13 +18,14 @@ Il sito è in **italiano e in inglese**: la prima volta segue la lingua del brow
 | ❌ **Sbagliato!** | Domande facilissime a raffica: bisogna dire la risposta sbagliata, tante volte di fila, contro il tempo |
 | ↔️ **In fila!** | Carte mescolate da rimettere in ordine (date, altezze, distanze...): chi sbaglia si fa rubare i punti |
 | 🔨 **All'asta!** | Esce un tema e le squadre rilanciano su quante risposte sanno dire: chi vince l'asta deve dirle tutte prima che scada il tempo |
+| ⏪ **In ritardo!** | Domande facili contro il tempo, ma si risponde sempre a quella prima: leggi la nuova e ricorda la vecchia |
 
 Ogni gioco si può creare in tre modi:
 - **✏️ Crea**: a mano dal telefono, si salva da solo; alla fine **✨ Genera il codice** dà un codice e un link
   da mandare a chi fa da host, che lo apre o lo incolla in **📥 Carica**. Con ✏️ su un contenuto lo si modifica.
 - **🤖 Crea con l'IA**: scegli il tema, copia il prompt nella tua IA (ChatGPT, Claude, Gemini…), incolla la risposta e si gioca
   (o la si apre nel creatore per sistemarla).
-- Con Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`, `/crea-infila`, `/crea-asta`.
+- Con Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`, `/crea-infila`, `/crea-asta`, `/crea-ritardo`.
 
 Un codice ricevuto si salva nel sito con `npm run import -- <file|codice|link>` (poi commit e push). Regole complete nel riquadro "Come si gioca" di ogni gioco.
 I contenuti del sito stanno in `quizzes/` (Jeopardy) e `content/<gioco>/` (gli altri).

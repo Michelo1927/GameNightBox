@@ -13,6 +13,7 @@ import { validateTopTen } from '../src/games/topten/schema';
 import { validateSbagliato } from '../src/games/sbagliato/schema';
 import { validateInFila } from '../src/games/infila/schema';
 import { validateAsta } from '../src/games/asta/schema';
+import { validateRitardo } from '../src/games/ritardo/schema';
 import type { Validation } from '../src/hub/content';
 
 const root = join(import.meta.dirname, '..', 'quizzes');
@@ -89,6 +90,7 @@ const validators: Record<string, (d: unknown) => Validation> = {
   sbagliato: validateSbagliato,
   infila: validateInFila,
   asta: validateAsta,
+  ritardo: validateRitardo,
 };
 let checked = slugs.length;
 for (const [game, validate] of Object.entries(validators)) {

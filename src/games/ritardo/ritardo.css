@@ -1,0 +1,117 @@
+.ri-page .game-stage {
+  /* Tight on a small screen, roomier as the screen grows. */
+  --space: clamp(8px, calc((100vh - 700px) / 12 + 8px), 34px);
+  gap: var(--space); padding: 8px 0 calc(var(--space) / 2);
+}
+.ri-page .team-strip { gap: 12px; }
+.ri-page .team-chip small { font-weight: 800; }
+
+/* Before a team's go. */
+.ri-intro {
+  display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 2vh, 22px); max-width: 860px; padding: clamp(18px, 3vh, 36px);
+  border-radius: 22px; background: rgba(0, 0, 0, 0.3); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 0 50px color-mix(in srgb, var(--accent) 20%, transparent); animation: pop-in 0.5s var(--ease-spring) backwards;
+}
+.ri-tag { padding: 6px 16px; border-radius: 99px; background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.ri-intro h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, 8vh, 5rem); line-height: 1; text-shadow: 0 0 30px currentColor; }
+.ri-intro ol { margin: 0; padding-left: 24px; text-align: left; display: flex; flex-direction: column; gap: 8px; font-size: clamp(1rem, 2.2vh, 1.35rem); line-height: 1.4; }
+.ri-intro p { margin: 0; }
+
+/* Clock and the path of answers to finish (the key is the password). */
+.ri-top { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 2vw, 32px); width: min(1700px, 100% - 32px); }
+.ri-clock {
+  flex: none; min-width: 3.2em; padding: 4px 16px; border-radius: 16px; text-align: center;
+  font-family: var(--font-display); font-size: clamp(2.2rem, 7vh, 4.6rem); line-height: 1.15; color: var(--gold-hi);
+  background: rgba(0, 0, 0, 0.45); border: 2px solid color-mix(in srgb, var(--gold) 45%, transparent); text-shadow: 0 0 20px rgba(255, 201, 40, 0.55);
+}
+.ri-clock.hurry { color: #fff; background: linear-gradient(180deg, #ff8f99, var(--ko) 70%); border-color: #ffc2c8; animation: ri-hurry 1s ease-in-out infinite; }
+@keyframes ri-hurry { 50% { transform: scale(1.06); } }
+.ri-path { flex: 1; display: grid; grid-template-columns: repeat(var(--steps), minmax(0, 1fr)); gap: clamp(3px, 0.5vw, 10px); max-width: calc(var(--steps) * 96px); }
+.ri-path span {
+  aspect-ratio: 1; max-height: clamp(34px, 8vh, 84px); display: grid; place-items: center; border-radius: 12px;
+  font-family: var(--font-display); font-size: clamp(0.9rem, 3vh, 2rem); color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(180deg, #1d1460, #120b3f); border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+.ri-path span.now { border-color: var(--accent); color: var(--accent); }
+.ri-path span.on {
+  color: #3a0b22; background: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--accent) 45%, #fff));
+  border-color: #fff; box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 80%, transparent); animation: ri-step 0.45s var(--ease-spring) backwards;
+}
+.ri-path span:last-child { border-color: var(--gold); color: var(--gold); }
+.ri-path span:last-child.on { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: #2a1c00; }
+/* The best run so far, after a restart. */
+.ri-path span.best { box-shadow: inset 0 -4px 0 var(--gold); color: var(--gold-hi); }
+@keyframes ri-step { from { transform: scale(1.5); filter: brightness(2); } }
+
+/* What to say, the question on screen and the host's peek. */
+.ri-play { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space); width: min(1200px, 100% - 32px); }
+.ri-say {
+  padding: 8px 22px; border-radius: 99px; font-size: clamp(1.05rem, 2.6vh, 1.6rem); font-weight: 700;
+  background: color-mix(in srgb, var(--accent) 18%, rgba(0, 0, 0, 0.35)); border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  animation: ri-in 0.28s var(--ease-out) backwards;
+}
+.ri-say b { color: var(--accent); font-family: var(--font-display); font-weight: 400; font-size: 1.35em; letter-spacing: 0.5px; text-transform: uppercase; }
+.ri-question {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, min(5vw, 8vh), 4.8rem); line-height: 1.1; letter-spacing: 0.5px;
+  max-width: 100%; text-wrap: balance; animation: ri-in 0.28s var(--ease-out) 0.05s backwards;
+}
+.ri-question small { font-family: var(--font-body, inherit); font-size: clamp(0.9rem, 2vh, 1.15rem); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.ri-question.ri-last { color: var(--gold-hi); text-shadow: 0 0 30px rgba(255, 201, 40, 0.5); }
+@keyframes ri-in { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
+
+/* Time left for this answer (only with a time limit per answer). */
+.ri-qtime { width: min(700px, 100%); height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.ri-qtime div { height: 100%; background: linear-gradient(90deg, var(--gold), var(--accent)); transition: width 0.1s linear; }
+.ri-qtime.late div { background: var(--ko); box-shadow: 0 0 12px var(--ko); }
+
+/* The expected answer: blurred for the players, sharp on hover, on a tap or with R. */
+.ri-peek {
+  display: flex; align-items: center; gap: 10px; padding: 6px 14px; border-radius: 12px; font: inherit; color: var(--muted);
+  background: rgba(0, 0, 0, 0.3); border: 1px dashed var(--line); cursor: pointer;
+}
+.ri-peek span { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.ri-peek b { color: var(--muted); font-size: 1.15rem; letter-spacing: 2px; user-select: none; }
+.ri-peek.on b { color: var(--text); letter-spacing: normal; }
+.ri-peek kbd { font-size: 0.8rem; }
+
+/* Paused: the question is hidden, so nobody thinks about it in the meantime. */
+.ri-play.paused .ri-question, .ri-play.paused .ri-say { filter: blur(18px); opacity: 0.5; }
+.ri-pause {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-family: var(--font-display); font-size: clamp(2rem, 7vh, 4rem); color: var(--gold-hi); text-shadow: 0 0 24px rgba(0, 0, 0, 0.8);
+}
+
+.ri-flash { min-height: 1.5em; margin: calc(var(--space) / -2) 0; font-weight: 800; font-size: clamp(1.1rem, 2.4vh, 1.6rem); }
+.ri-flash span { display: inline-block; animation: pop-in 0.4s var(--ease-spring) backwards; }
+
+.ri-done {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; padding: clamp(18px, 3vh, 34px) 40px; border-radius: 22px;
+  background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); animation: pop-in 0.5s var(--ease-spring) backwards;
+}
+.ri-done h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 6vh, 3.8rem); }
+.ri-done p { margin: 0; font-size: clamp(1.05rem, 2.4vh, 1.5rem); }
+
+@media (max-width: 700px) {
+  .ri-top { flex-direction: column; gap: 8px; }
+  .ri-path { width: 100%; }
+  .ri-path span { border-radius: 6px; font-size: 0.9rem; }
+  /* A long path goes on two rows, so the numbers still fit. */
+  .ri-path.long { grid-template-columns: repeat(var(--half), minmax(0, 1fr)); }
+  .ri-peek kbd { display: none; }
+}
+
+/* Creator */
+.ri-ed { display: grid; grid-template-columns: 28px 1fr; gap: 6px 8px; align-items: center; padding: 10px 0; border-top: 1px dashed var(--line); }
+.ri-ed > span { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #3a0b22; font-weight: 800; font-size: 0.85rem; }
+.ri-ed .ri-ed-line, .ri-ed .cr-error { grid-column: 2; margin: 0; }
+.ri-ed-line { display: flex; gap: 6px; }
+.ri-ed-q { flex: 3; min-width: 0; font-weight: 700; }
+.ri-ed-a { flex: 1; min-width: 0; border-color: color-mix(in srgb, var(--ok) 50%, transparent); }
+.ri-ed .ri-warn { color: var(--gold-hi); }
+.ri-preview ol { margin: 0 0 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 560px) {
+  .ri-ed-line { flex-wrap: wrap; }
+  .ri-ed-q { flex-basis: 100%; }
+}

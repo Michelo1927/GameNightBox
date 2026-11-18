@@ -18,13 +18,14 @@ the **IT / EN** button at the top left of the home page.
 | ❌ **Wrong Answer!** | Rapid-fire super easy questions: you must say the wrong answer, many times in a row, against the clock |
 | ↔️ **In Order!** | Shuffled cards to put back in order (dates, heights, distances...): get it wrong and the points get stolen |
 | 🔨 **Going Once!** | A theme comes up and the teams bid on how many answers they can say: whoever wins the auction must say them all before time runs out |
+| ⏪ **One Behind!** | Easy questions against the clock, but you always answer the previous one: read the new one, remember the old one |
 
 Every game can be created in three ways:
 - **✏️ Create**: by hand from your phone, saved as you type; at the end **✨ Make the code** gives a code and a link
   to send to the host, who opens it or pastes it in **📥 Load**. With ✏️ on a game you can edit it.
 - **🤖 Create with AI**: choose the theme, copy the prompt into your AI (ChatGPT, Claude, Gemini…), paste the answer and play
   (or open it in the creator to tidy it up). With the site in English, the AI writes the content in English.
-- With Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`, `/crea-infila`, `/crea-asta`
+- With Claude Code: `/crea-quiz`, `/crea-passaparola`, `/crea-catena`, `/crea-musichiere`, `/crea-topten`, `/crea-sbagliato`, `/crea-infila`, `/crea-asta`, `/crea-ritardo`
   (these skills are in Italian).
 
 A code you received is saved to the site with `npm run import -- <file|code|link>` (then commit and push). Full rules are in the
