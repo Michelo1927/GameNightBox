@@ -1,0 +1,42 @@
+/* Packs of games (PackPages.tsx): the list of the pack's games and the buttons to add them. */
+.pack-page { --accent: var(--gold); }
+.pack-page h1 { font-size: 1.4rem; }
+
+.pack-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pack-item {
+  border-radius: 14px; background: var(--bg); border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.pack-item.ok { border-color: color-mix(in srgb, var(--accent) 70%, transparent); }
+.pack-item.open { border-color: var(--accent); }
+.pack-item-head { display: flex; align-items: center; gap: 6px; padding: 4px 6px 4px 4px; }
+.pack-item-main {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 4px; border: 0; border-radius: 10px;
+  background: none; color: var(--text); text-align: left; font: inherit;
+}
+button.pack-item-main:not(:disabled) { cursor: pointer; }
+button.pack-item-main:hover:not(:disabled) { background: rgba(255, 255, 255, 0.05); }
+.pack-item-main .icon-disk { width: 40px; flex: none; }
+.pack-item-text { min-width: 0; display: flex; flex-direction: column; }
+.pack-item-text b { color: var(--accent); }
+.pack-item-text .muted { font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; }
+.pack-item-text .cr-error { font-size: 0.85rem; }
+.pack-item-tools { display: flex; gap: 4px; flex: none; }
+.pack-item-body { display: flex; flex-direction: column; gap: 10px; padding: 4px 12px 12px; }
+
+.pack-add { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.pack-add-game {
+  display: flex; align-items: center; gap: 8px; padding: 4px 8px 4px 4px; border-radius: 12px; font: inherit; font-weight: 700;
+  color: var(--text); background: var(--bg); border: 2px solid color-mix(in srgb, var(--accent) 35%, transparent); cursor: pointer; text-align: left;
+}
+.pack-add-game:hover { border-color: var(--accent); }
+.pack-add-game .icon-disk { width: 32px; flex: none; }
+.pack-add-game span { flex: 1; min-width: 0; font-size: 0.9rem; }
+.pack-add-game b { color: var(--accent); }
+
+.pack-pick { display: flex; gap: 6px; flex-wrap: wrap; }
+.pack-pick select {
+  flex: 1; min-width: 140px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit;
+}
+.pack-restart { align-self: flex-start; }
+.pack-file { font-size: 1.1rem; }
+.pack-done { margin: 0; font-weight: 700; color: var(--ok); }

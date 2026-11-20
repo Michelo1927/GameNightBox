@@ -8,6 +8,7 @@
 //   #/<game>/crea[/...]         creator (Jeopardy: one page per question below it)
 //   #/<game>/claude, /carica    create with Claude, load a code
 //   #/torneo[/nuovo]            the tournament (and a new one)
+//   #/pacchetto[/carica[/<c>]]  make a pack of games, or open one (both right under the hub)
 //   #/torneo/<game>/...         a game played inside the tournament: the same pages as above, under the tournament,
 //                               with their own saves (see gameKey in content.ts)
 //
@@ -42,6 +43,7 @@ export function parentOf(hash: string): string | null {
     const inner = parentOf(`#/${p.slice(1).join('/')}`);
     return !inner || inner === '#/' ? '#/torneo' : inner.replace('#/', '#/torneo/');
   }
+  if (p[0] === 'pacchetto') return '#/';
   const [game, page, arg] = p;
   const up = (...parts: string[]) => `#/${parts.join('/')}`;
   if (p.length === 1) return '#/';

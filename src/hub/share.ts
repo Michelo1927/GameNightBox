@@ -16,6 +16,9 @@ export const CODES: { prefix: string; game: string; name: string }[] = [
   { prefix: 'RI1.', game: 'ritardo', name: tr('In ritardo!', 'One Behind!') },
 ];
 
+/** Prefix of a pack: several games in one code (pack.ts). */
+export const PACK_PREFIX = 'GNB1.';
+
 /** Codes longer than this don't fit in a chat message: share them as a file. */
 export const MESSAGE_LIMIT = 60000;
 
@@ -59,6 +62,11 @@ export async function decode(input: string, prefix: string): Promise<unknown> {
   }
 
   const start = text.indexOf(prefix);
+  if (start < 0 && text.includes(PACK_PREFIX))
+    throw new Error(tr(
+      'Questo è un pacchetto di partite: aprilo dalla home, "🎁 Pacchetto di partite" → 📥 Carica.',
+      'This is a pack of games: open it from the home page, "🎁 Pack of games" → 📥 Load.',
+    ));
   if (start < 0) {
     const other = CODES.find((c) => text.includes(c.prefix));
     if (other) throw new Error(tr(

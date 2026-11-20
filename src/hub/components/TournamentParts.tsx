@@ -29,11 +29,11 @@ export function useTournamentSetup({ game, slug, title, teams, setTeams, started
 
   useEffect(() => {
     if (!t || !cur) return;
-    if (cur.slug !== slug) {
-      // First time this content is opened for the tournament: a clean game with the tournament's teams.
+    if (cur.slug !== slug || cur.preset) {
+      // First time this content is opened for the tournament (or given by the pack): a clean game with the tournament's teams.
       if (started) restart();
       setTeams(() => fresh(t.teams));
-      setTournament((tt) => (tt.current ? { ...tt, current: { ...tt.current, slug, title } } : tt));
+      setTournament((tt) => (tt.current ? { ...tt, current: { ...tt.current, slug, title, preset: undefined } } : tt));
       return;
     }
     if (!sameTeams(teams, t.teams)) return setTeams(() => fresh(t.teams));

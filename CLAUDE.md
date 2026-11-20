@@ -9,8 +9,9 @@ Hub di giochi a squadre da serata (React + Vite + TypeScript), pubblicato su Git
 - Quiz: `quizzes/<slug>/quiz.json` + file media nella stessa cartella. Formato in `src/games/jeopardy/quiz/schema.ts`.
 - Per creare un quiz usa la skill `/crea-quiz` (`.claude/skills/crea-quiz/SKILL.md`).
 - Dopo ogni modifica a un quiz: `npm run validate -- <slug> --online`.
-- Qualsiasi contenuto condiviso come codice (creatore del sito, codici `JQ1.` `PP1.` `CT1.` `MU1.` `TT1.` `SB1.` `IF1.` `AS1.` `RI1.`) si salva nel repo con
-  `npm run import -- <file|codice|link>`.
+- Qualsiasi contenuto condiviso come codice (creatore del sito, codici `JQ1.` `PP1.` `CT1.` `MU1.` `TT1.` `SB1.` `IF1.` `AS1.` `RI1.`,
+  pacchetti di partite `GNB1.`) si salva nel repo con `npm run import -- <file|codice|link>`.
+- Pacchetti (più partite in un file, `#/pacchetto`): `src/hub/pack.ts`; ogni gioco dichiara i suoi contenuti in `Game.content`.
 - Passaparola, Catena, Musichiere, Top Ten, Sbagliato!, In fila!, All'asta!, In ritardo!: un file `content/<gioco>/<slug>.json`. Formato in `src/games/<gioco>/schema.ts`;
   per crearne uno segui le regole del prompt in `src/games/<gioco>/prompt.ts` (lo stesso che usa la pagina "Crea con l'IA").
   Musichiere: cerca i link YouTube veri e controllali con `npm run validate -- musichiere/<slug> --online`.

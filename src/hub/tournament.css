@@ -11,6 +11,11 @@
 .trn-card-text { flex: 1; min-width: 180px; display: flex; flex-direction: column; text-align: left; }
 .trn-card-text b { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, 2.8vh, 1.9rem); color: var(--gold-hi); letter-spacing: 0.5px; }
 .trn-card-text .muted { font-size: clamp(0.85rem, 1.6vh, 1rem); }
+/* Packs of games (hub/pack.ts): a row of small links at the bottom of the card. */
+.trn-card-packs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.9rem; }
+.btn.small { padding: 4px 12px; font-size: 0.9rem; }
+.trn-pack { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.trn-pack > span { flex: 1; min-width: 240px; }
 
 .trn-page { --accent: var(--gold); }
 .trn-count { font-size: 1rem; font-weight: 600; }

@@ -2,7 +2,7 @@ import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -16,6 +16,18 @@ import './ritardo.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<RitardoSet>('ritardo', import.meta.glob('/content/ritardo/*.json', { eager: true, import: 'default' }), validateRitardo);
+
+const ai: AiSpec<RitardoSet> = {
+  fields: [
+    { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. geografia, sport, film…', 'E.g. geography, sport, films…') },
+    { key: 'questions', label: tr('Quante domande', 'How many questions'), type: 'number', options: [40, 60, 80, 100, 150] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con bambini', 'E.g. family with children') },
+  ],
+  initial: { topic: '', questions: 80, audience: '' },
+  prompt,
+  validate: validateRitardo,
+  preview: (d) => <Preview data={d} />,
+};
 
 const creation: Creation<RitardoSet> = {
   game: 'ritardo',
@@ -132,6 +144,14 @@ const ritardo: Game = {
   ),
   tags: ['turno', 'tempo'],
   href: '#/ritardo',
+  content: {
+    ai,
+    title: (d: RitardoSet) => d.title,
+    summary: creation.summary,
+    save: (d: RitardoSet) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: RitardoSet) => d.domande.map((q) => q.answer),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'ritardo') return null;
@@ -152,15 +172,7 @@ const ritardo: Game = {
               answer here: the app checks that every question has its own short answer (at least {MIN_QUESTIONS} are needed).
             </>,
           )}
-          fields={[
-            { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. geografia, sport, film…', 'E.g. geography, sport, films…') },
-            { key: 'questions', label: tr('Quante domande', 'How many questions'), type: 'number', options: [40, 60, 80, 100, 150] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con bambini', 'E.g. family with children') },
-          ]}
-          initial={{ topic: '', questions: 80, audience: '' }}
-          prompt={prompt}
-          validate={validateRitardo}
-          preview={(d) => <Preview data={d} />}
+          {...ai}
           onPlay={(d) => go(`/ritardo/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('ritardo', normalize(d))) && go('/ritardo/crea')}
         />

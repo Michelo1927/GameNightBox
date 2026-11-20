@@ -3,7 +3,7 @@ import icon from './icon';
 import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -17,6 +17,19 @@ import './topten.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<TopTenSet>('topten', import.meta.glob('/content/topten/*.json', { eager: true, import: 'default' }), validateTopTen);
+
+const ai: AiSpec<TopTenSet> = {
+  fields: [
+    { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. geografia, calcio, cinema, cibo…', 'E.g. geography, football, movies, food…') },
+    { key: 'lists', label: tr('Quante liste', 'How many lists'), type: 'number', options: [3, 4, 5, 6, 8, 10] },
+    { key: 'answers', label: tr('Risposte per lista', 'Answers per list'), type: 'number', options: [5, 6, 7, 8, 9, 10] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con ragazzi', 'E.g. family with teenagers') },
+  ],
+  initial: { topic: '', lists: 6, answers: 10, audience: '' },
+  prompt,
+  validate: validateTopTen,
+  preview: (d) => <Preview data={d} />,
+};
 
 const creation: Creation<TopTenSet> = {
   game: 'topten',
@@ -119,6 +132,14 @@ const topten: Game = {
   ),
   tags: ['prenotazione', 'rubata'],
   href: '#/topten',
+  content: {
+    ai,
+    title: (d: TopTenSet) => d.title,
+    summary: creation.summary,
+    save: (d: TopTenSet) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: TopTenSet) => d.liste.map((l) => l.question),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'topten') return null;
@@ -141,16 +162,7 @@ const topten: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. geografia, calcio, cinema, cibo…', 'E.g. geography, football, movies, food…') },
-            { key: 'lists', label: tr('Quante liste', 'How many lists'), type: 'number', options: [3, 4, 5, 6, 8, 10] },
-            { key: 'answers', label: tr('Risposte per lista', 'Answers per list'), type: 'number', options: [5, 6, 7, 8, 9, 10] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con ragazzi', 'E.g. family with teenagers') },
-          ]}
-          initial={{ topic: '', lists: 6, answers: 10, audience: '' }}
-          prompt={prompt}
-          validate={validateTopTen}
-          preview={(d) => <Preview data={d} />}
+          {...ai}
           onPlay={(d) => go(`/topten/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('topten', normalize(d))) && go('/topten/crea')}
         />

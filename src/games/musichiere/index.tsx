@@ -3,7 +3,7 @@ import icon from './icon';
 import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -19,6 +19,18 @@ import './musichiere.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<Playlist>('musichiere', import.meta.glob('/content/musichiere/*.json', { eager: true, import: 'default' }), validatePlaylist);
+
+const ai: AiSpec<Playlist> = {
+  fields: [
+    { key: 'topic', label: tr('Tema', 'Theme'), placeholder: tr('Es. Sanremo, anni 2000, cartoni animati, rock…', 'E.g. Eurovision, the 2000s, cartoons, rock…') },
+    { key: 'songs', label: tr('Quante canzoni', 'How many songs'), type: 'number', options: [10, 15, 20, 30, 40] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. amici sui 30 anni', 'E.g. friends around 30') },
+  ],
+  initial: { topic: '', songs: 20, audience: '' },
+  prompt,
+  validate: validatePlaylist,
+  preview: (d, update) => <Preview data={d} update={update} />,
+};
 
 const creation: Creation<Playlist> = {
   game: 'musichiere',
@@ -177,6 +189,14 @@ const musichiere: Game = {
   ),
   tags: ['prenotazione', 'turno', 'internet'],
   href: '#/musichiere',
+  content: {
+    ai,
+    title: (d: Playlist) => d.title,
+    summary: creation.summary,
+    save: (d: Playlist) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: Playlist) => d.songs.map((s) => `${s.title} (${s.artist})`),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'musichiere') return null;
@@ -199,15 +219,7 @@ const musichiere: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema', 'Theme'), placeholder: tr('Es. Sanremo, anni 2000, cartoni animati, rock…', 'E.g. Eurovision, the 2000s, cartoons, rock…') },
-            { key: 'songs', label: tr('Quante canzoni', 'How many songs'), type: 'number', options: [10, 15, 20, 30, 40] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. amici sui 30 anni', 'E.g. friends around 30') },
-          ]}
-          initial={{ topic: '', songs: 20, audience: '' }}
-          prompt={prompt}
-          validate={validatePlaylist}
-          preview={(d, update) => <Preview data={d} update={update} />}
+          {...ai}
           onPlay={(d) => go(`/musichiere/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('musichiere', normalize(d))) && go('/musichiere/crea')}
         />

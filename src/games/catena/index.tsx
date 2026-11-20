@@ -3,7 +3,7 @@ import icon from './icon';
 import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -17,6 +17,26 @@ import './catena.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<CatenaSet>('catena', import.meta.glob('/content/catena/*.json', { eager: true, import: 'default' }), validateCatena);
+
+const ai: AiSpec<CatenaSet> = {
+  fields: [
+    { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. cibo, sport, modi di dire…', 'E.g. food, sport, idioms…') },
+    { key: 'chains', label: tr('Quante catene', 'How many chains'), type: 'number', options: [2, 3, 4, 5, 6, 8] },
+    { key: 'finals', label: tr('Parole del finale (0 = senza finale)', 'Final words (0 = no final)'), type: 'number', options: [0, 1, 2, 3, 4, 5] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con ragazzi', 'E.g. family with teenagers') },
+  ],
+  initial: { topic: '', chains: 4, finals: 3, audience: '' },
+  prompt,
+  validate: validateCatena,
+  preview: (d) => (
+    <div className="ct-preview">
+      <b>{d.title}</b>
+      {(Array.isArray(d.catene) ? d.catene : []).map((c, i) => (
+        <p key={i} className="muted">{Array.isArray(c.words) ? c.words.join(' → ') : ''}</p>
+      ))}
+    </div>
+  ),
+};
 
 const creation: Creation<CatenaSet> = {
   game: 'catena',
@@ -94,6 +114,14 @@ const catena: Game = {
   ),
   tags: ['turno'],
   href: '#/catena',
+  content: {
+    ai,
+    title: (d: CatenaSet) => d.title,
+    summary: creation.summary,
+    save: (d: CatenaSet) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: CatenaSet) => d.catene.flatMap((c) => c.words),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'catena') return null;
@@ -116,23 +144,7 @@ const catena: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. cibo, sport, modi di dire…', 'E.g. food, sport, idioms…') },
-            { key: 'chains', label: tr('Quante catene', 'How many chains'), type: 'number', options: [2, 3, 4, 5, 6, 8] },
-            { key: 'finals', label: tr('Parole del finale (0 = senza finale)', 'Final words (0 = no final)'), type: 'number', options: [0, 1, 2, 3, 4, 5] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con ragazzi', 'E.g. family with teenagers') },
-          ]}
-          initial={{ topic: '', chains: 4, finals: 3, audience: '' }}
-          prompt={prompt}
-          validate={validateCatena}
-          preview={(d) => (
-            <div className="ct-preview">
-              <b>{d.title}</b>
-              {(Array.isArray(d.catene) ? d.catene : []).map((c, i) => (
-                <p key={i} className="muted">{Array.isArray(c.words) ? c.words.join(' → ') : ''}</p>
-              ))}
-            </div>
-          )}
+          {...ai}
           onPlay={(d) => go(`/catena/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('catena', normalize(d))) && go('/catena/crea')}
         />

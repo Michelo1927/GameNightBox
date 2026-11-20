@@ -4,7 +4,7 @@ import { go } from './nav';
 import { ask } from './ask';
 import { sounds } from './sounds';
 import { newTeam, type Team } from './teams';
-import { isOver, pointsScale, remaining, setTournament, standings, useTournament, type Tournament } from './tournament';
+import { getPendingPack, isOver, pickFor, pointsScale, remaining, setPendingPack, setTournament, standings, useTournament, type Tournament } from './tournament';
 import BackButton from './components/BackButton';
 import { IconDisk } from './components/GameIcon';
 import Ranking from './components/Ranking';
@@ -39,6 +39,11 @@ export function TournamentCard() {
             : tr('Ultimo torneo', 'Last tournament')}
         </a>
       )}
+      <span className="trn-card-packs">
+        <span className="muted">🎁 {tr('Pacchetto di partite:', 'Pack of games:')}</span>
+        <a className="btn ghost small" href="#/pacchetto">{tr('Prepara', 'Prepare')}</a>
+        <a className="btn ghost small" href="#/pacchetto/carica">📥 {tr('Carica', 'Load')}</a>
+      </span>
       <a className="btn primary" href="#/torneo/nuovo">{tr('Nuovo torneo', 'New tournament')}</a>
     </div>
   );
@@ -52,10 +57,20 @@ export function TournamentRoute({ games, view }: { games: Game[]; view?: string 
 function NewTournament({ games }: { games: Game[] }) {
   const old = useTournament();
   const [teams, setTeams] = useState<Team[]>(() => (old ? old.teams.map((t) => ({ ...t, adjust: 0 })) : [newTeam(0), newTeam(1)]));
+  /** A pack just loaded (hub/pack.ts): its games are already in the wheel, each with its content. */
+  const [pack, setPack] = useState(getPendingPack);
   /** How many times each game goes in the wheel (0 = not in the tournament). */
-  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [counts, setCounts] = useState<Record<string, number>>(() =>
+    pack ? Object.fromEntries(Object.entries(pack.contents).map(([g, list]) => [g, list.length])) : {},
+  );
   const countOf = (id: string) => counts[id] ?? 0;
-  const setCount = (id: string, n: number) => setCounts((c) => ({ ...c, [id]: Math.max(0, Math.min(MAX_REPEATS, n)) }));
+  const maxOf = (id: string) => Math.max(MAX_REPEATS, pack?.contents[id]?.length ?? 0);
+  const setCount = (id: string, n: number) => setCounts((c) => ({ ...c, [id]: Math.max(0, Math.min(maxOf(id), n)) }));
+  const dropPack = () => {
+    setPendingPack(null);
+    setPack(null);
+    setCounts({});
+  };
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
   const allOn = games.every((g) => countOf(g.id) > 0);
   const missing =
@@ -77,7 +92,9 @@ function NewTournament({ games }: { games: Game[] }) {
       games: games.flatMap((g) => Array<string>(countOf(g.id)).fill(g.id)),
       played: [],
       created: Date.now(),
+      ...(pack && { pack: pack.title, contents: pack.contents }),
     });
+    setPendingPack(null);
     go('/torneo');
   };
 
@@ -91,6 +108,18 @@ function NewTournament({ games }: { games: Game[] }) {
           'The teams stay the same for the whole tournament. Each time the wheel picks the next game among those left, and the game’s ranking gives the tournament points.',
         )}
       </p>
+
+      {pack && (
+        <div className="trn-note trn-pack">
+          <span>
+            🎁 {tr(
+              <>Pacchetto <b>{pack.title}</b>: i suoi giochi sono già nella ruota, ognuno con la sua partita pronta. Scegli le squadre e inizia.</>,
+              <>Pack <b>{pack.title}</b>: its games are already in the wheel, each with its game ready. Choose the teams and start.</>,
+            )}
+          </span>
+          <button className="btn ghost small" onClick={dropPack}>{tr('Non usare il pacchetto', "Don't use the pack")}</button>
+        </div>
+      )}
 
       <h2>{tr('Squadre', 'Teams')}</h2>
       <TeamList teams={teams} onChange={(fn) => setTeams(fn)} />
@@ -113,7 +142,7 @@ function NewTournament({ games }: { games: Game[] }) {
                 <span className="trn-stepper">
                   <button onClick={() => setCount(g.id, n - 1)} aria-label={tr(`Una partita in meno di ${g.name}`, `One game less of ${g.name}`)}>−</button>
                   <b>×{n}</b>
-                  <button onClick={() => setCount(g.id, n + 1)} disabled={n >= MAX_REPEATS} aria-label={tr(`Una partita in più di ${g.name}`, `One more game of ${g.name}`)}>+</button>
+                  <button onClick={() => setCount(g.id, n + 1)} disabled={n >= maxOf(g.id)} aria-label={tr(`Una partita in più di ${g.name}`, `One more game of ${g.name}`)}>+</button>
                 </span>
               )}
             </div>
@@ -253,7 +282,9 @@ function CurrentGame({ t, game }: { t: Tournament; game?: Game }) {
         <button className="btn primary big" onClick={() => go(`/torneo/${c.game}/${encodeURIComponent(c.slug!)}/play`)}>▶ {tr('Riprendi la partita', 'Resume the game')}</button>
       ) : c.slug ? (
         <>
-          <button className="btn primary big" onClick={() => go(`/torneo/${c.game}/${encodeURIComponent(c.slug!)}/setup`)}>{tr('Continua', 'Continue')}</button>
+          <button className="btn primary big" onClick={() => go(`/torneo/${c.game}/${encodeURIComponent(c.slug!)}/setup`)}>
+            {c.preset ? tr('Prepara la partita', 'Set up the game') : tr('Continua', 'Continue')}
+          </button>
           <button className="btn ghost" onClick={() => go(`/torneo/${c.game}`)}>{tr('Scegli un altro contenuto', 'Choose something else')}</button>
         </>
       ) : (
@@ -277,7 +308,7 @@ function NextWheel({ t, games }: { t: Tournament; games: Game[] }) {
   const wheel = useSpinWheel(slices, (s) => {
     setPicked(s.id);
     sounds.right();
-    setTimeout(() => setTournament((x) => ({ ...x, current: { game: s.game } })), 1600);
+    setTimeout(() => setTournament((x) => ({ ...x, current: pickFor(x, s.game) })), 1600);
   });
   const spin = () => !picked && wheel.spin();
 

@@ -2,7 +2,7 @@ import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -16,6 +16,18 @@ import './sbagliato.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<SbagliatoSet>('sbagliato', import.meta.glob('/content/sbagliato/*.json', { eager: true, import: 'default' }), validateSbagliato);
+
+const ai: AiSpec<SbagliatoSet> = {
+  fields: [
+    { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. animali, cibo, cose di casa…', 'E.g. animals, food, household things…') },
+    { key: 'questions', label: tr('Quante domande', 'How many questions'), type: 'number', options: [60, 80, 100, 150, 200] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con bambini', 'E.g. family with children') },
+  ],
+  initial: { topic: '', questions: 100, audience: '' },
+  prompt,
+  validate: validateSbagliato,
+  preview: (d) => <Preview data={d} />,
+};
 
 const creation: Creation<SbagliatoSet> = {
   game: 'sbagliato',
@@ -114,6 +126,14 @@ const sbagliato: Game = {
   ),
   tags: ['turno', 'tempo'],
   href: '#/sbagliato',
+  content: {
+    ai,
+    title: (d: SbagliatoSet) => d.title,
+    summary: creation.summary,
+    save: (d: SbagliatoSet) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: SbagliatoSet) => d.domande.map((q) => q.answer),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'sbagliato') return null;
@@ -136,15 +156,7 @@ const sbagliato: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. animali, cibo, cose di casa…', 'E.g. animals, food, household things…') },
-            { key: 'questions', label: tr('Quante domande', 'How many questions'), type: 'number', options: [60, 80, 100, 150, 200] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con bambini', 'E.g. family with children') },
-          ]}
-          initial={{ topic: '', questions: 100, audience: '' }}
-          prompt={prompt}
-          validate={validateSbagliato}
-          preview={(d) => <Preview data={d} />}
+          {...ai}
           onPlay={(d) => go(`/sbagliato/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('sbagliato', normalize(d))) && go('/sbagliato/crea')}
         />

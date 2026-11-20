@@ -3,7 +3,7 @@ import icon from './icon';
 import { library } from '../../hub/library';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -17,6 +17,19 @@ import './infila.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<InFilaSet>('infila', import.meta.glob('/content/infila/*.json', { eager: true, import: 'default' }), validateInFila);
+
+const ai: AiSpec<InFilaSet> = {
+  fields: [
+    { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. storia, cinema, geografia, animali…', 'E.g. history, movies, geography, animals…') },
+    { key: 'sequences', label: tr('Quante sequenze', 'How many sequences'), type: 'number', options: [4, 6, 8, 10, 12] },
+    { key: 'cards', label: tr('Carte per sequenza', 'Cards per sequence'), type: 'number', options: [4, 5, 6, 7, 8] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con ragazzi', 'E.g. family with teenagers') },
+  ],
+  initial: { topic: '', sequences: 8, cards: 5, audience: '' },
+  prompt,
+  validate: validateInFila,
+  preview: (d) => <Preview data={d} />,
+};
 
 const creation: Creation<InFilaSet> = {
   game: 'infila',
@@ -124,6 +137,14 @@ const infila: Game = {
   ),
   tags: ['turno', 'rubata'],
   href: '#/infila',
+  content: {
+    ai,
+    title: (d: InFilaSet) => d.title,
+    summary: creation.summary,
+    save: (d: InFilaSet) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: InFilaSet) => d.sequenze.map((s) => s.question),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'infila') return null;
@@ -148,16 +169,7 @@ const infila: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. storia, cinema, geografia, animali…', 'E.g. history, movies, geography, animals…') },
-            { key: 'sequences', label: tr('Quante sequenze', 'How many sequences'), type: 'number', options: [4, 6, 8, 10, 12] },
-            { key: 'cards', label: tr('Carte per sequenza', 'Cards per sequence'), type: 'number', options: [4, 5, 6, 7, 8] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con ragazzi', 'E.g. family with teenagers') },
-          ]}
-          initial={{ topic: '', sequences: 8, cards: 5, audience: '' }}
-          prompt={prompt}
-          validate={validateInFila}
-          preview={(d) => <Preview data={d} />}
+          {...ai}
           onPlay={(d) => go(`/infila/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('infila', normalize(d))) && go('/infila/crea')}
         />

@@ -567,3 +567,117 @@ export const IMPORT_TUTORIAL: Tutorial = {
     },
   ], EN_IMPORT),
 };
+
+const EN_PACK = [
+  {
+    title: 'A pack of games',
+    text: (
+      <p>
+        Here you make all the games of a night for someone else: at the end you send them <b>a single file</b>, and when they open it every game
+        is ready, even for a tournament.
+      </p>
+    ),
+  },
+  {
+    title: 'Title and theme',
+    target: '.pack-info',
+    text: <p>Give the pack a title. The theme and the audience, if you write them, go into every game's prompt (each game can change them).</p>,
+  },
+  {
+    title: 'Add the games',
+    target: '.pack-add',
+    text: <p>Tap a game to add it, even more than once (two Jeopardy! are two different games). Below you can also add one that is ready-made.</p>,
+  },
+  {
+    title: 'One prompt for each game',
+    target: '.pack-items',
+    text: (
+      <p>
+        Open a game, tap <b>📋 Copy the prompt</b>, paste it into a new AI chat and paste the answer back here. The app checks it: ✓ when it is
+        right, otherwise <b>🔧</b> copies the fix request to paste in the same chat.
+      </p>
+    ),
+  },
+  {
+    title: 'Download and send',
+    target: '.pack-page .cr-share',
+    text: <p>When every game has its ✓, <b>💾 Download the pack</b> and send the file. Your work stays saved here until you start over.</p>,
+  },
+];
+
+export const PACK_TUTORIAL: Tutorial = {
+  id: 'pacchetto',
+  steps: tr([
+    {
+      title: 'Un pacchetto di partite',
+      text: (
+        <p>
+          Qui prepari tutte le partite di una serata per qualcun altro: alla fine gli mandi <b>un solo file</b> e, quando lo apre, trova tutte
+          le partite pronte, anche per un torneo.
+        </p>
+      ),
+    },
+    {
+      title: 'Titolo e tema',
+      target: '.pack-info',
+      text: <p>Dai un titolo al pacchetto. Tema e pubblico, se li scrivi, finiscono nel prompt di ogni partita (ognuna li può cambiare).</p>,
+    },
+    {
+      title: 'Aggiungi le partite',
+      target: '.pack-add',
+      text: <p>Tocca un gioco per aggiungerlo, anche più volte (due Jeopardy! sono due partite diverse). Sotto puoi aggiungerne anche una già pronta.</p>,
+    },
+    {
+      title: 'Un prompt per partita',
+      target: '.pack-items',
+      text: (
+        <p>
+          Apri una partita, tocca <b>📋 Copia il prompt</b>, incollalo in una chat nuova dell'IA e incolla qui la risposta. L'app la controlla: ✓
+          se va bene, altrimenti <b>🔧</b> copia la richiesta di correzione da incollare nella stessa chat.
+        </p>
+      ),
+    },
+    {
+      title: 'Scarica e manda',
+      target: '.pack-page .cr-share',
+      text: <p>Quando tutte le partite hanno il ✓, <b>💾 Scarica il pacchetto</b> e manda il file. Il lavoro resta salvato qui finché non ricominci.</p>,
+    },
+  ], EN_PACK),
+};
+
+const EN_PACK_LOAD = [
+  {
+    title: 'Open the pack',
+    target: '.pack-file',
+    text: <p>Open the file you were sent (or paste its code below): the app shows all its games.</p>,
+  },
+  {
+    title: 'Load and play',
+    text: (
+      <p>
+        <b>📥 Load everything</b> saves every game in its own game, under "Yours". Then <b>🏆 Start the tournament</b>: the games of the pack are
+        already in the wheel, each with its game ready, and you only choose the teams.
+      </p>
+    ),
+  },
+];
+
+export const PACK_LOAD_TUTORIAL: Tutorial = {
+  id: 'pacchetto-carica',
+  steps: tr([
+    {
+      title: 'Apri il pacchetto',
+      target: '.pack-file',
+      text: <p>Apri il file che ti hanno mandato (o incolla sotto il suo codice): l'app ti mostra tutte le sue partite.</p>,
+    },
+    {
+      title: 'Carica e gioca',
+      text: (
+        <p>
+          <b>📥 Carica tutto</b> salva ogni partita nel suo gioco, tra "Le tue". Poi <b>🏆 Inizia il torneo</b>: i giochi del pacchetto sono già
+          nella ruota, ognuno con la sua partita pronta, e scegli solo le squadre.
+        </p>
+      ),
+    },
+  ], EN_PACK_LOAD),
+};

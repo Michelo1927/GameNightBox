@@ -15,7 +15,7 @@ export interface Field {
   options?: number[];
 }
 
-type Form = Record<string, string | number | boolean>;
+export type Form = Record<string, string | number | boolean>;
 
 interface Props<T> {
   back: string;
@@ -54,11 +54,67 @@ export function AiLinks() {
 }
 
 /** The AI may wrap the JSON in ``` fences or add a sentence: keep only the outermost {...}. */
-function extractJson(text: string): string {
+export function extractJson(text: string): string {
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
   return start >= 0 && end > start ? text.slice(start, end + 1) : text;
 }
+
+/** Reads what the AI answered: the data (null if it is not JSON) and what is wrong with it. */
+export function readAnswer<T>(value: string, validate: (data: unknown) => Validation): { data: T | null; errors: string[] } {
+  if (!value.trim()) return { data: null, errors: [] };
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(extractJson(value));
+  } catch {
+    return { data: null, errors: [tr("Non riesco a leggere la risposta: copia tutto il blocco JSON che ha scritto l'IA.", "I can't read the answer: copy the whole JSON block the AI wrote.")] };
+  }
+  // Made from the English prompt: English content, even if the AI forgot the field.
+  if (lang === 'en' && parsed && typeof parsed === 'object' && !Array.isArray(parsed) && !('lang' in parsed)) (parsed as Record<string, unknown>).lang = 'en';
+  return { data: parsed as T, errors: validate(parsed).errors };
+}
+
+/** The message to paste back in the same chat so the AI fixes its JSON. */
+export function fixRequest(errors: string[]): string {
+  const list = errors.map((e) => `- ${e}`).join('\n');
+  return tr(
+    `Nel JSON che mi hai dato ci sono questi errori:\n${list}\n\nCorreggili e rispondi di nuovo SOLO con il JSON completo.`,
+    `The JSON you gave me has these errors:\n${list}\n\nFix them and answer again with ONLY the complete JSON.`,
+  );
+}
+
+/** The fields of a "Crea con l'IA" form (also used by the pack page). `hint` replaces a text field's placeholder. */
+export function FormFields({ fields, form, set, hint }: { fields: Field[]; form: Form; set: (patch: Form) => void; hint?: (f: Field) => string | undefined }) {
+  return (
+    <>
+    {fields.map((f) =>
+      f.type === 'check' ? (
+        <label className="cr-check" key={f.key}>
+          <input type="checkbox" checked={!!form[f.key]} onChange={(e) => set({ [f.key]: e.target.checked })} />
+          {f.label}
+        </label>
+      ) : f.type === 'number' ? (
+        <div className="cr-field" key={f.key}>
+          <span className="cr-label">{f.label}</span>
+          <div className="seg">
+            {f.options!.map((n) => (
+              <button key={n} className={form[f.key] === n ? 'on' : ''} onClick={() => set({ [f.key]: n })}>
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <label className="cr-field" key={f.key}>
+          <span className="cr-label">{f.label}</span>
+          <input value={String(form[f.key] ?? '')} onChange={(e) => set({ [f.key]: e.target.value })} placeholder={hint?.(f) ?? f.placeholder} />
+        </label>
+      ),
+    )}
+    </>
+  );
+}
+
 
 /** #/<game>/claude: builds a prompt for any AI chat (ChatGPT, Claude, Gemini…); the JSON it answers with is pasted back here and played. */
 export default function ClaudeCreate<T>({ back, title, intro, fields, initial, prompt, validate, preview, onPlay, onEdit }: Props<T>) {
@@ -76,31 +132,15 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
 
   const read = (value: string) => {
     setAnswer(value);
-    setData(null);
-    setErrors([]);
-    if (!value.trim()) return;
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(extractJson(value));
-    } catch {
-      setErrors([tr("Non riesco a leggere la risposta: copia tutto il blocco JSON che ha scritto l'IA.", "I can't read the answer: copy the whole JSON block the AI wrote.")]);
-      return;
-    }
-    // Made from the English prompt: English content, even if the AI forgot the field.
-    if (lang === 'en' && parsed && typeof parsed === 'object' && !Array.isArray(parsed) && !('lang' in parsed)) (parsed as Record<string, unknown>).lang = 'en';
-    const v = validate(parsed);
-    setErrors(v.errors);
-    setData(parsed as T);
+    const r = readAnswer<T>(value, validate);
+    setData(r.data);
+    setErrors(r.errors);
   };
   const update = (d: T) => {
     setData(d);
     setErrors(validate(d).errors);
   };
-  const list = errors.map((e) => `- ${e}`).join('\n');
-  const fix = tr(
-    `Nel JSON che mi hai dato ci sono questi errori:\n${list}\n\nCorreggili e rispondi di nuovo SOLO con il JSON completo.`,
-    `The JSON you gave me has these errors:\n${list}\n\nFix them and answer again with ONLY the complete JSON.`,
-  );
+  const fix = fixRequest(errors);
 
   return (
     <div className="creator claude-page">
@@ -113,30 +153,7 @@ export default function ClaudeCreate<T>({ back, title, intro, fields, initial, p
 
       <section className="cr-cat">
         <div className="cr-label">1 · {tr('Cosa vuoi', 'What you want')}</div>
-        {fields.map((f) =>
-          f.type === 'check' ? (
-            <label className="cr-check" key={f.key}>
-              <input type="checkbox" checked={!!form[f.key]} onChange={(e) => set({ [f.key]: e.target.checked })} />
-              {f.label}
-            </label>
-          ) : f.type === 'number' ? (
-            <div className="cr-field" key={f.key}>
-              <span className="cr-label">{f.label}</span>
-              <div className="seg">
-                {f.options!.map((n) => (
-                  <button key={n} className={form[f.key] === n ? 'on' : ''} onClick={() => set({ [f.key]: n })}>
-                    {n}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <label className="cr-field" key={f.key}>
-              <span className="cr-label">{f.label}</span>
-              <input value={String(form[f.key] ?? '')} onChange={(e) => set({ [f.key]: e.target.value })} placeholder={f.placeholder} />
-            </label>
-          ),
-        )}
+        <FormFields fields={fields} form={form} set={set} />
       </section>
 
       <section className="cr-cat">

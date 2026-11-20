@@ -2,7 +2,7 @@ import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -16,6 +16,18 @@ import './asta.css';
 import { tr } from '../../hub/i18n';
 
 const lib = library<AstaSet>('asta', import.meta.glob('/content/asta/*.json', { eager: true, import: 'default' }), validateAsta);
+
+const ai: AiSpec<AstaSet> = {
+  fields: [
+    { key: 'topic', label: tr('Tema generale (facoltativo)', 'Overall theme (optional)'), placeholder: tr('Es. cinema, cibo, anni 90…', 'E.g. movies, food, the 90s…') },
+    { key: 'themes', label: tr('Quanti temi', 'How many themes'), type: 'number', options: [20, 30, 40, 60, 80] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con bambini', 'E.g. family with children') },
+  ],
+  initial: { topic: '', themes: 40, audience: '' },
+  prompt,
+  validate: validateAsta,
+  preview: (d) => <Preview data={d} />,
+};
 
 const creation: Creation<AstaSet> = {
   game: 'asta',
@@ -106,6 +118,14 @@ const asta: Game = {
   ),
   tags: ['turno', 'tempo'],
   href: '#/asta',
+  content: {
+    ai,
+    title: (d: AstaSet) => d.title,
+    summary: creation.summary,
+    save: (d: AstaSet) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: AstaSet) => d.temi,
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'asta') return null;
@@ -128,15 +148,7 @@ const asta: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema generale (facoltativo)', 'Overall theme (optional)'), placeholder: tr('Es. cinema, cibo, anni 90…', 'E.g. movies, food, the 90s…') },
-            { key: 'themes', label: tr('Quanti temi', 'How many themes'), type: 'number', options: [20, 30, 40, 60, 80] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. famiglia con bambini', 'E.g. family with children') },
-          ]}
-          initial={{ topic: '', themes: 40, audience: '' }}
-          prompt={prompt}
-          validate={validateAsta}
-          preview={(d) => <Preview data={d} />}
+          {...ai}
           onPlay={(d) => go(`/asta/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('asta', normalize(d))) && go('/asta/crea')}
         />

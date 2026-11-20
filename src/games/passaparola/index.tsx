@@ -2,7 +2,7 @@ import { library } from '../../hub/library';
 import icon from './icon';
 import { creationRoute, type Creation } from '../../hub/creation';
 import { startDraft } from '../../hub/draft';
-import type { Game } from '../../hub/games';
+import type { AiSpec, Game } from '../../hub/games';
 import { go } from '../../hub/nav';
 import ClaudeCreate from '../../hub/components/ClaudeCreate';
 import ContentHome from '../../hub/components/ContentHome';
@@ -20,6 +20,22 @@ const lib = library<Passaparola>(
   import.meta.glob('/content/passaparola/*.json', { eager: true, import: 'default' }),
   validatePassaparola,
 );
+
+const ai: AiSpec<Passaparola> = {
+  fields: [
+    { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. cultura generale, cinema, anni 90…', 'E.g. general knowledge, movies, the 90s…') },
+    { key: 'teams', label: tr('Quante squadre (una ruota ciascuna)', 'How many teams (one wheel each)'), type: 'number', options: [1, 2, 3, 4, 5, 6] },
+    { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. amici tra i 25 e i 35 anni', 'E.g. friends between 25 and 35') },
+  ],
+  initial: { topic: '', teams: 2, audience: '' },
+  prompt,
+  validate: validatePassaparola,
+  preview: (d) => (
+    <p className="muted" style={{ margin: 0 }}>
+      <b>{d.title}</b> · {Array.isArray(d.ruote) ? d.ruote.length : 0} {tr('ruote', 'wheels')}
+    </p>
+  ),
+};
 
 const creation: Creation<Passaparola> = {
   game: 'passaparola',
@@ -110,6 +126,14 @@ const passaparola: Game = {
   ),
   tags: ['turno', 'tempo'],
   href: '#/passaparola',
+  content: {
+    ai,
+    title: (d: Passaparola) => d.title,
+    summary: creation.summary,
+    save: (d: Passaparola) => lib.saveLocal(d),
+    all: lib.all,
+    used: (d: Passaparola) => d.ruote.flatMap((r) => r.items.map((i) => i.answer)),
+  },
   route(parts) {
     const [section, slug, view] = parts;
     if (section !== 'passaparola') return null;
@@ -132,19 +156,7 @@ const passaparola: Game = {
               </>,
             )
           }
-          fields={[
-            { key: 'topic', label: tr('Tema (facoltativo)', 'Theme (optional)'), placeholder: tr('Es. cultura generale, cinema, anni 90…', 'E.g. general knowledge, movies, the 90s…') },
-            { key: 'teams', label: tr('Quante squadre (una ruota ciascuna)', 'How many teams (one wheel each)'), type: 'number', options: [1, 2, 3, 4, 5, 6] },
-            { key: 'audience', label: tr('Chi gioca (facoltativo)', 'Who is playing (optional)'), placeholder: tr('Es. amici tra i 25 e i 35 anni', 'E.g. friends between 25 and 35') },
-          ]}
-          initial={{ topic: '', teams: 2, audience: '' }}
-          prompt={prompt}
-          validate={validatePassaparola}
-          preview={(d) => (
-            <p className="muted" style={{ margin: 0 }}>
-              <b>{d.title}</b> · {Array.isArray(d.ruote) ? d.ruote.length : 0} {tr('ruote', 'wheels')}
-            </p>
-          )}
+          {...ai}
           onPlay={(d) => go(`/passaparola/${lib.saveLocal(d)}/setup`)}
           onEdit={async (d) => (await startDraft('passaparola', normalize(d))) && go('/passaparola/crea')}
         />

@@ -57,6 +57,7 @@ GameNightBox/
 │  │  ├─ library.ts            contenuti del sito + quelli salvati sul dispositivo, con la data
 │  │  ├─ played.ts             partite segnate come già fatte (sul dispositivo)
 │  │  ├─ tournament.ts  TournamentPages.tsx   torneo: stato e punti; pagine #/torneo e #/torneo/nuovo
+│  │  ├─ pack.ts  PackPages.tsx  pacchetti di partite (GNB1.): pagine #/pacchetto e #/pacchetto/carica
 │  │  ├─ creation.tsx          indirizzi per creare e condividere: crea, crea/codice, carica
 │  │  ├─ draft.ts  share.ts    bozza del creatore; codici condivisibili (JQ1. PP1. CT1. MU1. TT1. SB1. IF1.)
 │  │  ├─ buzzer.ts             prenotazione: un tasto per squadra, o decide l'host
@@ -325,6 +326,34 @@ Creare e condividere funziona come nel Jeopardy, con le parti comuni in `src/hub
 - I giochi non sanno niente del torneo: passa tutto da `SetupPage` (e la preparazione di Jeopardy!), `Ranking`,
   `ContentHome` e la home di Jeopardy!, con i pezzi in `components/TournamentParts.tsx`.
 - "Finisci il torneo" chiude prima della fine: contano i giochi finiti.
+
+## Pacchetti di partite (`#/pacchetto`)
+
+Per chi prepara le partite a qualcun altro (es. il mod di uno streamer): tante partite, anche di giochi diversi, in **un
+solo file**. Si entra dal riquadro del torneo in home ("🎁 Pacchetto di partite: Prepara / 📥 Carica").
+
+- **Prepara** (`#/pacchetto`, `hub/PackPages.tsx`): titolo, autore, tema e pubblico comuni; poi le partite, una riga
+  ciascuna. "＋" su un gioco aggiunge una partita da fare con l'IA (anche più volte lo stesso gioco); sotto si può
+  aggiungere una partita già pronta (del sito o del dispositivo). Ogni riga ha i campi del suo gioco (tema e pubblico
+  vuoti = quelli del pacchetto), **il suo prompt** da copiare in una chat nuova, la risposta da incollare, gli errori con
+  la richiesta di correzione e l'anteprima (i link di Musichiere si controllano come in "Crea con l'IA"). Quando una
+  partita è a posto si apre la prossima da fare. Se nel pacchetto ci sono già partite dello stesso gioco, il prompt chiede
+  all'IA di non ripetere quello che hanno usato (categorie, temi, parole… `used` di ogni gioco). La bozza sta in
+  `gnb:pacchetto:draft`. Con tutte le partite ✓: 💾 scarica `<titolo>.txt` (o condividi il file, o copia il codice).
+- **Formato** (`hub/pack.ts`): `GNB1.` + JSON compresso come gli altri codici,
+  `{ title, author?, items: [{ game, data } | { game, site }] }`. `site` è lo slug di un contenuto del sito (che può avere
+  file suoi, come le foto di un quiz): non si copia, lo si cerca sul sito di chi carica. Un codice di un solo gioco
+  incollato qui vale come pacchetto di una partita; un pacchetto incollato nella pagina "Carica" di un gioco dice dove aprirlo.
+- **Carica** (`#/pacchetto/carica[/<codice>]`): apri il file (o incolla il codice) → elenco con ✓/❌ → "📥 Carica tutto"
+  salva ogni partita nel suo gioco (tra "Le tue"; lo stesso contenuto caricato due volte non si duplica) → "🏆 Inizia il
+  torneo" apre "Nuovo torneo" con i giochi del pacchetto già nella ruota (`gnb:torneo:pacchetto`, modificabili) e un
+  avviso con "Non usare il pacchetto"; le squadre le sceglie chi gioca.
+- **Nel torneo**: il torneo ricorda i contenuti del pacchetto per gioco (`contents`). Quando la ruota sceglie un gioco
+  (`pickFor`), prende il primo contenuto non ancora giocato e va dritto a "Prepara la partita" (`preset`: alla prima
+  apertura la partita riparte da zero con le squadre del torneo); "Scegli un altro contenuto" resta possibile.
+- Ogni gioco descrive i suoi contenuti in `Game.content` (`hub/games.ts`): il modulo IA (`ai`: campi, prompt,
+  controllo, anteprima, lo stesso della sua pagina "Crea con l'IA"), titolo, riassunto, salvataggio, elenco e `used`.
+- `npm run import -- <file del pacchetto>` salva nel repo ogni partita del pacchetto (quelle del sito ci sono già).
 
 ## Formato del quiz (`quiz.json`)
 

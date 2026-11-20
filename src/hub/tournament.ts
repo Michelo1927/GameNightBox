@@ -16,6 +16,14 @@ export interface Current {
   title?: string;
   /** "Inizia la partita" was pressed: from now on this content is the tournament's. */
   started?: boolean;
+  /** The content came from the tournament's pack and its setup page has not been opened yet. */
+  preset?: boolean;
+}
+
+/** A content of a pack (hub/pack.ts), saved on this device. */
+export interface PackContent {
+  slug: string;
+  title: string;
 }
 
 export interface Played {
@@ -37,6 +45,9 @@ export interface Tournament {
   /** Ended by hand before every game was played. */
   ended?: boolean;
   created: number;
+  /** Made from a pack: its title, and its contents by game in the pack's order (the wheel gives them one by one). */
+  pack?: string;
+  contents?: Record<string, PackContent[]>;
 }
 
 const KEY = 'gnb:torneo';
@@ -66,6 +77,34 @@ export function useTournament() {
     return () => void listeners.delete(on);
   }, []);
   return t;
+}
+
+/**
+ * What the tournament plays when the wheel picks `game`: the first content of the pack for that game not played yet,
+ * straight to its setup; without one, the host chooses (as in a tournament without a pack).
+ */
+export function pickFor(t: Tournament, game: string): Current {
+  const next = t.contents?.[game]?.find((c) => !t.played.some((p) => p.game === game && p.slug === c.slug));
+  return next ? { game, slug: next.slug, title: next.title, preset: true } : { game };
+}
+
+/** A pack just loaded, waiting for its tournament: the "Nuovo torneo" page starts from its games. */
+export interface PendingPack {
+  title: string;
+  contents: Record<string, PackContent[]>;
+}
+
+const PENDING_KEY = 'gnb:torneo:pacchetto';
+
+export const getPendingPack = () => loadSaved<PendingPack>(PENDING_KEY);
+
+export function setPendingPack(pack: PendingPack | null) {
+  try {
+    if (pack) localStorage.setItem(PENDING_KEY, JSON.stringify(pack));
+    else localStorage.removeItem(PENDING_KEY);
+  } catch {
+    /* storage unavailable */
+  }
 }
 
 /** The games still in the wheel (a game chosen twice and played once is still there once). */

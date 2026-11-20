@@ -3,6 +3,7 @@ import { games } from './games';
 import { norm, useHash } from './hub/nav';
 import HubHome from './hub/HubHome';
 import { TournamentRoute } from './hub/TournamentPages';
+import { PackRoute } from './hub/PackPages';
 import Intro, { shouldPlayIntro } from './hub/components/Intro';
 import { SoundDock } from './hub/components/SoundButtons';
 
@@ -19,6 +20,7 @@ export default function App() {
     const inner = games.find((g) => g.id === parts[1])!.route(parts.slice(1));
     page = <div key="torneo" className="trn-scope">{inner}</div>;
   } else if (parts[0] === 'torneo') page = <TournamentRoute games={games} view={parts[1]} />;
+  else if (parts[0] === 'pacchetto') page = <PackRoute games={games} view={parts[1]} code={parts[2]} />;
   else {
     // Another game on the same content (#/<game>/<slug>~<n>/...): the game's pages for the content, redrawn from
     // scratch for each game (its save is picked from the address, see slotOfPage in hub/content.ts).

@@ -12,14 +12,14 @@ import { lang, tr } from '../../../hub/i18n';
 
 // #/claude: builds a ready prompt for any AI chat; the JSON it answers with is pasted back here and played.
 
-interface Form {
+export interface Form {
   topic: string;
   categories: string;
   audience: string;
   final: boolean;
 }
 
-function buildPrompt(f: Form): string {
+export function buildPrompt(f: Form): string {
   if (lang === 'en') return buildPromptEn(f);
   const what = f.categories.trim()
     ? `Usa esattamente queste 5 categorie, con lo stesso nome e nello stesso ordine: ${f.categories.trim()}.`
